@@ -1,0 +1,100 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            // Add maven repo for SpecialSource
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+ext.buildProps = file "build.properties"
+
+buildProps.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+repositories {
+    maven {
+        name = "forge"
+        url = "http://files.minecraftforge.net/maven"
+    }
+    maven { // the repo from which to get NEI and stuff
+        name 'CB Repo'
+        url "http://chickenbones.net/maven"
+    }
+    ivy {
+        name 'FMP'
+        artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
+    }
+}
+
+dependencies {
+    compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.version.minecraft}-${config.version.cc.nei}", ext: 'jar', classifier: "dev"
+    compile group: 'codechicken', name: 'CodeChickenCore', version: "${config.version.minecraft}-${config.version.cc.core}", ext: 'jar', classifier: "dev"
+    compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cc.lib}", ext: 'jar', classifier: "dev"
+}
+
+group = "werkbench"
+archivesBaseName = "Werkbench"
+
+minecraft {
+    version = "${config.version.minecraft}-${config.version.forge}"
+
+    replace "@MAJOR@", config.version.mod.major
+    replace "@MINOR@", config.version.mod.minor
+
+    if (System.getenv("BUILD_NUMBER") != null) {
+        replace "@BUILD@", System.getenv("BUILD_NUMBER")
+    }
+    else
+    {
+        replace "@BUILD@", "ManuallyBuilt"
+    }
+}
+
+processResources {
+    from 'build.properties'
+}
+
+allprojects {
+    version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}"
+
+    if (System.getenv("BUILD_NUMBER") != null) {
+        version += ".${System.getenv("BUILD_NUMBER")}"
+    } else {
+        version += "-ManuallyBuilt"
+    }
+
+    jar {
+        destinationDir = file (rootProject.getRootDir().getPath() + '/output')
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifact jar
+            }
+        }
+        repositories {
+            maven {
+                url "file://var/www/maven"
+            }
+        }
+    }
+}
