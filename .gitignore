@@ -1,0 +1,50 @@
+## Edits of this file MUST be in their own commit ##
+## Whenever possible, use wildcards to keep this clean ##
+## Alphabetize, or else ##
+## Put your edits in the proper section, or I'll grouch at you ##
+
+## General housekeeping
+*.bat
+*.class
+*.iml
+*.ipr
+*.iws
+*.log
+*.py
+*.sh
+*.txt
+*.xml
+.cache
+libs/
+natives/
+
+## Because Macs
+.DS_Store
+._*
+
+## Gradle
+.gradle/
+build/
+gradle/
+gradlew
+out/
+output/
+run/
+
+## sublime
+*.sublime*
+
+## eclipse
+.classpath
+.metadata/
+.project
+.settings/
+bin/
+eclipse/
+
+## Intellij IDEA
+.idea/
+
+## netbeans
+nbbuild/
+nbproject/
