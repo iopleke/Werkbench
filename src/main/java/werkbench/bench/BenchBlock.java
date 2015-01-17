@@ -29,8 +29,15 @@ public class BenchBlock extends BlockContainer
 		textureName = Compendium.Naming.id + ":werkBenchIcon";
 	}
 
+	/**
+	 * Create the tileEntity
+	 *
+	 * @param world game world object
+	 * @param meta  block metadata
+	 * @return TileEntity
+	 */
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return new BenchTileEntity();
 	}
@@ -42,6 +49,7 @@ public class BenchBlock extends BlockContainer
 	 * @param meta the block metadata
 	 * @return IIcon
 	 */
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta)
 	{
@@ -58,6 +66,12 @@ public class BenchBlock extends BlockContainer
 		}
 	}
 
+	/**
+	 * Register the block icons for top, sides, front, and bottom
+	 *
+	 * @param iconRegister object for icon registration
+	 */
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
