@@ -7,9 +7,11 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import werkbench.Werkbench;
 import werkbench.reference.Compendium;
 
 public class BenchBlock extends BlockContainer
@@ -27,6 +29,36 @@ public class BenchBlock extends BlockContainer
 		setCreativeTab(CreativeTabs.tabDecorations);
 		setStepSound(Block.soundTypeWood);
 		textureName = Compendium.Naming.id + ":werkBenchIcon";
+	}
+
+	/**
+	 * Do stuff on block activation
+	 *
+	 * @param world  the game world object
+	 * @param x      the x coordinate of the block being activated
+	 * @param y      the y coordinate of the block being activated
+	 * @param z      the z coordinate of the block being activated
+	 * @param player the entityplayer object
+	 * @param side   which side was hit
+	 * @param hitX   on the side that was hit, the x coordinate
+	 * @param hitY   on the side that was hit, the y coordinate
+	 * @param hitZ   on the side that was hit, the z coordinate
+	 * @return boolean does the block get activated
+	 */
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (tileEntity != null && !player.isSneaking())
+		{
+			if (!world.isRemote)
+			{
+				player.openGui(Werkbench.INSTANCE, 0, world, x, y, z);
+			}
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
