@@ -5,6 +5,9 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import werkbench.bench.BenchBlock;
+import werkbench.bench.BenchTileEntity;
 import werkbench.helper.LogHelper;
 import werkbench.reference.Compendium;
 
@@ -20,13 +23,20 @@ public class Werkbench
     @Mod.Metadata(Compendium.Naming.id)
     public static ModMetadata metadata;
 
+    public static BenchBlock werkbench;
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         // Register instance.
         INSTANCE = this;
 
-        LogHelper.debug("Set Werkbench MetaData info");
+        LogHelper.debug("Set Werkbench MetaData info...");
         metadata = Compendium.MetaData.init(metadata);
+
+        LogHelper.debug("Registering Werkbench block...");
+        werkbench = new BenchBlock();
+        GameRegistry.registerBlock(werkbench, Compendium.Naming.block);
+        GameRegistry.registerTileEntity(BenchTileEntity.class, Compendium.Naming.tileEntity);
     }
 }
