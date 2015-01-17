@@ -2,14 +2,15 @@ package werkbench.bench;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.world.World;
 import werkbench.reference.Compendium;
 
 public class BenchGUI extends GuiContainer
 {
 
-	public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench)
+	public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
 	{
-		super(new BenchContainer(inventoryPlayer, bench));
+		super(new BenchContainer(inventoryPlayer, bench, world));
 
 	}
 
