@@ -2,6 +2,7 @@ package werkbench.reference;
 
 import cpw.mods.fml.common.ModMetadata;
 import java.util.Arrays;
+import net.minecraft.util.ResourceLocation;
 
 /*
  * A compendium of all constants for the mod, such as the modID and
@@ -65,7 +66,7 @@ public class Compendium
 
 		public static final class GUI
 		{
-
+			public static ResourceLocation background = new ResourceLocation(Compendium.Naming.id, "textures/gui/werkBenchBackground.png");
 		}
 
 		public static final class Model
