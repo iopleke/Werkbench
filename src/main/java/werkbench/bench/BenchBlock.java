@@ -36,7 +36,11 @@ public class BenchBlock extends BlockContainer
 	}
 
 	/**
-	 * Gets the block's texture. Args: side, meta
+	 * Gets the texture, given a side
+	 *
+	 * @param side the block side
+	 * @param meta the block metadata
+	 * @return IIcon
 	 */
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta)
