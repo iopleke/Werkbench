@@ -38,7 +38,7 @@ public class BenchContainer extends Container
         bindCraftGrid(bench);
 
         // Add the crafting output to the right side
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, bench, this.craftResult, 0, 131, 30));
+        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, bench, this.craftResult, 0, 131, 60));
     }
 
     /**
@@ -52,7 +52,7 @@ public class BenchContainer extends Container
         {
             for (int j = 0; j < 3; ++j)
             {
-                addSlotToContainer(new Slot(bench, j + i * 3, 62 + j * 18, 12 + i * 18));
+                addSlotToContainer(new Slot(bench, j + i * 3, 62 + j * 18, 42 + i * 18));
             }
         }
     }
@@ -68,13 +68,13 @@ public class BenchContainer extends Container
         {
             for (int j = 0; j < 9; j++)
             {
-                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 114 + i * 18));
             }
         }
 
         for (int i = 0; i < 9; i++)
         {
-            addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
+            addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 172));
         }
     }
 
@@ -113,7 +113,6 @@ public class BenchContainer extends Container
                 for (int j = 0; j < this.crafters.size(); ++j)
                 {
                     ((ICrafting) this.crafters.get(j)).sendSlotContents(this, i, itemstack1);
-
                 }
             }
         }
