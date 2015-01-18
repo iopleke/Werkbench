@@ -18,7 +18,7 @@ public class BenchContainer extends Container
 
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
-    private World world;
+    private final World world;
 
     public BenchContainer(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
@@ -61,6 +61,7 @@ public class BenchContainer extends Container
      *
      * @param inventory
      */
+    @Override
     public void onCraftMatrixChanged(IInventory inventory)
     {
         this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
@@ -74,7 +75,12 @@ public class BenchContainer extends Container
 
     /**
      * Called when a player shift-clicks on a slot.
+     *
+     * @param player EntityPlayer object
+     * @param slotID int ID of the slot
+     * @return ItemStack for the slotID
      */
+    @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
     {
         ItemStack itemstack = null;

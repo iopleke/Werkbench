@@ -191,6 +191,5 @@ public class BenchTileEntity extends TileEntity implements IInventory
             }
         }
         nbttagcompound.setTag("BenchInventory", nbttaglist);
-
     }
 }
