@@ -12,12 +12,13 @@ import werkbench.reference.Compendium;
 
 public class BenchTileEntity extends TileEntity implements IInventory
 {
-    private final ItemStack[] inventory;
+
+    // The inventory is a 3x3 grid (for crafting)
+    private final ItemStack[] inventory = new ItemStack[9];
 
     public BenchTileEntity()
     {
-        // The inventory is a 3x3 grid (for crafting)
-        inventory = new ItemStack[9];
+        super();
     }
 
     @Override
@@ -177,9 +178,12 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
         for (int i = 0; i < inventory.length; i++)
         {
-            NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-            inventory[i].writeToNBT(nbttagcompound1);
-            nbttaglist.appendTag(nbttagcompound1);
+            if (inventory[i] != null)
+            {
+                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+                inventory[i].writeToNBT(nbttagcompound1);
+                nbttaglist.appendTag(nbttagcompound1);
+            }
         }
         nbttagcompound.setTag("BenchInventory", nbttaglist);
 
