@@ -21,6 +21,11 @@ public class BenchTileEntity extends TileEntity implements IInventory
         super();
     }
 
+    /**
+     * Get the size of the inventory
+     *
+     * @return int size of the inventory object
+     */
     @Override
     public int getSizeInventory()
     {
