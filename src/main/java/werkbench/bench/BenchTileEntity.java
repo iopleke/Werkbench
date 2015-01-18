@@ -212,7 +212,11 @@ public class BenchTileEntity extends TileEntity implements IInventory
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                 inventory[i].writeToNBT(nbttagcompound1);
                 nbttaglist.appendTag(nbttagcompound1);
+            } else
+            {
+                nbttaglist.appendTag(new NBTTagCompound());
             }
+
         }
         nbttagcompound.setTag("BenchInventory", nbttaglist);
     }
