@@ -1,6 +1,8 @@
 package werkbench.bench;
 
 import codechicken.lib.inventory.InventoryUtils;
+import java.util.EnumMap;
+import java.util.Map;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -17,11 +19,115 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     // The inventory is a 3x3 grid (for crafting)
     private final ItemStack[] inventory = new ItemStack[9];
-    private final Boolean[] hasChestOnSide = new Boolean[6];
+    private final Map<ForgeDirection, Boolean> chestOnSide = new EnumMap<ForgeDirection, Boolean>(ForgeDirection.class);
 
     public BenchTileEntity()
     {
         super();
+        for (ForgeDirection VALID_DIRECTION : ForgeDirection.VALID_DIRECTIONS)
+        {
+            chestOnSide.put(VALID_DIRECTION, false);
+        }
+    }
+
+    /**
+     * Check if the bench has a chest on a specific side
+     *
+     * @param direction direction to check
+     * @return boolean if there's a chest on the given side
+     */
+    public boolean getHasChestOnSide(ForgeDirection direction)
+    {
+        return chestOnSide.get(direction);
+    }
+
+    /**
+     * Get the ForgeDirection for the bench's left side
+     *
+     * @return ForgeDirection
+     */
+    public ForgeDirection getLeftChestDirection()
+    {
+        int meta = this.getBlockMetadata();
+        switch (meta)
+        {
+            case 0:
+                return ForgeDirection.EAST;
+            case 1:
+                return ForgeDirection.SOUTH;
+            case 2:
+                return ForgeDirection.WEST;
+            case 4:
+                return ForgeDirection.NORTH;
+            default:
+                return ForgeDirection.UNKNOWN;
+        }
+    }
+
+    /**
+     * Get the ForgeDirection for the bench's right side
+     *
+     * @return ForgeDirection
+     */
+    public ForgeDirection getRightChestDirection()
+    {
+        return getLeftChestDirection().getOpposite();
+    }
+
+    /**
+     * Check if the bench has a chest on the left side
+     *
+     * @return boolean
+     */
+    public boolean getHasChestLeft()
+    {
+        int meta = this.getBlockMetadata();
+        switch (meta)
+        {
+            case 0:
+                return chestOnSide.get(ForgeDirection.EAST);
+            case 1:
+                return chestOnSide.get(ForgeDirection.SOUTH);
+            case 2:
+                return chestOnSide.get(ForgeDirection.WEST);
+            case 4:
+                return chestOnSide.get(ForgeDirection.NORTH);
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Check if the bench has a chest on the right side
+     *
+     * @return boolean
+     */
+    public boolean getHasChestRight()
+    {
+        int meta = this.getBlockMetadata();
+        switch (meta)
+        {
+            case 0:
+                return chestOnSide.get(ForgeDirection.WEST);
+            case 1:
+                return chestOnSide.get(ForgeDirection.NORTH);
+            case 2:
+                return chestOnSide.get(ForgeDirection.EAST);
+            case 4:
+                return chestOnSide.get(ForgeDirection.SOUTH);
+            default:
+                return false;
+        }
+    }
+
+    public boolean chestIsDouble(ForgeDirection direction)
+    {
+        TileEntity potentialChest = this.worldObj.getTileEntity(direction.offsetX + xCoord, direction.offsetY + yCoord, direction.offsetZ + zCoord);
+        if (potentialChest instanceof TileEntityChest)
+        {
+            ((TileEntityChest) potentialChest).checkForAdjacentChests();
+        }
+        return false;
     }
 
     /**
@@ -30,16 +136,16 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public void updateEntity()
     {
-        for (int i = 0; i < hasChestOnSide.length; i++)
+        for (int i = 0; i < chestOnSide.size(); i++)
         {
             ForgeDirection direction = ForgeDirection.getOrientation(i);
             TileEntity potentialChest = this.worldObj.getTileEntity(direction.offsetX + xCoord, direction.offsetY + yCoord, direction.offsetZ + zCoord);
             if (potentialChest instanceof TileEntityChest)
             {
-                hasChestOnSide[i] = true;
+                chestOnSide.put(direction, true);
             } else
             {
-                hasChestOnSide[i] = false;
+                chestOnSide.put(direction, false);
             }
 
         }
