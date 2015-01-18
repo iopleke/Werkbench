@@ -38,7 +38,7 @@ public class BenchContainer extends Container
         bindCraftGrid(bench);
 
         // Add the crafting output to the right side
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, bench, this.craftResult, 9, 131, 30));
+        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, bench, this.craftResult, 0, 131, 30));
     }
 
     /**
@@ -153,7 +153,7 @@ public class BenchContainer extends Container
 
             if (slotID == 0)
             {
-                if (!this.mergeItemStack(itemstack1, 10, 46, true))
+                if (!this.mergeItemStack(itemstack1, 9, 46, true))
                 {
                     return null;
                 }
