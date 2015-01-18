@@ -113,6 +113,15 @@ public class BenchBlock extends BlockContainer
         this.bottomIcon = iconRegister.registerIcon(this.getTextureName() + "Bottom");
     }
 
+    /**
+     * Actions done when blocks next to this one changes
+     *
+     * @param world        the world object
+     * @param x            the changed block's x coordinate
+     * @param y            the changed block's y coordinate
+     * @param z            the changed block's z coordinate
+     * @param changedBlock the block object of whatever changed
+     */
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block changedBlock)
     {
