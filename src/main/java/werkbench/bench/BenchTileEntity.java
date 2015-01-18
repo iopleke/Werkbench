@@ -7,7 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.ForgeDirection;
 import werkbench.reference.Compendium;
 
 public class BenchTileEntity extends TileEntity implements IInventory
@@ -15,10 +17,32 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     // The inventory is a 3x3 grid (for crafting)
     private final ItemStack[] inventory = new ItemStack[9];
+    private final Boolean[] hasChestOnSide = new Boolean[6];
 
     public BenchTileEntity()
     {
         super();
+    }
+
+    /**
+     * Checks for chests on each side on update
+     */
+    @Override
+    public void updateEntity()
+    {
+        for (int i = 0; i < hasChestOnSide.length; i++)
+        {
+            ForgeDirection direction = ForgeDirection.getOrientation(i);
+            TileEntity potentialChest = this.worldObj.getTileEntity(direction.offsetX + xCoord, direction.offsetY + yCoord, direction.offsetZ + zCoord);
+            if (potentialChest instanceof TileEntityChest)
+            {
+                hasChestOnSide[i] = true;
+            } else
+            {
+                hasChestOnSide[i] = false;
+            }
+
+        }
     }
 
     /**
