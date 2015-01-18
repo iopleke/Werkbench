@@ -11,35 +11,35 @@ import werkbench.bench.BenchTileEntity;
 public class GUIHandler implements IGuiHandler
 {
 
-	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-	{
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity != null)
-		{
-			if (tileEntity instanceof BenchTileEntity)
-			{
-				return new BenchGUI(player.inventory, (BenchTileEntity) tileEntity, world);
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity != null)
+        {
+            if (tileEntity instanceof BenchTileEntity)
+            {
+                return new BenchGUI(player.inventory, (BenchTileEntity) tileEntity, world);
 
-			}
-		}
-		return null;
-	}
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-	{
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    {
 
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity != null)
-		{
-			if (tileEntity instanceof BenchTileEntity)
-			{
-				return new BenchContainer(player.inventory, (BenchTileEntity) tileEntity, world);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity != null)
+        {
+            if (tileEntity instanceof BenchTileEntity)
+            {
+                return new BenchContainer(player.inventory, (BenchTileEntity) tileEntity, world);
 
-			}
-		}
-		return null;
-	}
+            }
+        }
+        return null;
+    }
 
 }

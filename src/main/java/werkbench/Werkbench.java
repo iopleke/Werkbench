@@ -17,35 +17,35 @@ import werkbench.reference.Compendium;
 public class Werkbench
 {
 
-	// Instancing
-	@Instance(value = Compendium.Naming.id)
-	public static Werkbench INSTANCE;
+    // Instancing
+    @Instance(value = Compendium.Naming.id)
+    public static Werkbench INSTANCE;
 
-	// Public metadata about the mod, used by Forge for display on the client's mod list
-	@Mod.Metadata(Compendium.Naming.id)
-	public static ModMetadata metadata;
+    // Public metadata about the mod, used by Forge for display on the client's mod list
+    @Mod.Metadata(Compendium.Naming.id)
+    public static ModMetadata metadata;
 
-	public static BenchBlock werkbench;
+    public static BenchBlock werkbench;
 
-	public static GUIHandler guiHandler = new GUIHandler();
+    public static GUIHandler guiHandler = new GUIHandler();
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		// Register instance.
-		INSTANCE = this;
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event)
+    {
+        // Register instance.
+        INSTANCE = this;
 
-		LogHelper.debug("Set Werkbench MetaData info...");
-		metadata = Compendium.MetaData.init(metadata);
+        LogHelper.debug("Set Werkbench MetaData info...");
+        metadata = Compendium.MetaData.init(metadata);
 
-		LogHelper.debug("Registering Werkbench block...");
-		werkbench = new BenchBlock();
-		GameRegistry.registerBlock(werkbench, Compendium.Naming.block);
-		GameRegistry.registerTileEntity(BenchTileEntity.class, Compendium.Naming.tileEntity);
+        LogHelper.debug("Registering Werkbench block...");
+        werkbench = new BenchBlock();
+        GameRegistry.registerBlock(werkbench, Compendium.Naming.block);
+        GameRegistry.registerTileEntity(BenchTileEntity.class, Compendium.Naming.tileEntity);
 
-		LogHelper.debug("Registering GUI handler for werkbench...");
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
+        LogHelper.debug("Registering GUI handler for werkbench...");
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 
-		LogHelper.debug("Werkbench done loading");
-	}
+        LogHelper.debug("Werkbench done loading");
+    }
 }
