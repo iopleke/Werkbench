@@ -7,9 +7,12 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import werkbench.Werkbench;
 import werkbench.reference.Compendium;
@@ -19,7 +22,7 @@ public class BenchBlock extends BlockContainer
     @SideOnly(Side.CLIENT)
     private IIcon topIcon;
     @SideOnly(Side.CLIENT)
-    private IIcon frontIcon;
+    private IIcon sidesIcon;
     @SideOnly(Side.CLIENT)
     private IIcon bottomIcon;
 
@@ -32,7 +35,7 @@ public class BenchBlock extends BlockContainer
     }
 
     /**
-     * Do stuff on block activation
+     * Open the GUI on block activation
      *
      * @param world  the game world object
      * @param x      the x coordinate of the block being activated
@@ -85,17 +88,38 @@ public class BenchBlock extends BlockContainer
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
+        if (side == 0 || side == 1)
+        {
+            switch (side)
+            {
+                case 0:
+                    return bottomIcon;
+                case 1:
+                    return topIcon;
+            }
+        }
+
+        if (meta % 2 == 0)
+        {
+            switch (side)
+            {
+                case 2:
+                case 3:
+                    return blockIcon;
+                default:
+                    return sidesIcon;
+            }
+        }
+
         switch (side)
         {
-            case 0:
-                return bottomIcon;
-            case 1:
-                return topIcon;
+            case 2:
             case 3:
-                return frontIcon;
+                return sidesIcon;
             default:
                 return blockIcon;
         }
+
     }
 
     /**
@@ -108,8 +132,8 @@ public class BenchBlock extends BlockContainer
     public void registerBlockIcons(IIconRegister iconRegister)
     {
         this.topIcon = iconRegister.registerIcon(this.getTextureName());
-        this.blockIcon = iconRegister.registerIcon(this.getTextureName() + "Side");
-        this.frontIcon = iconRegister.registerIcon(this.getTextureName() + "Front");
+        this.blockIcon = iconRegister.registerIcon(this.getTextureName() + "Front");
+        this.sidesIcon = iconRegister.registerIcon(this.getTextureName() + "Side");
         this.bottomIcon = iconRegister.registerIcon(this.getTextureName() + "Bottom");
     }
 
@@ -128,4 +152,22 @@ public class BenchBlock extends BlockContainer
         // Check if changedBlock is a chest, update GUI to reflect this
     }
 
+    /**
+     * Set the direction the block is facing
+     *
+     * @param world        the world object
+     * @param x            the changed block's x coordinate
+     * @param y            the changed block's y coordinate
+     * @param z            the changed block's z coordinate
+     * @param livingEntity entity that placed the block
+     * @param itemStack    the itemstack used to place the block
+     */
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase livingEntity, ItemStack itemStack)
+    {
+        super.onBlockPlacedBy(world, x, y, z, livingEntity, itemStack);
+
+        int facing = MathHelper.floor_double(livingEntity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+        world.setBlockMetadataWithNotify(x, y, z, facing, 2);
+    }
 }
