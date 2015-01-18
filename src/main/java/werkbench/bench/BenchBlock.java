@@ -54,11 +54,14 @@ public class BenchBlock extends BlockContainer
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity != null && !player.isSneaking())
         {
-            if (!world.isRemote)
+            if (tileEntity instanceof BenchTileEntity)
             {
-                player.openGui(Werkbench.INSTANCE, 0, world, x, y, z);
+                if (!world.isRemote)
+                {
+                    player.openGui(Werkbench.INSTANCE, 0, world, x, y, z);
+                }
+                return true;
             }
-            return true;
         }
 
         return false;
