@@ -4,7 +4,10 @@ import codechicken.lib.inventory.InventoryUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.Constants;
 import werkbench.reference.Compendium;
 
 public class BenchTileEntity extends TileEntity implements IInventory
@@ -140,5 +143,45 @@ public class BenchTileEntity extends TileEntity implements IInventory
     public boolean isItemValidForSlot(int slot, ItemStack stack)
     {
         return true;
+    }
+
+    /**
+     * Read saved values from NBT
+     *
+     * @param nbttagcompound
+     */
+    @Override
+    public void readFromNBT(NBTTagCompound nbttagcompound)
+    {
+        super.readFromNBT(nbttagcompound);
+
+        NBTTagList nbttaglist = nbttagcompound.getTagList("BenchInventory", Constants.NBT.TAG_COMPOUND);
+
+        for (int i = 0; i < inventory.length; i++)
+        {
+            inventory[i] = ItemStack.loadItemStackFromNBT(nbttaglist.getCompoundTagAt(i));
+        }
+
+    }
+
+    /**
+     * Save data to NBT
+     *
+     * @param nbttagcompound
+     */
+    @Override
+    public void writeToNBT(NBTTagCompound nbttagcompound)
+    {
+        super.writeToNBT(nbttagcompound);
+        NBTTagList nbttaglist = new NBTTagList();
+
+        for (int i = 0; i < inventory.length; i++)
+        {
+            NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+            inventory[i].writeToNBT(nbttagcompound1);
+            nbttaglist.appendTag(nbttagcompound1);
+        }
+        nbttagcompound.setTag("BenchInventory", nbttaglist);
+
     }
 }
