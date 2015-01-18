@@ -67,6 +67,8 @@ public class Compendium
         public static final class GUI
         {
             public static ResourceLocation background = new ResourceLocation(Compendium.Naming.id, "textures/gui/werkBenchGUIBackground.png");
+            public static ResourceLocation singleChest = new ResourceLocation(Compendium.Naming.id, "textures/gui/werkBenchGUIBackgroundChestSingle.png");
+            public static ResourceLocation doubleChest = new ResourceLocation(Compendium.Naming.id, "textures/gui/werkBenchGUIBackgroundChestDouble.png");
         }
 
         public static final class Model
