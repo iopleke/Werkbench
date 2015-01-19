@@ -20,6 +20,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     // The inventory is a 3x3 grid (for crafting)
     private final ItemStack[] inventory = new ItemStack[9];
     private final Map<ForgeDirection, Boolean> chestOnSide = new EnumMap<ForgeDirection, Boolean>(ForgeDirection.class);
+    private TileEntityChest chestLeft;
 
     public BenchTileEntity()
     {
@@ -28,6 +29,21 @@ public class BenchTileEntity extends TileEntity implements IInventory
         {
             chestOnSide.put(VALID_DIRECTION, false);
         }
+
+    }
+
+    public TileEntityChest getChestLeftTileEntity()
+    {
+
+        TileEntity potentialChest = this.worldObj.getTileEntity(getLeftChestDirection().offsetX + xCoord, getLeftChestDirection().offsetY + yCoord, getLeftChestDirection().offsetZ + zCoord);
+        if (potentialChest instanceof TileEntityChest)
+        {
+            chestLeft = ((TileEntityChest) potentialChest);
+        } else
+        {
+            chestLeft = null;
+        }
+        return chestLeft;
     }
 
     /**

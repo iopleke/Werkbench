@@ -11,6 +11,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 
 public class BenchContainer extends Container
@@ -37,8 +38,36 @@ public class BenchContainer extends Container
         bindPlayerInventory(inventoryPlayer);
         bindCraftGrid(bench);
 
+        if (bench.getHasChestLeft())
+        {
+            bindLeftChestSingle(bench);
+        }
+
         // Add the crafting output to the right side
         addSlotToContainer(new SlotCrafting(inventoryPlayer.player, bench, this.craftResult, 0, 131, 60));
+    }
+
+    /**
+     * Add the left chest slots
+     *
+     * @param BenchTileEntity the bench tile entity
+     */
+    private void bindLeftChestSingle(BenchTileEntity bench)
+    {
+        TileEntityChest chestLeft = bench.getChestLeftTileEntity();
+        if (chestLeft instanceof TileEntityChest)
+        {
+
+            for (int i = 0; i < 3; i++)
+            {
+
+                for (int j = 0; j < 9; j++)
+                {
+                    addSlotToContainer(new Slot(chestLeft, j + i * 9, i * 18 - 60, j * 18 + 28));
+                }
+            }
+        }
+
     }
 
     /**
