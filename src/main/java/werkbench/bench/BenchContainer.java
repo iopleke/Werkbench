@@ -42,6 +42,10 @@ public class BenchContainer extends Container
         {
             bindLeftChestSingle(bench);
         }
+        if (bench.getHasChestRight())
+        {
+            bindRightChestSingle(bench);
+        }
 
         // Add the crafting output to the right side
         addSlotToContainer(new SlotCrafting(inventoryPlayer.player, bench, this.craftResult, 0, 131, 60));
@@ -64,6 +68,29 @@ public class BenchContainer extends Container
                 for (int j = 0; j < 9; j++)
                 {
                     addSlotToContainer(new Slot(chestLeft, j + i * 9, i * 18 - 60, j * 18 + 28));
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Add the right chest slots
+     *
+     * @param BenchTileEntity the bench tile entity
+     */
+    private void bindRightChestSingle(BenchTileEntity bench)
+    {
+        TileEntityChest chestRight = bench.getChestRightTileEntity();
+        if (chestRight instanceof TileEntityChest)
+        {
+
+            for (int i = 0; i < 3; i++)
+            {
+
+                for (int j = 0; j < 9; j++)
+                {
+                    addSlotToContainer(new Slot(chestRight, j + i * 9, i * 18 + 184, j * 18 + 28));
                 }
             }
         }

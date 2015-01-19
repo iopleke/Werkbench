@@ -21,6 +21,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     private final ItemStack[] inventory = new ItemStack[9];
     private final Map<ForgeDirection, Boolean> chestOnSide = new EnumMap<ForgeDirection, Boolean>(ForgeDirection.class);
     private TileEntityChest chestLeft;
+    private TileEntityChest chestRight;
 
     public BenchTileEntity()
     {
@@ -44,6 +45,20 @@ public class BenchTileEntity extends TileEntity implements IInventory
             chestLeft = null;
         }
         return chestLeft;
+    }
+
+    public TileEntityChest getChestRightTileEntity()
+    {
+
+        TileEntity potentialChest = this.worldObj.getTileEntity(getRightChestDirection().offsetX + xCoord, getRightChestDirection().offsetY + yCoord, getRightChestDirection().offsetZ + zCoord);
+        if (potentialChest instanceof TileEntityChest)
+        {
+            chestRight = ((TileEntityChest) potentialChest);
+        } else
+        {
+            chestRight = null;
+        }
+        return chestRight;
     }
 
     /**
