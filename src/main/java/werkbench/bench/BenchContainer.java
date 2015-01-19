@@ -61,10 +61,8 @@ public class BenchContainer extends Container
         TileEntityChest chestLeft = bench.getChestLeftTileEntity();
         if (chestLeft instanceof TileEntityChest)
         {
-
             for (int i = 0; i < 3; i++)
             {
-
                 for (int j = 0; j < 9; j++)
                 {
                     addSlotToContainer(new Slot(chestLeft, j + i * 9, i * 18 - 60, j * 18 + 28));
@@ -164,7 +162,6 @@ public class BenchContainer extends Container
                 {
                     craftMatrix.setInventorySlotContents(s, bench.getStackInSlot(s));
                 }
-
                 for (int j = 0; j < this.crafters.size(); ++j)
                 {
                     ((ICrafting) this.crafters.get(j)).sendSlotContents(this, i, itemstack1);

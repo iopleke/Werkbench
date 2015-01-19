@@ -18,7 +18,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
 {
 
     // The inventory is a 3x3 grid (for crafting)
-    private final ItemStack[] inventory = new ItemStack[9];
+    public ItemStack[] craftGrid = new ItemStack[9];
     private final Map<ForgeDirection, Boolean> chestOnSide = new EnumMap<ForgeDirection, Boolean>(ForgeDirection.class);
     private TileEntityChest chestLeft;
     private TileEntityChest chestRight;
@@ -88,7 +88,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
                 return ForgeDirection.SOUTH;
             case 2:
                 return ForgeDirection.WEST;
-            case 4:
+            case 3:
                 return ForgeDirection.NORTH;
             default:
                 return ForgeDirection.UNKNOWN;
@@ -121,7 +121,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
                 return chestOnSide.get(ForgeDirection.SOUTH);
             case 2:
                 return chestOnSide.get(ForgeDirection.WEST);
-            case 4:
+            case 3:
                 return chestOnSide.get(ForgeDirection.NORTH);
             default:
                 return false;
@@ -144,7 +144,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
                 return chestOnSide.get(ForgeDirection.NORTH);
             case 2:
                 return chestOnSide.get(ForgeDirection.EAST);
-            case 4:
+            case 3:
                 return chestOnSide.get(ForgeDirection.SOUTH);
             default:
                 return false;
@@ -190,7 +190,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public int getSizeInventory()
     {
-        return inventory.length;
+        return craftGrid.length;
     }
 
     /**
@@ -202,7 +202,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public ItemStack getStackInSlot(int slot)
     {
-        return inventory[slot];
+        return craftGrid[slot];
     }
 
     /**
@@ -239,7 +239,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack)
     {
-        inventory[slot] = stack;
+        craftGrid[slot] = stack;
         markDirty();
     }
 
@@ -324,9 +324,9 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
         NBTTagList nbttaglist = nbttagcompound.getTagList("BenchInventory", Constants.NBT.TAG_COMPOUND);
 
-        for (int i = 0; i < inventory.length; i++)
+        for (int i = 0; i < craftGrid.length; i++)
         {
-            inventory[i] = ItemStack.loadItemStackFromNBT(nbttaglist.getCompoundTagAt(i));
+            craftGrid[i] = ItemStack.loadItemStackFromNBT(nbttaglist.getCompoundTagAt(i));
         }
 
     }
@@ -342,12 +342,12 @@ public class BenchTileEntity extends TileEntity implements IInventory
         super.writeToNBT(nbttagcompound);
         NBTTagList nbttaglist = new NBTTagList();
 
-        for (int i = 0; i < inventory.length; i++)
+        for (int i = 0; i < craftGrid.length; i++)
         {
-            if (inventory[i] != null)
+            if (craftGrid[i] != null)
             {
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                inventory[i].writeToNBT(nbttagcompound1);
+                craftGrid[i].writeToNBT(nbttagcompound1);
                 nbttaglist.appendTag(nbttagcompound1);
             } else
             {
