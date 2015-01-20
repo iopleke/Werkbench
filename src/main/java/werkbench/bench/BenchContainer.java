@@ -20,6 +20,7 @@ public class BenchContainer extends Container
 
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
+
     private final World world;
 
     /**
@@ -48,7 +49,7 @@ public class BenchContainer extends Container
         }
 
         // Add the crafting output to the right side
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, bench, this.craftResult, 0, 131, 60));
+        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, bench, this.craftResult, 0, 253, 70));
     }
 
     /**
@@ -61,11 +62,15 @@ public class BenchContainer extends Container
         TileEntityChest chestLeft = bench.getChestLeftTileEntity();
         if (chestLeft instanceof TileEntityChest)
         {
+            int slot, x, y;
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    addSlotToContainer(new Slot(chestLeft, j + i * 9, i * 18 - 60, j * 18 + 28));
+                    slot = j + i * 9;
+                    x = 62 + i * 18;
+                    y = 38 + j * 18;
+                    addSlotToContainer(new Slot(chestLeft, slot, x, y));
                 }
             }
         }
@@ -82,13 +87,15 @@ public class BenchContainer extends Container
         TileEntityChest chestRight = bench.getChestRightTileEntity();
         if (chestRight instanceof TileEntityChest)
         {
-
+            int slot, x, y;
             for (int i = 0; i < 3; i++)
             {
-
                 for (int j = 0; j < 9; j++)
                 {
-                    addSlotToContainer(new Slot(chestRight, j + i * 9, i * 18 + 184, j * 18 + 28));
+                    slot = j + i * 9;
+                    x = 306 + i * 18;
+                    y = 38 + j * 18;
+                    addSlotToContainer(new Slot(chestRight, slot, x, y));
                 }
             }
         }
@@ -101,11 +108,15 @@ public class BenchContainer extends Container
      */
     private void bindCraftGrid(BenchTileEntity bench)
     {
+        int slot, x, y;
         for (int i = 0; i < 3; ++i)
         {
             for (int j = 0; j < 3; ++j)
             {
-                addSlotToContainer(new Slot(bench, j + i * 3, 62 + j * 18, 42 + i * 18));
+                slot = j + i * 3;
+                x = 184 + j * 18;
+                y = 52 + i * 18;
+                addSlotToContainer(new Slot(bench, slot, x, y));
             }
         }
     }
@@ -117,17 +128,22 @@ public class BenchContainer extends Container
      */
     private void bindPlayerInventory(InventoryPlayer inventoryPlayer)
     {
+        int slot, x, y;
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)
             {
-                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 114 + i * 18));
+                slot = j + i * 9 + 9;
+                x = 130 + j * 18;
+                y = 124 + i * 18;
+                addSlotToContainer(new Slot(inventoryPlayer, slot, x, y));
+                if (i == 0)
+                {
+                    x = 130 + j * 18;
+                    y = 182;
+                    addSlotToContainer(new Slot(inventoryPlayer, j, x, y));
+                }
             }
-        }
-
-        for (int i = 0; i < 9; i++)
-        {
-            addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 172));
         }
     }
 
