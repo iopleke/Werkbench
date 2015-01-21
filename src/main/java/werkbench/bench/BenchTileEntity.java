@@ -342,18 +342,17 @@ public class BenchTileEntity extends TileEntity implements IInventory
         super.writeToNBT(nbttagcompound);
         NBTTagList nbttaglist = new NBTTagList();
 
-        for (int i = 0; i < craftGrid.length; i++)
+        for (ItemStack stack : craftGrid)
         {
-            if (craftGrid[i] != null)
+            if (stack != null)
             {
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                craftGrid[i].writeToNBT(nbttagcompound1);
+                stack.writeToNBT(nbttagcompound1);
                 nbttaglist.appendTag(nbttagcompound1);
             } else
             {
                 nbttaglist.appendTag(new NBTTagCompound());
             }
-
         }
         nbttagcompound.setTag("BenchInventory", nbttaglist);
     }
