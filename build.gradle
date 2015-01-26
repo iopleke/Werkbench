@@ -104,7 +104,7 @@ sourceSets {
     main {
         resources {
             exclude '**/xcf/*'
-            exclude 'resources/assets/minechem/xcf'
+            exclude 'resources/assets/werkbench/xcf'
         }
     }
 }
