@@ -16,12 +16,12 @@ import net.minecraft.world.World;
 
 public class BenchContainer extends Container
 {
+
     private final BenchTileEntity bench;
 
+    private final World world;
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
-
-    private final World world;
 
     /**
      * Container object for the workbench
@@ -39,7 +39,7 @@ public class BenchContainer extends Container
         bindPlayerInventory(inventoryPlayer);
         bindCraftGrid(bench);
 
-        if (bench.getHasChestLeft())
+        if (bench.getHasLeftChest())
         {
             if (bench.chestIsDouble(bench.getLeftChestDirection()))
             {
@@ -49,7 +49,7 @@ public class BenchContainer extends Container
                 bindLeftChestSingle(bench);
             }
         }
-        if (bench.getHasChestRight())
+        if (bench.getHasRightChest())
         {
             if (bench.chestIsDouble(bench.getRightChestDirection()))
             {
@@ -88,7 +88,7 @@ public class BenchContainer extends Container
     {
         bindLeftChestSingle(bench);
 
-        TileEntityChest chestLeft = bench.getDoubleChestLeftTileEntity();
+        TileEntityChest chestLeft = bench.getLeftChestDoubleTileEntity();
         if (chestLeft instanceof TileEntityChest)
         {
             int slot, x, y;
@@ -112,7 +112,7 @@ public class BenchContainer extends Container
      */
     private void bindLeftChestSingle(BenchTileEntity bench)
     {
-        TileEntityChest chestLeft = bench.getChestLeftTileEntity();
+        TileEntityChest chestLeft = bench.getLeftChestSingleTileEntity();
         if (chestLeft instanceof TileEntityChest)
         {
             int slot, x, y;
@@ -159,7 +159,7 @@ public class BenchContainer extends Container
     {
         bindRightChestSingle(bench);
 
-        TileEntityChest chestRight = bench.getDoubleChestRightTileEntity();
+        TileEntityChest chestRight = bench.getRightChestDoubleTileEntity();
         if (chestRight instanceof TileEntityChest)
         {
             int slot, x, y;
@@ -184,7 +184,7 @@ public class BenchContainer extends Container
      */
     private void bindRightChestSingle(BenchTileEntity bench)
     {
-        TileEntityChest chestRight = bench.getChestRightTileEntity();
+        TileEntityChest chestRight = bench.getRightChestSingleTileEntity();
         if (chestRight instanceof TileEntityChest)
         {
             int slot, x, y;

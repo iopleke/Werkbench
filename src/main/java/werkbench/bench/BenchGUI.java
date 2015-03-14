@@ -27,7 +27,7 @@ public class BenchGUI extends GuiContainer
         int y = (height - ySize) / 2 + 40;
         drawTexturedModalRect(x, y, 0, 0, 176, 166);
 
-        if (bench.getHasChestLeft())
+        if (bench.getHasLeftChest())
         {
             if (bench.chestIsDouble(bench.getLeftChestDirection()))
             {
@@ -37,7 +37,7 @@ public class BenchGUI extends GuiContainer
                 renderSingleChestLeft();
             }
         }
-        if (bench.getHasChestRight())
+        if (bench.getHasRightChest())
         {
             if (bench.chestIsDouble(bench.getRightChestDirection()))
             {
