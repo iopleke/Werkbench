@@ -41,15 +41,68 @@ public class BenchContainer extends Container
 
         if (bench.getHasChestLeft())
         {
-            bindLeftChestSingle(bench);
+            if (bench.chestIsDouble(bench.getLeftChestDirection()))
+            {
+                bindLeftChestDouble(bench);
+            } else
+            {
+                bindLeftChestSingle(bench);
+            }
         }
         if (bench.getHasChestRight())
         {
-            bindRightChestSingle(bench);
+            if (bench.chestIsDouble(bench.getRightChestDirection()))
+            {
+                bindRightChestDouble(bench);
+            } else
+            {
+                bindRightChestSingle(bench);
+            }
         }
 
         // Add the crafting output to the right side
         addSlotToContainer(new SlotCrafting(inventoryPlayer.player, bench, this.craftResult, 0, 253, 70));
+    }
+
+    /**
+     * Add the crafting grid to the GUI
+     *
+     * @param bench the bench TileEntity
+     */
+    private void bindCraftGrid(BenchTileEntity bench)
+    {
+        int slot, x, y;
+        for (int i = 0; i < 3; ++i)
+        {
+            for (int j = 0; j < 3; ++j)
+            {
+                slot = j + i * 3;
+                x = 184 + j * 18;
+                y = 52 + i * 18;
+                addSlotToContainer(new Slot(bench, slot, x, y));
+            }
+        }
+    }
+
+    private void bindLeftChestDouble(BenchTileEntity bench)
+    {
+        bindLeftChestSingle(bench);
+
+        TileEntityChest chestLeft = bench.getDoubleChestLeftTileEntity();
+        if (chestLeft instanceof TileEntityChest)
+        {
+            int slot, x, y;
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    slot = j + i * 9;
+                    x = 8 + i * 18;
+                    y = 38 + j * 18;
+                    addSlotToContainer(new Slot(chestLeft, slot, x, y));
+                }
+            }
+        }
     }
 
     /**
@@ -71,6 +124,53 @@ public class BenchContainer extends Container
                     x = 62 + i * 18;
                     y = 38 + j * 18;
                     addSlotToContainer(new Slot(chestLeft, slot, x, y));
+                }
+            }
+        }
+    }
+
+    /**
+     * Add the player's inventory slots to the GUI
+     *
+     * @param inventoryPlayer the player's inventory
+     */
+    private void bindPlayerInventory(InventoryPlayer inventoryPlayer)
+    {
+        int slot, x, y;
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                slot = j + i * 9 + 9;
+                x = 130 + j * 18;
+                y = 124 + i * 18;
+                addSlotToContainer(new Slot(inventoryPlayer, slot, x, y));
+                if (i == 0)
+                {
+                    x = 130 + j * 18;
+                    y = 182;
+                    addSlotToContainer(new Slot(inventoryPlayer, j, x, y));
+                }
+            }
+        }
+    }
+
+    private void bindRightChestDouble(BenchTileEntity bench)
+    {
+        bindRightChestSingle(bench);
+
+        TileEntityChest chestRight = bench.getDoubleChestRightTileEntity();
+        if (chestRight instanceof TileEntityChest)
+        {
+            int slot, x, y;
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    slot = j + i * 9;
+                    x = 360 + i * 18;
+                    y = 38 + j * 18;
+                    addSlotToContainer(new Slot(chestRight, slot, x, y));
                 }
             }
         }
@@ -102,60 +202,15 @@ public class BenchContainer extends Container
     }
 
     /**
-     * Add the crafting grid to the GUI
+     * Determine if the player can interact with the container
      *
-     * @param bench the bench TileEntity
-     */
-    private void bindCraftGrid(BenchTileEntity bench)
-    {
-        int slot, x, y;
-        for (int i = 0; i < 3; ++i)
-        {
-            for (int j = 0; j < 3; ++j)
-            {
-                slot = j + i * 3;
-                x = 184 + j * 18;
-                y = 52 + i * 18;
-                addSlotToContainer(new Slot(bench, slot, x, y));
-            }
-        }
-    }
-
-    /**
-     * Add the player's inventory slots to the GUI
-     *
-     * @param inventoryPlayer the player's inventory
-     */
-    private void bindPlayerInventory(InventoryPlayer inventoryPlayer)
-    {
-        int slot, x, y;
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                slot = j + i * 9 + 9;
-                x = 130 + j * 18;
-                y = 124 + i * 18;
-                addSlotToContainer(new Slot(inventoryPlayer, slot, x, y));
-                if (i == 0)
-                {
-                    x = 130 + j * 18;
-                    y = 182;
-                    addSlotToContainer(new Slot(inventoryPlayer, j, x, y));
-                }
-            }
-        }
-    }
-
-    /**
-     * Update the crafting result when the grid changes
-     *
-     * @param inventory
+     * @param entityPlayer the player entity
+     * @return boolean
      */
     @Override
-    public void onCraftMatrixChanged(IInventory inventory)
+    public boolean canInteractWith(EntityPlayer entityPlayer)
     {
-        this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
+        return true;
     }
 
     /**
@@ -187,15 +242,14 @@ public class BenchContainer extends Container
     }
 
     /**
-     * Determine if the player can interact with the container
+     * Update the crafting result when the grid changes
      *
-     * @param entityPlayer the player entity
-     * @return boolean
+     * @param inventory
      */
     @Override
-    public boolean canInteractWith(EntityPlayer entityPlayer)
+    public void onCraftMatrixChanged(IInventory inventory)
     {
-        return true;
+        this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
     }
 
     /**

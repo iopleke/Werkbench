@@ -61,6 +61,34 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return chestRight;
     }
 
+    public TileEntityChest getDoubleChestLeftTileEntity()
+    {
+
+        TileEntity potentialChest = this.worldObj.getTileEntity(getLeftChestDirection().offsetX + getLeftChestDirection().offsetX + xCoord, getLeftChestDirection().offsetY + getLeftChestDirection().offsetY + yCoord, getLeftChestDirection().offsetZ + getLeftChestDirection().offsetZ + zCoord);
+        if (potentialChest instanceof TileEntityChest)
+        {
+            chestLeft = ((TileEntityChest) potentialChest);
+        } else
+        {
+            chestLeft = null;
+        }
+        return chestLeft;
+    }
+
+    public TileEntityChest getDoubleChestRightTileEntity()
+    {
+
+        TileEntity potentialChest = this.worldObj.getTileEntity(getRightChestDirection().offsetX + getRightChestDirection().offsetX + xCoord, getRightChestDirection().offsetY + getRightChestDirection().offsetY + yCoord, getRightChestDirection().offsetZ + getRightChestDirection().offsetZ + zCoord);
+        if (potentialChest instanceof TileEntityChest)
+        {
+            chestRight = ((TileEntityChest) potentialChest);
+        } else
+        {
+            chestRight = null;
+        }
+        return chestRight;
+    }
+
     /**
      * Check if the bench has a chest on a specific side
      *
@@ -153,10 +181,10 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     public boolean chestIsDouble(ForgeDirection direction)
     {
-        TileEntity potentialChest = this.worldObj.getTileEntity(direction.offsetX + xCoord, direction.offsetY + yCoord, direction.offsetZ + zCoord);
+        TileEntity potentialChest = this.worldObj.getTileEntity(direction.offsetX + direction.offsetX + xCoord, direction.offsetY + direction.offsetY + yCoord, direction.offsetZ + direction.offsetZ + zCoord);
         if (potentialChest instanceof TileEntityChest)
         {
-            ((TileEntityChest) potentialChest).checkForAdjacentChests();
+            return true;
         }
         return false;
     }
@@ -166,6 +194,11 @@ public class BenchTileEntity extends TileEntity implements IInventory
      */
     @Override
     public void updateEntity()
+    {
+        updateSideChecks();
+    }
+
+    public void updateSideChecks()
     {
         for (int i = 0; i < chestOnSide.size(); i++)
         {

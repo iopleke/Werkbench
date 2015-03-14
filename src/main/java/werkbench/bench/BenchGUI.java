@@ -29,11 +29,23 @@ public class BenchGUI extends GuiContainer
 
         if (bench.getHasChestLeft())
         {
-            renderSingleChestLeft();
+            if (bench.chestIsDouble(bench.getLeftChestDirection()))
+            {
+                renderDoubleChestLeft();
+            } else
+            {
+                renderSingleChestLeft();
+            }
         }
         if (bench.getHasChestRight())
         {
-            renderSingleChestRight();
+            if (bench.chestIsDouble(bench.getRightChestDirection()))
+            {
+                renderDoubleChestRight();
+            } else
+            {
+                renderSingleChestRight();
+            }
         }
     }
 

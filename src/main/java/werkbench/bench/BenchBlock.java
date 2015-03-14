@@ -141,7 +141,7 @@ public class BenchBlock extends BlockContainer
     }
 
     /**
-     * Actions done when blocks next to this one changes
+     * Check if changedBlock is a chest, update GUI to reflect this
      *
      * @param world        the world object
      * @param x            the changed block's x coordinate
@@ -152,7 +152,11 @@ public class BenchBlock extends BlockContainer
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block changedBlock)
     {
-        // Check if changedBlock is a chest, update GUI to reflect this
+        TileEntity potentialBench = world.getTileEntity(x, y, z);
+        if (potentialBench instanceof BenchTileEntity)
+        {
+            ((BenchTileEntity) potentialBench).updateSideChecks();
+        }
     }
 
     /**
