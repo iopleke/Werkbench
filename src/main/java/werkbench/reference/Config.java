@@ -13,18 +13,18 @@ import net.minecraftforge.common.config.Property;
 
 public class Config
 {
-    public static Configuration config;
+    protected static Configuration config;
 
     // turns on extra logging printouts
-    public static boolean debugMode = true;
+    public static boolean debugMode;
 
     public static void init()
     {
 
         if (config == null)
         {
-
             config = new Configuration(new File(Compendium.Config.configPrefix + "Werkbench.cfg"));
+            debugMode = true;
             loadConfig();
         }
     }

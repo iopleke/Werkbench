@@ -89,7 +89,7 @@ public class BenchContainer extends Container
         bindLeftChestSingle(bench);
 
         TileEntityChest chestLeft = bench.getLeftChestDoubleTileEntity();
-        if (chestLeft instanceof TileEntityChest)
+        if (chestLeft != null)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)
@@ -113,7 +113,7 @@ public class BenchContainer extends Container
     private void bindLeftChestSingle(BenchTileEntity bench)
     {
         TileEntityChest chestLeft = bench.getLeftChestSingleTileEntity();
-        if (chestLeft instanceof TileEntityChest)
+        if (chestLeft != null)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)
@@ -160,7 +160,7 @@ public class BenchContainer extends Container
         bindRightChestSingle(bench);
 
         TileEntityChest chestRight = bench.getRightChestDoubleTileEntity();
-        if (chestRight instanceof TileEntityChest)
+        if (chestRight != null)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)
@@ -185,7 +185,7 @@ public class BenchContainer extends Container
     private void bindRightChestSingle(BenchTileEntity bench)
     {
         TileEntityChest chestRight = bench.getRightChestSingleTileEntity();
-        if (chestRight instanceof TileEntityChest)
+        if (chestRight != null)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)

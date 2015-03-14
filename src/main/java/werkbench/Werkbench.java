@@ -1,5 +1,6 @@
 package werkbench;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -12,6 +13,7 @@ import werkbench.bench.BenchTileEntity;
 import werkbench.handler.GUIHandler;
 import werkbench.helper.LogHelper;
 import werkbench.reference.Compendium;
+import werkbench.reference.Config;
 
 @Mod(modid = Compendium.Naming.id)
 public class Werkbench
@@ -23,17 +25,22 @@ public class Werkbench
 
     // Public metadata about the mod, used by Forge for display on the client's mod list
     @Mod.Metadata(Compendium.Naming.id)
-    public static ModMetadata metadata;
+    protected static ModMetadata metadata;
 
-    public static BenchBlock werkbench;
+    protected static BenchBlock werkbench;
 
-    public static GUIHandler guiHandler = new GUIHandler();
+    protected static final GUIHandler guiHandler = new GUIHandler();
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         // Register instance.
         INSTANCE = this;
+
+        // Load configuration.
+        LogHelper.debug("Loading configuration...");
+        Config.init();
+        FMLCommonHandler.instance().bus().register(new Config());
 
         LogHelper.debug("Set Werkbench MetaData info...");
         metadata = Compendium.MetaData.init(metadata);
