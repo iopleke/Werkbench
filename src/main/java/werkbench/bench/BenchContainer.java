@@ -9,10 +9,12 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
+import org.lwjgl.input.Mouse;
 
 public class BenchContainer extends Container
 {
@@ -249,7 +251,19 @@ public class BenchContainer extends Container
     @Override
     public void onCraftMatrixChanged(IInventory inventory)
     {
-        this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
+        Mouse.setGrabbed(false);
+        ItemStack craftingResultStack = CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world);
+        Item craftingResultItem = null;
+        if (craftingResultStack != null)
+        {
+            craftingResultItem = craftingResultStack.getItem();
+        }
+        String name = "";
+        if (craftingResultItem != null)
+        {
+            name = craftingResultItem.getUnlocalizedName();
+        }
+        this.craftResult.setInventorySlotContents(0, craftingResultStack);
     }
 
     /**
