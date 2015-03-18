@@ -22,7 +22,7 @@ public class BenchGUI extends GuiContainer
     @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int mousex, int mousey)
     {
-        this.mc.renderEngine.bindTexture(Compendium.Texture.GUI.background);
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.background);
         int x = (width - xSize) / 2 + 122;
         int y = (height - ySize) / 2 + 40;
         drawTexturedModalRect(x, y, 0, 0, 176, 166);
@@ -51,7 +51,7 @@ public class BenchGUI extends GuiContainer
 
     private void renderDoubleChestLeft()
     {
-        this.mc.renderEngine.bindTexture(Compendium.Texture.GUI.doubleChest);
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.doubleChest);
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2 + 30;
         drawTexturedModalRect(x, y, 0, 0, 122, 176);
@@ -59,7 +59,7 @@ public class BenchGUI extends GuiContainer
 
     private void renderSingleChestLeft()
     {
-        this.mc.renderEngine.bindTexture(Compendium.Texture.GUI.singleChest);
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.singleChest);
         int x = (width - xSize) / 2 + 54;
         int y = (height - ySize) / 2 + 30;
         drawTexturedModalRect(x, y, 0, 0, 68, 176);
@@ -67,7 +67,7 @@ public class BenchGUI extends GuiContainer
 
     private void renderDoubleChestRight()
     {
-        this.mc.renderEngine.bindTexture(Compendium.Texture.GUI.doubleChest);
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.doubleChest);
         int x = (width - xSize) / 2 + 298;
         int y = (height - ySize) / 2 + 30;
         drawTexturedModalRect(x, y, 0, 0, 122, 176);
@@ -75,7 +75,7 @@ public class BenchGUI extends GuiContainer
 
     private void renderSingleChestRight()
     {
-        this.mc.renderEngine.bindTexture(Compendium.Texture.GUI.singleChest);
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.singleChest);
         int x = (width - xSize) / 2 + 298;
         int y = (height - ySize) / 2 + 30;
         drawTexturedModalRect(x, y, 0, 0, 68, 176);

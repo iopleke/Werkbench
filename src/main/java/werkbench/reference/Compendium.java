@@ -66,14 +66,15 @@ public class Compendium
 
         public static final class GUI
         {
-            public static final ResourceLocation background = new ResourceLocation(Compendium.Naming.id, "textures/gui/werkBenchGUIBackground.png");
-            public static final ResourceLocation singleChest = new ResourceLocation(Compendium.Naming.id, "textures/gui/werkBenchGUIBackgroundChestSingle.png");
-            public static final ResourceLocation doubleChest = new ResourceLocation(Compendium.Naming.id, "textures/gui/werkBenchGUIBackgroundChestDouble.png");
+            public static final String background = "textures/gui/werkBenchGUIBackground.png";
+            public static final String singleChest = "textures/gui/werkBenchGUIBackgroundChestSingle.png";
+            public static final String doubleChest = "textures/gui/werkBenchGUIBackgroundChestDouble.png";
         }
 
         public static final class Model
         {
 
+            public static final String bench = "textures/block/werkBench.png";
         }
     }
 
@@ -87,11 +88,14 @@ public class Compendium
         public static final class GUI
         {
 
+            public static final ResourceLocation background = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.background);
+            public static final ResourceLocation singleChest = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.singleChest);
+            public static final ResourceLocation doubleChest = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.doubleChest);
         }
 
         public static final class Model
         {
-
+            public static final ResourceLocation bench = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.Model.bench);
         }
 
         public static final class Tab
