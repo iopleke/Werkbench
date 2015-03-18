@@ -74,7 +74,7 @@ public class Compendium
         public static final class Model
         {
 
-            public static final String bench = "textures/block/werkBench.png";
+            public static final String bench = "textures/blocks/werkBench.png";
         }
     }
 

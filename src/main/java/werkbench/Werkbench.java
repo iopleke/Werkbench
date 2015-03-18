@@ -5,6 +5,8 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -12,6 +14,7 @@ import werkbench.bench.BenchBlock;
 import werkbench.bench.BenchTileEntity;
 import werkbench.handler.GUIHandler;
 import werkbench.helper.LogHelper;
+import werkbench.proxy.CommonProxy;
 import werkbench.reference.Compendium;
 import werkbench.reference.Config;
 
@@ -27,7 +30,10 @@ public class Werkbench
     @Mod.Metadata(Compendium.Naming.id)
     protected static ModMetadata metadata;
 
-    protected static BenchBlock werkbench;
+    @SidedProxy(clientSide = "werkbench.proxy.client.ClientProxy", serverSide = "werkbench.proxy.CommonProxy")
+    public static CommonProxy proxy;
+
+    public static BenchBlock werkbench;
 
     protected static final GUIHandler guiHandler = new GUIHandler();
 
@@ -54,5 +60,11 @@ public class Werkbench
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 
         LogHelper.debug("Werkbench done loading");
+    }
+
+    @EventHandler
+    public void init(FMLInitializationEvent event)
+    {
+        proxy.registerRenderers();
     }
 }

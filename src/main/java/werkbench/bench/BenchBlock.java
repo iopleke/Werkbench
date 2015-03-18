@@ -15,17 +15,11 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import werkbench.Werkbench;
+import werkbench.proxy.CommonProxy;
 import werkbench.reference.Compendium;
 
 public class BenchBlock extends BlockContainer
 {
-    @SideOnly(Side.CLIENT)
-    private IIcon topIcon;
-    @SideOnly(Side.CLIENT)
-    private IIcon sidesIcon;
-    @SideOnly(Side.CLIENT)
-    private IIcon bottomIcon;
-
     public BenchBlock()
     {
         super(Material.wood);
@@ -91,38 +85,7 @@ public class BenchBlock extends BlockContainer
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
-        if (side == 0 || side == 1)
-        {
-            switch (side)
-            {
-                case 0:
-                    return bottomIcon;
-                case 1:
-                    return topIcon;
-            }
-        }
-
-        if (meta % 2 == 0)
-        {
-            switch (side)
-            {
-                case 2:
-                case 3:
-                    return blockIcon;
-                default:
-                    return sidesIcon;
-            }
-        }
-
-        switch (side)
-        {
-            case 2:
-            case 3:
-                return sidesIcon;
-            default:
-                return blockIcon;
-        }
-
+        return blockIcon;
     }
 
     /**
@@ -134,10 +97,7 @@ public class BenchBlock extends BlockContainer
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister)
     {
-        this.topIcon = iconRegister.registerIcon(this.getTextureName());
-        this.blockIcon = iconRegister.registerIcon(this.getTextureName() + "Front");
-        this.sidesIcon = iconRegister.registerIcon(this.getTextureName() + "Side");
-        this.bottomIcon = iconRegister.registerIcon(this.getTextureName() + "Bottom");
+        this.blockIcon = iconRegister.registerIcon(this.getTextureName());
     }
 
     /**
@@ -176,5 +136,23 @@ public class BenchBlock extends BlockContainer
 
         int facing = MathHelper.floor_double(livingEntity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         world.setBlockMetadataWithNotify(x, y, z, facing, 2);
+    }
+
+    @Override
+    public int getRenderType()
+    {
+        return CommonProxy.RENDER_ID;
+    }
+
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
     }
 }
