@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
-import org.lwjgl.opengl.GL11;
 
 public class BasicItemRenderer implements IItemRenderer
 {
@@ -26,11 +25,8 @@ public class BasicItemRenderer implements IItemRenderer
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
-        if (type == IItemRenderer.ItemRenderType.ENTITY)
-        {
-            GL11.glTranslatef(-0.5F, -0.0F, -0.5F);
-        }
-        tesr.renderTileEntityAt(this.tileEntity, 0.0D, -(1.5D / 3), 0.0D, 0.0625F);
+        this.tileEntity.blockMetadata = 1;
+        tesr.renderTileEntityAt(this.tileEntity, 0.0D, -0.2D, 0.0D, 0.0625F);
     }
 
     @Override

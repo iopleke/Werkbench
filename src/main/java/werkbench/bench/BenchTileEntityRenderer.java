@@ -26,7 +26,6 @@ public class BenchTileEntityRenderer extends TileEntitySpecialRenderer
         GL11.glScaled(1, 1, 1);
         bindTexture(Compendium.Resource.Model.bench);
         this.benchModel.render(0.03125F);
-
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
