@@ -9,12 +9,10 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
-import org.lwjgl.input.Mouse;
 
 public class BenchContainer extends Container
 {
@@ -37,6 +35,8 @@ public class BenchContainer extends Container
 
         this.world = world;
         this.bench = bench;
+
+        loadCraftGridFromTileEntity();
 
         bindPlayerInventory(inventoryPlayer);
         bindCraftGrid(bench);
@@ -203,6 +203,14 @@ public class BenchContainer extends Container
         }
     }
 
+    private void loadCraftGridFromTileEntity()
+    {
+        for (int s = 0; s < bench.getSizeInventory(); s++)
+        {
+            craftMatrix.setInventorySlotContents(s, bench.getStackInSlot(s));
+        }
+    }
+
     /**
      * Determine if the player can interact with the container
      *
@@ -231,10 +239,8 @@ public class BenchContainer extends Container
                 itemstack1 = itemstack == null ? null : itemstack.copy();
                 this.inventoryItemStacks.set(i, itemstack1);
 
-                for (int s = 0; s < bench.getSizeInventory(); s++)
-                {
-                    craftMatrix.setInventorySlotContents(s, bench.getStackInSlot(s));
-                }
+                loadCraftGridFromTileEntity();
+
                 for (int j = 0; j < this.crafters.size(); ++j)
                 {
                     ((ICrafting) this.crafters.get(j)).sendSlotContents(this, i, itemstack1);
@@ -251,19 +257,7 @@ public class BenchContainer extends Container
     @Override
     public void onCraftMatrixChanged(IInventory inventory)
     {
-        Mouse.setGrabbed(false);
-        ItemStack craftingResultStack = CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world);
-        Item craftingResultItem = null;
-        if (craftingResultStack != null)
-        {
-            craftingResultItem = craftingResultStack.getItem();
-        }
-        String name = "";
-        if (craftingResultItem != null)
-        {
-            name = craftingResultItem.getUnlocalizedName();
-        }
-        this.craftResult.setInventorySlotContents(0, craftingResultStack);
+        craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
     }
 
     /**
