@@ -13,7 +13,7 @@ public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdate
 
     private int xCoord, yCoord, zCoord;
 
-    public DiffuserUpdateMessage()
+    public BenchUpdateMessage()
     {
     }
     
