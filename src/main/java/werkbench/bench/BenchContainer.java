@@ -257,7 +257,8 @@ public class BenchContainer extends Container
     @Override
     public void onCraftMatrixChanged(IInventory inventory)
     {
-        craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
+        bench.craftResult = CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world);
+        craftResult.setInventorySlotContents(0, bench.craftResult);
     }
 
     /**

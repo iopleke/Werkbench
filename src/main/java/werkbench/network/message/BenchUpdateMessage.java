@@ -1,10 +1,12 @@
 package werkbench.network.message;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import werkbench.bench.BenchTileEntity;
 
@@ -12,16 +14,18 @@ public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdate
 {
 
     private int xCoord, yCoord, zCoord;
+    private ItemStack output = null;
 
     public BenchUpdateMessage()
     {
     }
-    
+
     public BenchUpdateMessage(BenchTileEntity bench)
     {
         this.xCoord = bench.xCoord;
         this.yCoord = bench.yCoord;
         this.zCoord = bench.zCoord;
+        this.output = bench.craftResult;
     }
 
     @Override
@@ -30,6 +34,7 @@ public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdate
         xCoord = buf.readInt();
         yCoord = buf.readInt();
         zCoord = buf.readInt();
+        this.output = ByteBufUtils.readItemStack(buf);
     }
 
     @Override
@@ -50,6 +55,7 @@ public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdate
         buf.writeInt(xCoord);
         buf.writeInt(yCoord);
         buf.writeInt(zCoord);
+        ByteBufUtils.writeItemStack(buf, output);
     }
 
 }
