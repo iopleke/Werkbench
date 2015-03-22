@@ -38,31 +38,35 @@ public class BenchContainer extends Container
         loadCraftGridFromTileEntity();
 
         bindPlayerInventory(inventoryPlayer);
-        bindCraftGrid(bench);
+        bindCraftGrid(this.bench);
 
-        if (bench.getHasLeftChest())
+        if (this.bench.getHasLeftChest())
         {
-            if (bench.chestIsDouble(bench.getLeftChestDirection()))
+            if (this.bench.chestIsDouble(this.bench.getLeftChestDirection()))
             {
-                bindLeftChestDouble(bench);
+                bindLeftChestDouble(this.bench);
             } else
             {
-                bindLeftChestSingle(bench);
+                bindLeftChestSingle(this.bench);
             }
         }
-        if (bench.getHasRightChest())
+        if (this.bench.getHasRightChest())
         {
-            if (bench.chestIsDouble(bench.getRightChestDirection()))
+            if (this.bench.chestIsDouble(this.bench.getRightChestDirection()))
             {
-                bindRightChestDouble(bench);
+                bindRightChestDouble(this.bench);
             } else
             {
-                bindRightChestSingle(bench);
+                bindRightChestSingle(this.bench);
             }
         }
 
         // Add the crafting output to the right side
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, bench, this.craftResult, 0, 253, 70));
+        // This line saves and syncs the craftgrid perfectly, but doesn't display the output clientside
+        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench, this.craftResult, 0, 253, 70));
+        // If I switch it to use the craftMatrix rather than the bench tileEntity (and below in the bindCraftGrid method), it displays the output just fine clientside
+        // but then it doesn't sync...nicely...I'd have to save the craftmatrix back to the TE, but load/update if the TE had changed...it gets hairy.
+        //addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
     }
 
     /**
@@ -81,6 +85,9 @@ public class BenchContainer extends Container
                 x = 184 + j * 18;
                 y = 52 + i * 18;
                 addSlotToContainer(new Slot(bench, slot, x, y));
+
+                // ..as long as I also set this to the craftMatrix, it updates clientside
+                //addSlotToContainer(new Slot(this.craftMatrix, slot, x, y));
             }
         }
     }
@@ -202,6 +209,14 @@ public class BenchContainer extends Container
         }
     }
 
+    private void saveCraftGridToTileEntity()
+    {
+        for (int s = 0; s < bench.getSizeInventory(); s++)
+        {
+            bench.setInventorySlotContents(s, craftMatrix.getStackInSlot(s));
+        }
+    }
+
     private void loadCraftGridFromTileEntity()
     {
         for (int s = 0; s < bench.getSizeInventory(); s++)
@@ -237,8 +252,6 @@ public class BenchContainer extends Container
             {
                 itemstack1 = itemstack == null ? null : itemstack.copy();
                 this.inventoryItemStacks.set(i, itemstack1);
-
-                loadCraftGridFromTileEntity();
 
                 for (int j = 0; j < this.crafters.size(); ++j)
                 {
