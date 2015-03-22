@@ -32,7 +32,6 @@ public class BenchContainer extends Container
      */
     public BenchContainer(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
-
         this.world = world;
         this.bench = bench;
 
@@ -257,8 +256,7 @@ public class BenchContainer extends Container
     @Override
     public void onCraftMatrixChanged(IInventory inventory)
     {
-        bench.craftResult = CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world);
-        craftResult.setInventorySlotContents(0, bench.craftResult);
+        craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
     }
 
     /**

@@ -22,7 +22,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     // The inventory is a 3x3 grid (for crafting)
     public ItemStack[] craftGrid = new ItemStack[9];
-    public ItemStack craftResult;
 
     public BenchTileEntity()
     {

@@ -14,7 +14,6 @@ import werkbench.bench.BenchBlock;
 import werkbench.bench.BenchTileEntity;
 import werkbench.handler.GUIHandler;
 import werkbench.helper.LogHelper;
-import werkbench.network.MessageHandler;
 import werkbench.proxy.CommonProxy;
 import werkbench.reference.Compendium;
 import werkbench.reference.Config;
@@ -48,10 +47,6 @@ public class Werkbench
         LogHelper.debug("Loading configuration...");
         Config.init();
         FMLCommonHandler.instance().bus().register(new Config());
-
-        // Register MessageHandler
-        LogHelper.debug("Registering message handler...");
-        MessageHandler.init();
 
         LogHelper.debug("Set Werkbench MetaData info...");
         metadata = Compendium.MetaData.init(metadata);
