@@ -22,6 +22,7 @@ public class BenchContainer extends Container
     private final World world;
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
+    boolean loading = false;
 
     /**
      * Container object for the workbench
