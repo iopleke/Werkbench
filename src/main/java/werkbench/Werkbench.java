@@ -10,6 +10,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import werkbench.bench.BenchBlock;
 import werkbench.bench.BenchTileEntity;
 import werkbench.handler.GUIHandler;
@@ -65,6 +67,10 @@ public class Werkbench
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
+        GameRegistry.addRecipe(new ItemStack(Werkbench.werkbench), new Object[]
+        {
+            "ppp", "pbp", "pcp", 'p', Blocks.planks, 'b', Blocks.crafting_table, 'c', Blocks.chest
+        });
         proxy.registerRenderers();
     }
 }
