@@ -22,6 +22,7 @@ public class BenchContainer extends Container
     private final World world;
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
+    boolean loading = false;
 
     /**
      * Container object for the workbench
@@ -63,10 +64,10 @@ public class BenchContainer extends Container
 
         // Add the crafting output to the right side
         // This line saves and syncs the craftgrid perfectly, but doesn't display the output clientside
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench, this.craftResult, 0, 253, 70));
+        //addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench, this.craftResult, 0, 253, 70));
         // If I switch it to use the craftMatrix rather than the bench tileEntity (and below in the bindCraftGrid method), it displays the output just fine clientside
         // but then it doesn't sync...nicely...I'd have to save the craftmatrix back to the TE, but load/update if the TE had changed...it gets hairy.
-        //addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
+        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
     }
 
     /**
@@ -84,10 +85,10 @@ public class BenchContainer extends Container
                 slot = j + i * 3;
                 x = 184 + j * 18;
                 y = 52 + i * 18;
-                addSlotToContainer(new Slot(bench, slot, x, y));
+                //addSlotToContainer(new Slot(bench, slot, x, y));
 
                 // ..as long as I also set this to the craftMatrix, it updates clientside
-                //addSlotToContainer(new Slot(this.craftMatrix, slot, x, y));
+                addSlotToContainer(new Slot(this.craftMatrix, slot, x, y));
             }
         }
     }
@@ -219,10 +220,12 @@ public class BenchContainer extends Container
 
     private void loadCraftGridFromTileEntity()
     {
+        loading = true;
         for (int s = 0; s < bench.getSizeInventory(); s++)
         {
             craftMatrix.setInventorySlotContents(s, bench.getStackInSlot(s));
         }
+        loading = false;
     }
 
     /**
@@ -259,6 +262,7 @@ public class BenchContainer extends Container
                 }
             }
         }
+        loadCraftGridFromTileEntity();
     }
 
     /**
@@ -270,6 +274,10 @@ public class BenchContainer extends Container
     public void onCraftMatrixChanged(IInventory inventory)
     {
         craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
+        if (!bench.getWorldObj().isRemote && !loading)
+        {
+            saveCraftGridToTileEntity();
+        }
     }
 
     /**
