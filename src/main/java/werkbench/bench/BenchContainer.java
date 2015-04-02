@@ -262,6 +262,7 @@ public class BenchContainer extends Container
                 }
             }
         }
+        loadCraftGridFromTileEntity();
     }
 
     /**
@@ -273,7 +274,10 @@ public class BenchContainer extends Container
     public void onCraftMatrixChanged(IInventory inventory)
     {
         craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
-        if (!bench.getWorldObj().isRemote && !loading) saveCraftGridToTileEntity();
+        if (!bench.getWorldObj().isRemote && !loading)
+        {
+            saveCraftGridToTileEntity();
+        }
     }
 
     /**
