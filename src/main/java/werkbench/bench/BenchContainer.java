@@ -39,7 +39,7 @@ public class BenchContainer extends Container
         loadCraftGridFromTileEntity();
 
         bindPlayerInventory(inventoryPlayer);
-        bindCraftGrid(this.bench);
+        bindCraftGrid();
 
         if (this.bench.getHasLeftChest())
         {
@@ -62,11 +62,6 @@ public class BenchContainer extends Container
             }
         }
 
-        // Add the crafting output to the right side
-        // This line saves and syncs the craftgrid perfectly, but doesn't display the output clientside
-        //addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench, this.craftResult, 0, 253, 70));
-        // If I switch it to use the craftMatrix rather than the bench tileEntity (and below in the bindCraftGrid method), it displays the output just fine clientside
-        // but then it doesn't sync...nicely...I'd have to save the craftmatrix back to the TE, but load/update if the TE had changed...it gets hairy.
         addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
     }
 
@@ -75,7 +70,7 @@ public class BenchContainer extends Container
      *
      * @param bench the bench TileEntity
      */
-    private void bindCraftGrid(BenchTileEntity bench)
+    private void bindCraftGrid()
     {
         int slot, x, y;
         for (int i = 0; i < 3; ++i)
@@ -85,9 +80,7 @@ public class BenchContainer extends Container
                 slot = j + i * 3;
                 x = 184 + j * 18;
                 y = 52 + i * 18;
-                //addSlotToContainer(new Slot(bench, slot, x, y));
 
-                // ..as long as I also set this to the craftMatrix, it updates clientside
                 addSlotToContainer(new Slot(this.craftMatrix, slot, x, y));
             }
         }
@@ -262,6 +255,7 @@ public class BenchContainer extends Container
                 }
             }
         }
+        loadCraftGridFromTileEntity();
     }
 
     /**
@@ -273,71 +267,28 @@ public class BenchContainer extends Container
     public void onCraftMatrixChanged(IInventory inventory)
     {
         craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
-        if (!bench.getWorldObj().isRemote && !loading) saveCraftGridToTileEntity();
+        if (!bench.getWorldObj().isRemote && !loading)
+        {
+            saveCraftGridToTileEntity();
+        }
     }
 
     /**
-     * Called when a player shift-clicks on a slot.
+     * Shift click transfer mechanic
      *
-     * Shift clicking currently ignores the first slot: http://pics.jakimfett.com/2015-01-17_21-05-09.png
-     *
-     * @param player EntityPlayer object
+     * @param player the player object
      * @param slotID int ID of the slot
-     * @return ItemStack for the slotID
+     * @return itemstack from the slot
      */
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
     {
-        ItemStack itemstack = null;
-        Slot slot = (Slot) this.inventorySlots.get(slotID);
+        // @TODO - implement shift clicking
+        // I've opted to remove this for now.
+        // Shift clicking is difficult for me to get working well in most ideal case,
+        // and this expanded craft grid has so much to take into account.
 
-        if (slot != null && slot.getHasStack())
-        {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-
-            if (slotID == 0)
-            {
-                if (!this.mergeItemStack(itemstack1, 9, 46, true))
-                {
-                    return null;
-                }
-
-                slot.onSlotChange(itemstack1, itemstack);
-            } else if (slotID >= 10 && slotID < 37)
-            {
-                if (!this.mergeItemStack(itemstack1, 37, 46, false))
-                {
-                    return null;
-                }
-            } else if (slotID >= 37 && slotID < 46)
-            {
-                if (!this.mergeItemStack(itemstack1, 10, 37, false))
-                {
-                    return null;
-                }
-            } else if (!this.mergeItemStack(itemstack1, 10, 46, false))
-            {
-                return null;
-            }
-
-            if (itemstack1.stackSize == 0)
-            {
-                slot.putStack((ItemStack) null);
-            } else
-            {
-                slot.onSlotChanged();
-            }
-
-            if (itemstack1.stackSize == itemstack.stackSize)
-            {
-                return null;
-            }
-
-            slot.onPickupFromSlot(player, itemstack1);
-        }
-
-        return itemstack;
+        return null;
     }
 
 }

@@ -22,12 +22,53 @@ import werkbench.reference.Compendium;
 
 public class BenchBlock extends BlockContainer
 {
+    // @TODO - override breakBlock to make the TileEntity drop the inventory
     public BenchBlock()
     {
         super(Material.wood);
         setCreativeTab(CreativeTabs.tabDecorations);
         setStepSound(Block.soundTypeWood);
+        setBlockName(Compendium.Naming.id);
         textureName = Compendium.Naming.id + ":werkBenchIcon";
+    }
+
+    /**
+     * Create the tileEntity
+     *
+     * @param world game world object
+     * @param meta  block metadata
+     * @return TileEntity
+     */
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta)
+    {
+        return new BenchTileEntity();
+    }
+
+    /**
+     * Gets the texture, given a side
+     *
+     * @param side the block side
+     * @param meta the block metadata
+     * @return IIcon
+     */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(int side, int meta)
+    {
+        return blockIcon;
+    }
+
+    @Override
+    public int getRenderType()
+    {
+        return CommonProxy.RENDER_ID;
+    }
+
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
     }
 
     /**
@@ -64,64 +105,6 @@ public class BenchBlock extends BlockContainer
     }
 
     /**
-     * Create the tileEntity
-     *
-     * @param world game world object
-     * @param meta  block metadata
-     * @return TileEntity
-     */
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
-        return new BenchTileEntity();
-    }
-
-    /**
-     * Gets the texture, given a side
-     *
-     * @param side the block side
-     * @param meta the block metadata
-     * @return IIcon
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta)
-    {
-        return blockIcon;
-    }
-
-    /**
-     * Register the block icons for top, sides, front, and bottom
-     *
-     * @param iconRegister object for icon registration
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
-    {
-        this.blockIcon = iconRegister.registerIcon(this.getTextureName());
-    }
-
-    /**
-     * Check if changedBlock is a chest, update GUI to reflect this
-     *
-     * @param world        the world object
-     * @param x            the changed block's x coordinate
-     * @param y            the changed block's y coordinate
-     * @param z            the changed block's z coordinate
-     * @param changedBlock the block object of whatever changed
-     */
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block changedBlock)
-    {
-        TileEntity potentialBench = world.getTileEntity(x, y, z);
-        if (potentialBench instanceof BenchTileEntity)
-        {
-            ((BenchTileEntity)potentialBench).updateSideChecks();
-        }
-    }
-
-    /**
      * Set the direction the block is facing
      *
      * @param world        the world object
@@ -139,6 +122,7 @@ public class BenchBlock extends BlockContainer
         int facing = MathHelper.floor_double(livingEntity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         world.setBlockMetadataWithNotify(x, y, z, facing, 2);
     }
+
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta)
@@ -166,16 +150,35 @@ public class BenchBlock extends BlockContainer
         }
     }
 
+    /**
+     * Check if changedBlock is a chest, update GUI to reflect this
+     *
+     * @param world        the world object
+     * @param x            the changed block's x coordinate
+     * @param y            the changed block's y coordinate
+     * @param z            the changed block's z coordinate
+     * @param changedBlock the block object of whatever changed
+     */
     @Override
-    public int getRenderType()
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block changedBlock)
     {
-        return CommonProxy.RENDER_ID;
+        TileEntity potentialBench = world.getTileEntity(x, y, z);
+        if (potentialBench instanceof BenchTileEntity)
+        {
+            ((BenchTileEntity) potentialBench).updateSideChecks();
+        }
     }
 
+    /**
+     * Register the block icons for top, sides, front, and bottom
+     *
+     * @param iconRegister object for icon registration
+     */
     @Override
-    public boolean isOpaqueCube()
+    @SideOnly(Side.CLIENT)
+    public void registerBlockIcons(IIconRegister iconRegister)
     {
-        return false;
+        this.blockIcon = iconRegister.registerIcon(this.getTextureName());
     }
 
     @Override
