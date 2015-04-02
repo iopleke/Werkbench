@@ -25,6 +25,7 @@ public class BenchBlock extends BlockContainer
         super(Material.wood);
         setCreativeTab(CreativeTabs.tabDecorations);
         setStepSound(Block.soundTypeWood);
+        setBlockName(Compendium.Naming.id);
         textureName = Compendium.Naming.id + ":werkBenchIcon";
     }
 
