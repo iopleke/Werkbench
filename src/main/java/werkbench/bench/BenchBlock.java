@@ -20,6 +20,7 @@ import werkbench.reference.Compendium;
 
 public class BenchBlock extends BlockContainer
 {
+    // @TODO - override breakBlock to make the TileEntity drop the inventory
     public BenchBlock()
     {
         super(Material.wood);
@@ -27,6 +28,45 @@ public class BenchBlock extends BlockContainer
         setStepSound(Block.soundTypeWood);
         setBlockName(Compendium.Naming.id);
         textureName = Compendium.Naming.id + ":werkBenchIcon";
+    }
+
+    /**
+     * Create the tileEntity
+     *
+     * @param world game world object
+     * @param meta  block metadata
+     * @return TileEntity
+     */
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta)
+    {
+        return new BenchTileEntity();
+    }
+
+    /**
+     * Gets the texture, given a side
+     *
+     * @param side the block side
+     * @param meta the block metadata
+     * @return IIcon
+     */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(int side, int meta)
+    {
+        return blockIcon;
+    }
+
+    @Override
+    public int getRenderType()
+    {
+        return CommonProxy.RENDER_ID;
+    }
+
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
     }
 
     /**
@@ -63,42 +103,22 @@ public class BenchBlock extends BlockContainer
     }
 
     /**
-     * Create the tileEntity
+     * Set the direction the block is facing
      *
-     * @param world game world object
-     * @param meta  block metadata
-     * @return TileEntity
+     * @param world        the world object
+     * @param x            the changed block's x coordinate
+     * @param y            the changed block's y coordinate
+     * @param z            the changed block's z coordinate
+     * @param livingEntity entity that placed the block
+     * @param itemStack    the itemstack used to place the block
      */
     @Override
-    public TileEntity createNewTileEntity(World world, int meta)
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase livingEntity, ItemStack itemStack)
     {
-        return new BenchTileEntity();
-    }
+        super.onBlockPlacedBy(world, x, y, z, livingEntity, itemStack);
 
-    /**
-     * Gets the texture, given a side
-     *
-     * @param side the block side
-     * @param meta the block metadata
-     * @return IIcon
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta)
-    {
-        return blockIcon;
-    }
-
-    /**
-     * Register the block icons for top, sides, front, and bottom
-     *
-     * @param iconRegister object for icon registration
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
-    {
-        this.blockIcon = iconRegister.registerIcon(this.getTextureName());
+        int facing = MathHelper.floor_double(livingEntity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+        world.setBlockMetadataWithNotify(x, y, z, facing, 2);
     }
 
     /**
@@ -121,34 +141,15 @@ public class BenchBlock extends BlockContainer
     }
 
     /**
-     * Set the direction the block is facing
+     * Register the block icons for top, sides, front, and bottom
      *
-     * @param world        the world object
-     * @param x            the changed block's x coordinate
-     * @param y            the changed block's y coordinate
-     * @param z            the changed block's z coordinate
-     * @param livingEntity entity that placed the block
-     * @param itemStack    the itemstack used to place the block
+     * @param iconRegister object for icon registration
      */
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase livingEntity, ItemStack itemStack)
+    @SideOnly(Side.CLIENT)
+    public void registerBlockIcons(IIconRegister iconRegister)
     {
-        super.onBlockPlacedBy(world, x, y, z, livingEntity, itemStack);
-
-        int facing = MathHelper.floor_double(livingEntity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-        world.setBlockMetadataWithNotify(x, y, z, facing, 2);
-    }
-
-    @Override
-    public int getRenderType()
-    {
-        return CommonProxy.RENDER_ID;
-    }
-
-    @Override
-    public boolean isOpaqueCube()
-    {
-        return false;
+        this.blockIcon = iconRegister.registerIcon(this.getTextureName());
     }
 
     @Override
