@@ -8,7 +8,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -115,7 +117,7 @@ public class BenchBlock extends BlockContainer
         TileEntity potentialBench = world.getTileEntity(x, y, z);
         if (potentialBench instanceof BenchTileEntity)
         {
-            ((BenchTileEntity) potentialBench).updateSideChecks();
+            ((BenchTileEntity)potentialBench).updateSideChecks();
         }
     }
 
@@ -136,6 +138,32 @@ public class BenchBlock extends BlockContainer
 
         int facing = MathHelper.floor_double(livingEntity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         world.setBlockMetadataWithNotify(x, y, z, facing, 2);
+    }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta)
+    {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof IInventory)
+        {
+            IInventory inventory = (IInventory)te;
+            for (int i = 0; i < inventory.getSizeInventory(); i++)
+            {
+                ItemStack stack = inventory.getStackInSlotOnClosing(i);
+                if (stack != null)
+                {
+                    float spawnX = x + world.rand.nextFloat();
+                    float spawnY = y + world.rand.nextFloat();
+                    float spawnZ = z + world.rand.nextFloat();
+                    EntityItem droppedItem = new EntityItem(world, spawnX, spawnY, spawnZ, stack);
+                    float scale = 0.05F;
+                    droppedItem.motionX = (-0.5F + world.rand.nextFloat()) * scale;
+                    droppedItem.motionY = (4 + world.rand.nextFloat()) * scale;
+                    droppedItem.motionZ = (-0.5F + world.rand.nextFloat()) * scale;
+                    world.spawnEntityInWorld(droppedItem);
+                }
+            }
+        }
     }
 
     @Override
