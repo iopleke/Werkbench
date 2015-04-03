@@ -12,19 +12,22 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import werkbench.reference.Compendium;
+import werkbench.reference.Config;
 
 public class BenchTileEntity extends TileEntity implements IInventory
 {
     private TileEntityChest chestLeft;
     private final Map<ForgeDirection, Boolean> chestOnSide = new EnumMap<ForgeDirection, Boolean>(ForgeDirection.class);
     private TileEntityChest chestRight;
+    private int selectedWerkspace;
 
     // The inventory is a 3x3 grid (for crafting)
-    public ItemStack[] craftGrid = new ItemStack[9];
+    public ItemStack[][] craftGrid = new ItemStack[Config.werkspaceCount][9];
 
     public BenchTileEntity()
     {
         super();
+        selectedWerkspace = 0;
         for (ForgeDirection VALID_DIRECTION : ForgeDirection.VALID_DIRECTIONS)
         {
             chestOnSide.put(VALID_DIRECTION, false);
@@ -57,18 +60,18 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public ItemStack decrStackSize(int slot, int amount)
     {
-        ItemStack item = this.craftGrid[slot];
+        ItemStack item = this.craftGrid[selectedWerkspace][slot];
         if (item != null)
         {
             if (item.stackSize <= amount)
             {
-                this.craftGrid[slot] = null;
+                this.craftGrid[selectedWerkspace][slot] = null;
             } else
             {
-                item = this.craftGrid[slot].splitStack(amount);
-                if (this.craftGrid[slot].stackSize < 1)
+                item = this.craftGrid[selectedWerkspace][slot].splitStack(amount);
+                if (this.craftGrid[selectedWerkspace][slot].stackSize < 1)
                 {
-                    this.craftGrid[slot] = null;
+                    this.craftGrid[selectedWerkspace][slot] = null;
                 }
             }
             markDirty();
@@ -264,7 +267,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public ItemStack getStackInSlot(int slot)
     {
-        return craftGrid[slot];
+        return craftGrid[selectedWerkspace][slot];
     }
 
     /**
@@ -276,8 +279,8 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public ItemStack getStackInSlotOnClosing(int slot)
     {
-        ItemStack stack = craftGrid[slot];
-        craftGrid[slot] = null;
+        ItemStack stack = craftGrid[selectedWerkspace][slot];
+        craftGrid[selectedWerkspace][slot] = null;
         return stack;
     }
 
@@ -326,20 +329,21 @@ public class BenchTileEntity extends TileEntity implements IInventory
     /**
      * Read saved values from NBT
      *
-     * @param nbttagcompound
+     * @param nbtTag
      */
     @Override
-    public void readFromNBT(NBTTagCompound nbttagcompound)
+    public void readFromNBT(NBTTagCompound nbtTag)
     {
-        super.readFromNBT(nbttagcompound);
+        super.readFromNBT(nbtTag);
 
-        NBTTagList nbttaglist = nbttagcompound.getTagList("BenchInventory", Constants.NBT.TAG_COMPOUND);
-
-        for (int i = 0; i < craftGrid.length; i++)
+        for (int s = 0; s < Config.werkspaceCount; s++)
         {
-            craftGrid[i] = ItemStack.loadItemStackFromNBT(nbttaglist.getCompoundTagAt(i));
+            NBTTagList nbtList = nbtTag.getTagList("BenchInventory" + s, Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < craftGrid.length; i++)
+            {
+                craftGrid[s][i] = ItemStack.loadItemStackFromNBT(nbtList.getCompoundTagAt(i));
+            }
         }
-
     }
 
     /**
@@ -351,7 +355,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack)
     {
-        craftGrid[slot] = stack;
+        craftGrid[selectedWerkspace][slot] = stack;
         markDirty();
     }
 
@@ -392,18 +396,21 @@ public class BenchTileEntity extends TileEntity implements IInventory
         super.writeToNBT(nbttagcompound);
         NBTTagList nbttaglist = new NBTTagList();
 
-        for (ItemStack stack : craftGrid)
+        for (int s = 0; s < Config.werkspaceCount; s++)
         {
-            if (stack != null)
+            for (ItemStack stack : craftGrid[s])
             {
-                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                stack.writeToNBT(nbttagcompound1);
-                nbttaglist.appendTag(nbttagcompound1);
-            } else
-            {
-                nbttaglist.appendTag(new NBTTagCompound());
+                if (stack != null)
+                {
+                    NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+                    stack.writeToNBT(nbttagcompound1);
+                    nbttaglist.appendTag(nbttagcompound1);
+                } else
+                {
+                    nbttaglist.appendTag(new NBTTagCompound());
+                }
             }
+            nbttagcompound.setTag("BenchInventory" + s, nbttaglist);
         }
-        nbttagcompound.setTag("BenchInventory", nbttaglist);
     }
 }
