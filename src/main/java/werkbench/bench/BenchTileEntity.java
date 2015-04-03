@@ -247,6 +247,11 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return chestRight;
     }
 
+    public int getSelectedWerkspace()
+    {
+        return this.selectedWerkspace;
+    }
+
     /**
      * Get the size of the inventory
      *
@@ -295,6 +300,18 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return false;
     }
 
+    public void incrementSelectedWorkspace()
+    {
+        if (selectedWerkspace < craftGrid.length - 1)
+        {
+            selectedWerkspace++;
+        } else
+        {
+            selectedWerkspace = 0;
+        }
+        System.out.println("Selected werkspace is: " + selectedWerkspace);
+    }
+
     /**
      * Can an item be put into the slot
      *
@@ -335,6 +352,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     public void readFromNBT(NBTTagCompound nbtTag)
     {
         super.readFromNBT(nbtTag);
+        selectedWerkspace = nbtTag.getInteger("selectedWerkspace");
 
         for (int s = 0; s < Config.werkspaceCount; s++)
         {
@@ -395,6 +413,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     {
         super.writeToNBT(nbttagcompound);
         NBTTagList nbttaglist = new NBTTagList();
+        nbttagcompound.setInteger("selectedWerkspace", selectedWerkspace);
 
         for (int s = 0; s < Config.werkspaceCount; s++)
         {

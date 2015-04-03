@@ -14,7 +14,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 
-public class BenchContainer extends Container
+public final class BenchContainer extends Container
 {
 
     private final BenchTileEntity bench;
@@ -23,6 +23,7 @@ public class BenchContainer extends Container
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
     boolean loading = false;
+    int selectedWerkspace;
 
     /**
      * Container object for the workbench
@@ -35,6 +36,7 @@ public class BenchContainer extends Container
     {
         this.world = world;
         this.bench = bench;
+        this.selectedWerkspace = bench.getSelectedWerkspace();
 
         loadCraftGridFromTileEntity();
 
@@ -203,7 +205,7 @@ public class BenchContainer extends Container
         }
     }
 
-    private void saveCraftGridToTileEntity()
+    public void saveCraftGridToTileEntity()
     {
         for (int s = 0; s < bench.getSizeInventory(); s++)
         {
@@ -211,7 +213,14 @@ public class BenchContainer extends Container
         }
     }
 
-    private void loadCraftGridFromTileEntity()
+    public void resetCraftingGrid()
+    {
+        craftMatrix = new InventoryCrafting(this, 3, 3);
+        this.selectedWerkspace = bench.getSelectedWerkspace();
+        saveCraftGridToTileEntity();
+    }
+
+    public void loadCraftGridFromTileEntity()
     {
         loading = true;
         for (int s = 0; s < bench.getSizeInventory(); s++)
