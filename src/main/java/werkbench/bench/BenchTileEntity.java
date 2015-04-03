@@ -255,7 +255,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public int getSizeInventory()
     {
-        return craftGrid.length;
+        return craftGrid[selectedWerkspace].length;
     }
 
     /**
@@ -339,7 +339,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
         for (int s = 0; s < Config.werkspaceCount; s++)
         {
             NBTTagList nbtList = nbtTag.getTagList("BenchInventory" + s, Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < craftGrid.length; i++)
+            for (int i = 0; i < craftGrid[s].length; i++)
             {
                 craftGrid[s][i] = ItemStack.loadItemStackFromNBT(nbtList.getCompoundTagAt(i));
             }
