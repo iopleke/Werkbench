@@ -1,6 +1,5 @@
 package werkbench.bench;
 
-import codechicken.lib.inventory.InventoryUtils;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,7 +57,23 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public ItemStack decrStackSize(int slot, int amount)
     {
-        return InventoryUtils.decrStackSize(this, slot, amount);
+        ItemStack item = this.craftGrid[slot];
+        if (item != null)
+        {
+            if (item.stackSize <= amount)
+            {
+                this.craftGrid[slot] = null;
+            } else
+            {
+                item = this.craftGrid[slot].splitStack(amount);
+                if (this.craftGrid[slot].stackSize < 1)
+                {
+                    this.craftGrid[slot] = null;
+                }
+            }
+            markDirty();
+        }
+        return item;
     }
 
     /**
@@ -261,7 +276,9 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public ItemStack getStackInSlotOnClosing(int slot)
     {
-        return InventoryUtils.getStackInSlotOnClosing(this, slot);
+        ItemStack stack = craftGrid[slot];
+        craftGrid[slot] = null;
+        return stack;
     }
 
     /**
