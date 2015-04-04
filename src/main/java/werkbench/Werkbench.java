@@ -16,6 +16,7 @@ import werkbench.bench.BenchBlock;
 import werkbench.bench.BenchTileEntity;
 import werkbench.handler.GUIHandler;
 import werkbench.helper.LogHelper;
+import werkbench.network.MessageHandler;
 import werkbench.proxy.CommonProxy;
 import werkbench.reference.Compendium;
 import werkbench.reference.Config;
@@ -60,6 +61,8 @@ public class Werkbench
 
         LogHelper.debug("Registering GUI handler for werkbench...");
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
+
+        MessageHandler.init();
 
         LogHelper.debug("Werkbench done loading");
     }
