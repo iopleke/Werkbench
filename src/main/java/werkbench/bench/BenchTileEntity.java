@@ -7,10 +7,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
+import werkbench.network.MessageHandler;
+import werkbench.network.message.BenchUpdateMessage;
 import werkbench.reference.Compendium;
 import werkbench.reference.Config;
 
@@ -77,6 +80,13 @@ public class BenchTileEntity extends TileEntity implements IInventory
             markDirty();
         }
         return item;
+    }
+
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        this.writeToNBT(new NBTTagCompound());
+        return MessageHandler.INSTANCE.getPacketFrom(new BenchUpdateMessage(this));
     }
 
     /**
@@ -300,6 +310,11 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return false;
     }
 
+    public void setSelectedWorkspace(int selectedWerkspace)
+    {
+        this.selectedWerkspace = selectedWerkspace;
+    }
+
     public void incrementSelectedWorkspace()
     {
         if (selectedWerkspace < craftGrid.length - 1)
@@ -309,7 +324,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
         {
             selectedWerkspace = 0;
         }
-        System.out.println("Selected werkspace is: " + selectedWerkspace);
     }
 
     /**

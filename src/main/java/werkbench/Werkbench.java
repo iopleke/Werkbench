@@ -62,6 +62,7 @@ public class Werkbench
         LogHelper.debug("Registering GUI handler for werkbench...");
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 
+        // Register packet handler
         MessageHandler.init();
 
         LogHelper.debug("Werkbench done loading");
