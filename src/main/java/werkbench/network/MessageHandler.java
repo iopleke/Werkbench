@@ -19,7 +19,8 @@ public class MessageHandler implements IMessageHandler
 
     public static void init()
     {
-        INSTANCE.registerMessage(BenchUpdateMessage.class, BenchUpdateMessage.class, 1, Side.CLIENT);
+        int packetID = 0;
+        INSTANCE.registerMessage(BenchUpdateMessage.class, BenchUpdateMessage.class, packetID, Side.CLIENT);
     }
 
     @Override
