@@ -12,31 +12,25 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.world.World;
 
 public final class BenchContainer extends Container
 {
 
     private final BenchTileEntity bench;
 
-    private final World world;
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
     boolean loading = false;
-    int selectedWerkspace;
 
     /**
      * Container object for the workbench
      *
      * @param inventoryPlayer the player's inventory
      * @param bench           the bench TileEntity
-     * @param world           the world object
      */
-    public BenchContainer(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
+    public BenchContainer(InventoryPlayer inventoryPlayer, BenchTileEntity bench)
     {
-        this.world = world;
         this.bench = bench;
-        this.selectedWerkspace = bench.getSelectedWerkspace();
 
         loadCraftGridFromTileEntity();
 
@@ -216,7 +210,6 @@ public final class BenchContainer extends Container
     public void resetCraftingGrid()
     {
         craftMatrix = new InventoryCrafting(this, 3, 3);
-        this.selectedWerkspace = bench.getSelectedWerkspace();
         saveCraftGridToTileEntity();
     }
 
@@ -275,7 +268,7 @@ public final class BenchContainer extends Container
     @Override
     public void onCraftMatrixChanged(IInventory inventory)
     {
-        craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world));
+        craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.bench.getWorldObj()));
         if (!bench.getWorldObj().isRemote && !loading)
         {
             saveCraftGridToTileEntity();

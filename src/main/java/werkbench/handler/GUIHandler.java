@@ -35,7 +35,7 @@ public class GUIHandler implements IGuiHandler
         {
             if (tileEntity instanceof BenchTileEntity)
             {
-                return new BenchContainer(player.inventory, (BenchTileEntity) tileEntity, world);
+                return new BenchContainer(player.inventory, (BenchTileEntity) tileEntity);
 
             }
         }

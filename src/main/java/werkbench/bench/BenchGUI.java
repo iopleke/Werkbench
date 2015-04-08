@@ -14,7 +14,7 @@ public class BenchGUI extends GuiContainer
 
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
-        super(new BenchContainer(inventoryPlayer, bench, world));
+        super(new BenchContainer(inventoryPlayer, bench));
         this.bench = bench;
 
         this.xSize = 420;
