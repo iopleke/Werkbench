@@ -201,6 +201,10 @@ public final class BenchContainer extends Container
 
     public void saveCraftGridToTileEntity()
     {
+        if (bench.getWorldObj().isRemote && !loading)
+        {
+            bench.getDescriptionPacket();
+        }
         for (int s = 0; s < bench.getSizeInventory(); s++)
         {
             bench.setInventorySlotContents(s, craftMatrix.getStackInSlot(s));
@@ -215,6 +219,10 @@ public final class BenchContainer extends Container
 
     public void loadCraftGridFromTileEntity()
     {
+        if (bench.getWorldObj().isRemote && !loading)
+        {
+            bench.getDescriptionPacket();
+        }
         loading = true;
         for (int s = 0; s < bench.getSizeInventory(); s++)
         {
@@ -268,6 +276,10 @@ public final class BenchContainer extends Container
     @Override
     public void onCraftMatrixChanged(IInventory inventory)
     {
+        if (bench.getWorldObj().isRemote && !loading)
+        {
+            bench.getDescriptionPacket();
+        }
         craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.bench.getWorldObj()));
         if (!bench.getWorldObj().isRemote && !loading)
         {
