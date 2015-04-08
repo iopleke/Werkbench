@@ -1,6 +1,6 @@
 package werkbench.network.message;
 
-import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -41,7 +41,7 @@ public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdate
     @Override
     public IMessage onMessage(BenchUpdateMessage message, MessageContext ctx)
     {
-        TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.x, message.y, message.z);
+        TileEntity tileEntity = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().getTileEntity(message.x, message.y, message.z);
         if (tileEntity instanceof BenchTileEntity)
         {
             ((BenchTileEntity) tileEntity).setSelectedWorkspace(message.selectedWerkspace);
