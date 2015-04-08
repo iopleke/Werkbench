@@ -41,10 +41,10 @@ public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdate
     @Override
     public IMessage onMessage(BenchUpdateMessage message, MessageContext ctx)
     {
-        TileEntity tile = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.x, message.y, message.z);
-        if (tile instanceof BenchTileEntity)
+        TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.x, message.y, message.z);
+        if (tileEntity instanceof BenchTileEntity)
         {
-            ((BenchTileEntity) tile).setSelectedWorkspace(selectedWerkspace);
+            ((BenchTileEntity) tileEntity).setSelectedWorkspace(message.selectedWerkspace);
         }
         return null;
     }
