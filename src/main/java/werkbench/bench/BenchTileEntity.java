@@ -86,7 +86,8 @@ public class BenchTileEntity extends TileEntity implements IInventory
     public Packet getDescriptionPacket()
     {
         this.writeToNBT(new NBTTagCompound());
-        return MessageHandler.INSTANCE.getPacketFrom(new BenchUpdateMessage(this));
+        MessageHandler.INSTANCE.sendToServer(new BenchUpdateMessage(this));
+        return null;
     }
 
     /**
@@ -324,6 +325,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
         {
             selectedWerkspace = 0;
         }
+        getDescriptionPacket();
     }
 
     /**
