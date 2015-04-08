@@ -328,6 +328,18 @@ public class BenchTileEntity extends TileEntity implements IInventory
         getDescriptionPacket();
     }
 
+    public void decrementSelectedWorkspace()
+    {
+        if (selectedWerkspace > 0)
+        {
+            selectedWerkspace--;
+        } else
+        {
+            selectedWerkspace = craftGrid.length - 1;
+        }
+        getDescriptionPacket();
+    }
+
     /**
      * Can an item be put into the slot
      *
