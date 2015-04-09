@@ -201,10 +201,6 @@ public final class BenchContainer extends Container
 
     public void saveCraftGridToTileEntity()
     {
-        if (bench.getWorldObj().isRemote && !loading)
-        {
-            bench.getDescriptionPacket();
-        }
         for (int s = 0; s < bench.getSizeInventory(); s++)
         {
             bench.setInventorySlotContents(s, craftMatrix.getStackInSlot(s));
