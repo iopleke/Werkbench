@@ -21,7 +21,7 @@ import werkbench.proxy.CommonProxy;
 import werkbench.reference.Compendium;
 import werkbench.reference.Config;
 
-@Mod(modid = Compendium.Naming.id)
+@Mod(modid = Compendium.Naming.id, name = Compendium.Naming.name, version = Compendium.Version.full, useMetadata = false, acceptedMinecraftVersions = "[1.7.10,)", dependencies = "required-after:Forge@[10.13.2.1291,)")
 public class Werkbench
 {
 
