@@ -15,22 +15,19 @@ import net.minecraftforge.common.util.ForgeDirection;
 import werkbench.network.MessageHandler;
 import werkbench.network.message.BenchUpdateMessage;
 import werkbench.reference.Compendium;
-import werkbench.reference.Config;
 
 public class BenchTileEntity extends TileEntity implements IInventory
 {
     private TileEntityChest chestLeft;
     private final Map<ForgeDirection, Boolean> chestOnSide = new EnumMap<ForgeDirection, Boolean>(ForgeDirection.class);
     private TileEntityChest chestRight;
-    private int selectedWerkspace;
 
     // The inventory is a 3x3 grid (for crafting)
-    public ItemStack[][] craftGrid = new ItemStack[Config.werkspaceCount][9];
+    public ItemStack[] craftGrid = new ItemStack[9];
 
     public BenchTileEntity()
     {
         super();
-        selectedWerkspace = 0;
         for (ForgeDirection VALID_DIRECTION : ForgeDirection.VALID_DIRECTIONS)
         {
             chestOnSide.put(VALID_DIRECTION, false);
@@ -63,18 +60,18 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public ItemStack decrStackSize(int slot, int amount)
     {
-        ItemStack item = this.craftGrid[selectedWerkspace][slot];
+        ItemStack item = this.craftGrid[slot];
         if (item != null)
         {
             if (item.stackSize <= amount)
             {
-                this.craftGrid[selectedWerkspace][slot] = null;
+                this.craftGrid[slot] = null;
             } else
             {
-                item = this.craftGrid[selectedWerkspace][slot].splitStack(amount);
-                if (this.craftGrid[selectedWerkspace][slot].stackSize < 1)
+                item = this.craftGrid[slot].splitStack(amount);
+                if (this.craftGrid[slot].stackSize < 1)
                 {
-                    this.craftGrid[selectedWerkspace][slot] = null;
+                    this.craftGrid[slot] = null;
                 }
             }
             markDirty();
@@ -258,11 +255,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return chestRight;
     }
 
-    public int getSelectedWerkspace()
-    {
-        return this.selectedWerkspace;
-    }
-
     /**
      * Get the size of the inventory
      *
@@ -271,7 +263,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public int getSizeInventory()
     {
-        return craftGrid[selectedWerkspace].length;
+        return craftGrid.length;
     }
 
     /**
@@ -283,7 +275,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public ItemStack getStackInSlot(int slot)
     {
-        return craftGrid[selectedWerkspace][slot];
+        return craftGrid[slot];
     }
 
     /**
@@ -295,8 +287,8 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public ItemStack getStackInSlotOnClosing(int slot)
     {
-        ItemStack stack = craftGrid[selectedWerkspace][slot];
-        craftGrid[selectedWerkspace][slot] = null;
+        ItemStack stack = craftGrid[slot];
+        craftGrid[slot] = null;
         return stack;
     }
 
@@ -309,35 +301,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
     public boolean hasCustomInventoryName()
     {
         return false;
-    }
-
-    public void setSelectedWorkspace(int selectedWerkspace)
-    {
-        this.selectedWerkspace = selectedWerkspace;
-    }
-
-    public void incrementSelectedWorkspace()
-    {
-        if (selectedWerkspace < craftGrid.length - 1)
-        {
-            selectedWerkspace++;
-        } else
-        {
-            selectedWerkspace = 0;
-        }
-        getDescriptionPacket();
-    }
-
-    public void decrementSelectedWorkspace()
-    {
-        if (selectedWerkspace > 0)
-        {
-            selectedWerkspace--;
-        } else
-        {
-            selectedWerkspace = craftGrid.length - 1;
-        }
-        getDescriptionPacket();
     }
 
     /**
@@ -380,15 +343,10 @@ public class BenchTileEntity extends TileEntity implements IInventory
     public void readFromNBT(NBTTagCompound nbtTag)
     {
         super.readFromNBT(nbtTag);
-        selectedWerkspace = nbtTag.getInteger("selectedWerkspace");
-
-        for (int s = 0; s < Config.werkspaceCount; s++)
+        NBTTagList nbtList = nbtTag.getTagList("BenchInventory", Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < craftGrid.length; i++)
         {
-            NBTTagList nbtList = nbtTag.getTagList("BenchInventory" + s, Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < craftGrid[s].length; i++)
-            {
-                craftGrid[s][i] = ItemStack.loadItemStackFromNBT(nbtList.getCompoundTagAt(i));
-            }
+            craftGrid[i] = ItemStack.loadItemStackFromNBT(nbtList.getCompoundTagAt(i));
         }
     }
 
@@ -401,7 +359,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack)
     {
-        craftGrid[selectedWerkspace][slot] = stack;
+        craftGrid[slot] = stack;
         markDirty();
     }
 
@@ -441,23 +399,20 @@ public class BenchTileEntity extends TileEntity implements IInventory
     {
         super.writeToNBT(nbttagcompound);
         NBTTagList nbttaglist = new NBTTagList();
-        nbttagcompound.setInteger("selectedWerkspace", selectedWerkspace);
 
-        for (int s = 0; s < Config.werkspaceCount; s++)
+        for (ItemStack stack : craftGrid)
         {
-            for (ItemStack stack : craftGrid[s])
+            if (stack != null)
             {
-                if (stack != null)
-                {
-                    NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                    stack.writeToNBT(nbttagcompound1);
-                    nbttaglist.appendTag(nbttagcompound1);
-                } else
-                {
-                    nbttaglist.appendTag(new NBTTagCompound());
-                }
+                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+                stack.writeToNBT(nbttagcompound1);
+                nbttaglist.appendTag(nbttagcompound1);
+            } else
+            {
+                nbttaglist.appendTag(new NBTTagCompound());
             }
-            nbttagcompound.setTag("BenchInventory" + s, nbttaglist);
         }
+        nbttagcompound.setTag("BenchInventory", nbttaglist);
+
     }
 }

@@ -15,7 +15,6 @@ import werkbench.bench.BenchTileEntity;
 public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdateMessage, IMessage>
 {
     private int x, y, z;
-    private int selectedWerkspace;
 
     public BenchUpdateMessage()
     {
@@ -26,7 +25,6 @@ public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdate
         x = bench.xCoord;
         y = bench.yCoord;
         z = bench.zCoord;
-        selectedWerkspace = bench.getSelectedWerkspace();
     }
 
     @Override
@@ -35,7 +33,6 @@ public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdate
         x = buf.readInt();
         y = buf.readInt();
         z = buf.readInt();
-        selectedWerkspace = buf.readInt();
     }
 
     @Override
@@ -44,7 +41,7 @@ public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdate
         TileEntity tileEntity = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().getTileEntity(message.x, message.y, message.z);
         if (tileEntity instanceof BenchTileEntity)
         {
-            ((BenchTileEntity) tileEntity).setSelectedWorkspace(message.selectedWerkspace);
+            //((BenchTileEntity) tileEntity).setSelectedWorkspace(message.selectedWerkspace);
         }
         return null;
     }
@@ -55,6 +52,5 @@ public class BenchUpdateMessage implements IMessage, IMessageHandler<BenchUpdate
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
-        buf.writeInt(selectedWerkspace);
     }
 }

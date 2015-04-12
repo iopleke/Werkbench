@@ -1,6 +1,5 @@
 package werkbench.bench;
 
-import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.world.World;
@@ -34,45 +33,6 @@ public class BenchGUI extends GuiContainer
         return this.guiTop;
     }
 
-    public void drawHoverString(List list, int w, int h)
-    {
-        this.drawHoveringText(list, w, h, fontRendererObj);
-    }
-
-    @Override
-    public void mouseClicked(int x, int y, int button)
-    {
-        super.mouseClicked(x, y, button);
-
-        if (inLeftButton(x, y))
-        {
-            ((BenchContainer) inventorySlots).saveCraftGridToTileEntity();
-            bench.decrementSelectedWorkspace();
-            ((BenchContainer) inventorySlots).loadCraftGridFromTileEntity();
-            ((BenchContainer) inventorySlots).saveCraftGridToTileEntity();
-        } else if (inRightButton(x, y))
-        {
-            ((BenchContainer) inventorySlots).saveCraftGridToTileEntity();
-            bench.incrementSelectedWorkspace();
-            ((BenchContainer) inventorySlots).loadCraftGridFromTileEntity();
-            ((BenchContainer) inventorySlots).saveCraftGridToTileEntity();
-        }
-    }
-
-    public boolean inLeftButton(int mouseX, int mouseY)
-    {
-        int buttonWidth = 15;
-        int buttonHeight = 30;
-        return mouseX >= buttonLeftX && mouseX <= buttonLeftX + buttonWidth && mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
-    }
-
-    public boolean inRightButton(int mouseX, int mouseY)
-    {
-        int buttonWidth = 15;
-        int buttonHeight = 30;
-        return mouseX >= buttonRightX && mouseX <= buttonRightX + buttonWidth && mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
-    }
-
     @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int mousex, int mousey)
     {
@@ -80,13 +40,6 @@ public class BenchGUI extends GuiContainer
         int x = (width - xSize) / 2 + 122;
         int y = (height - ySize) / 2 + 40;
         drawTexturedModalRect(x, y, 0, 0, 176, 166);
-
-        buttonLeftX = x + 6;
-        buttonY = y + 24;
-
-        drawTexturedModalRect(buttonLeftX, buttonY, 0, 166, 15, 30);
-        buttonRightX = buttonLeftX + 20;
-        drawTexturedModalRect(buttonRightX, buttonY, 15, 166, 15, 30);
 
         if (bench.getHasLeftChest())
         {

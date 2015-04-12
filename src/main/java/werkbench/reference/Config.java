@@ -18,8 +18,6 @@ public class Config
     // turns on extra logging printouts
     public static boolean debugMode;
 
-    public static int werkspaceCount = 3;
-
     public static void init()
     {
 
