@@ -36,30 +36,16 @@ public final class BenchContainer extends Container
         loadCraftGridFromTileEntity();
 
         bindPlayerInventory(inventoryPlayer);
-        bindCraftGrid();
+        bindCraftGrid(inventoryPlayer);
 
-        if (this.bench.getLeftSideBlock() == AdjacentBlockType.CHEST)
+        if (bench.getLeftSideBlock() == AdjacentBlockType.CHEST)
         {
-            if (this.bench.chestIsDouble(this.bench.getLeftChestDirection()))
-            {
-                bindLeftChestDouble(this.bench);
-            } else
-            {
-                bindLeftChestSingle(this.bench);
-            }
+            bindLeftChest();
         }
-        if (this.bench.getRightSideBlock() == AdjacentBlockType.CHEST)
+        if (bench.getRightSideBlock() == AdjacentBlockType.CHEST)
         {
-            if (this.bench.chestIsDouble(this.bench.getRightChestDirection()))
-            {
-                bindRightChestDouble(this.bench);
-            } else
-            {
-                bindRightChestSingle(this.bench);
-            }
+            bindRightChest();
         }
-
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
     }
 
     /**
@@ -67,7 +53,14 @@ public final class BenchContainer extends Container
      *
      * @param bench the bench TileEntity
      */
-    private void bindCraftGrid()
+    private void bindCraftGrid(InventoryPlayer inventoryPlayer)
+    {
+        bindCraftGridInput();
+
+        bindCraftGridOutput(inventoryPlayer);
+    }
+
+    private void bindCraftGridInput()
     {
         int slot, x, y;
         for (int i = 0; i < 3; ++i)
@@ -80,6 +73,22 @@ public final class BenchContainer extends Container
 
                 addSlotToContainer(new Slot(this.craftMatrix, slot, x, y));
             }
+        }
+    }
+
+    private void bindCraftGridOutput(InventoryPlayer inventoryPlayer)
+    {
+        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
+    }
+
+    private void bindLeftChest()
+    {
+        if (bench.chestIsDouble(bench.getLeftChestDirection()))
+        {
+            bindLeftChestDouble(bench);
+        } else
+        {
+            bindLeftChestSingle(bench);
         }
     }
 
@@ -154,6 +163,17 @@ public final class BenchContainer extends Container
         }
     }
 
+    private void bindRightChest()
+    {
+        if (this.bench.chestIsDouble(this.bench.getRightChestDirection()))
+        {
+            bindRightChestDouble(this.bench);
+        } else
+        {
+            bindRightChestSingle(this.bench);
+        }
+    }
+
     private void bindRightChestDouble(BenchTileEntity bench)
     {
         bindRightChestSingle(bench);
@@ -200,34 +220,6 @@ public final class BenchContainer extends Container
         }
     }
 
-    public void saveCraftGridToTileEntity()
-    {
-        for (int s = 0; s < bench.getSizeInventory(); s++)
-        {
-            bench.setInventorySlotContents(s, craftMatrix.getStackInSlot(s));
-        }
-    }
-
-    public void resetCraftingGrid()
-    {
-        craftMatrix = new InventoryCrafting(this, 3, 3);
-        saveCraftGridToTileEntity();
-    }
-
-    public void loadCraftGridFromTileEntity()
-    {
-        if (bench.getWorldObj().isRemote && !loading)
-        {
-            bench.getDescriptionPacket();
-        }
-        loading = true;
-        for (int s = 0; s < bench.getSizeInventory(); s++)
-        {
-            craftMatrix.setInventorySlotContents(s, bench.getStackInSlot(s));
-        }
-        loading = false;
-    }
-
     /**
      * Determine if the player can interact with the container
      *
@@ -265,6 +257,20 @@ public final class BenchContainer extends Container
         loadCraftGridFromTileEntity();
     }
 
+    public void loadCraftGridFromTileEntity()
+    {
+        if (bench.getWorldObj().isRemote && !loading)
+        {
+            bench.getDescriptionPacket();
+        }
+        loading = true;
+        for (int s = 0; s < bench.getSizeInventory(); s++)
+        {
+            craftMatrix.setInventorySlotContents(s, bench.getStackInSlot(s));
+        }
+        loading = false;
+    }
+
     /**
      * Update the crafting result when the grid changes
      *
@@ -281,6 +287,20 @@ public final class BenchContainer extends Container
         if (!bench.getWorldObj().isRemote && !loading)
         {
             saveCraftGridToTileEntity();
+        }
+    }
+
+    public void resetCraftingGrid()
+    {
+        craftMatrix = new InventoryCrafting(this, 3, 3);
+        saveCraftGridToTileEntity();
+    }
+
+    public void saveCraftGridToTileEntity()
+    {
+        for (int s = 0; s < bench.getSizeInventory(); s++)
+        {
+            bench.setInventorySlotContents(s, craftMatrix.getStackInSlot(s));
         }
     }
 
