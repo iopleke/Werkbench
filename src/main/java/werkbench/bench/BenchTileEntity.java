@@ -36,16 +36,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     }
 
-    public boolean chestIsDouble(ForgeDirection direction)
-    {
-        TileEntity potentialChest = this.worldObj.getTileEntity(direction.offsetX + direction.offsetX + xCoord, direction.offsetY + direction.offsetY + yCoord, direction.offsetZ + direction.offsetZ + zCoord);
-        if (potentialChest instanceof TileEntityChest)
-        {
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public void closeInventory()
     {
@@ -80,14 +70,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return item;
     }
 
-    @Override
-    public Packet getDescriptionPacket()
-    {
-        this.writeToNBT(new NBTTagCompound());
-        MessageHandler.INSTANCE.sendToServer(new BenchUpdateMessage(this));
-        return null;
-    }
-
     /**
      * Check if the bench has a chest on a specific side
      *
@@ -99,50 +81,12 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return chestOnSide.get(direction);
     }
 
-    /**
-     * Check if the bench has a chest on the left side
-     *
-     * @return Enum
-     */
-    public Enum getLeftSideBlock()
+    @Override
+    public Packet getDescriptionPacket()
     {
-        int meta = this.getBlockMetadata();
-        switch (meta)
-        {
-            case 0:
-                return chestOnSide.get(ForgeDirection.EAST);
-            case 1:
-                return chestOnSide.get(ForgeDirection.SOUTH);
-            case 2:
-                return chestOnSide.get(ForgeDirection.WEST);
-            case 3:
-                return chestOnSide.get(ForgeDirection.NORTH);
-            default:
-                return AdjacentBlockType.EMPTY;
-        }
-    }
-
-    /**
-     * Check if the bench has a chest on the right side
-     *
-     * @return Enum
-     */
-    public Enum getRightSideBlock()
-    {
-        int meta = this.getBlockMetadata();
-        switch (meta)
-        {
-            case 0:
-                return chestOnSide.get(ForgeDirection.WEST);
-            case 1:
-                return chestOnSide.get(ForgeDirection.NORTH);
-            case 2:
-                return chestOnSide.get(ForgeDirection.EAST);
-            case 3:
-                return chestOnSide.get(ForgeDirection.SOUTH);
-            default:
-                return AdjacentBlockType.EMPTY;
-        }
+        this.writeToNBT(new NBTTagCompound());
+        MessageHandler.INSTANCE.sendToServer(new BenchUpdateMessage(this));
+        return null;
     }
 
     /**
@@ -219,6 +163,29 @@ public class BenchTileEntity extends TileEntity implements IInventory
     }
 
     /**
+     * Check if the bench has a chest on the left side
+     *
+     * @return Enum
+     */
+    public Enum getLeftSideBlock()
+    {
+        int meta = this.getBlockMetadata();
+        switch (meta)
+        {
+            case 0:
+                return chestOnSide.get(ForgeDirection.EAST);
+            case 1:
+                return chestOnSide.get(ForgeDirection.SOUTH);
+            case 2:
+                return chestOnSide.get(ForgeDirection.WEST);
+            case 3:
+                return chestOnSide.get(ForgeDirection.NORTH);
+            default:
+                return AdjacentBlockType.EMPTY;
+        }
+    }
+
+    /**
      * Get the ForgeDirection for the bench's right side
      *
      * @return ForgeDirection
@@ -254,6 +221,29 @@ public class BenchTileEntity extends TileEntity implements IInventory
             chestRight = null;
         }
         return chestRight;
+    }
+
+    /**
+     * Check if the bench has a chest on the right side
+     *
+     * @return Enum
+     */
+    public Enum getRightSideBlock()
+    {
+        int meta = this.getBlockMetadata();
+        switch (meta)
+        {
+            case 0:
+                return chestOnSide.get(ForgeDirection.WEST);
+            case 1:
+                return chestOnSide.get(ForgeDirection.NORTH);
+            case 2:
+                return chestOnSide.get(ForgeDirection.EAST);
+            case 3:
+                return chestOnSide.get(ForgeDirection.SOUTH);
+            default:
+                return AdjacentBlockType.EMPTY;
+        }
     }
 
     /**
@@ -301,6 +291,16 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public boolean hasCustomInventoryName()
     {
+        return false;
+    }
+
+    public boolean isChestDouble(ForgeDirection direction)
+    {
+        TileEntity potentialChest = this.worldObj.getTileEntity(direction.offsetX + direction.offsetX + xCoord, direction.offsetY + direction.offsetY + yCoord, direction.offsetZ + direction.offsetZ + zCoord);
+        if (potentialChest instanceof TileEntityChest)
+        {
+            return true;
+        }
         return false;
     }
 

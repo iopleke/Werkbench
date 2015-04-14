@@ -83,7 +83,7 @@ public final class BenchContainer extends Container
 
     private void bindLeftChest()
     {
-        if (bench.chestIsDouble(bench.getLeftChestDirection()))
+        if (bench.isChestDouble(bench.getLeftChestDirection()))
         {
             bindLeftChestDouble(bench);
         } else
@@ -165,7 +165,7 @@ public final class BenchContainer extends Container
 
     private void bindRightChest()
     {
-        if (this.bench.chestIsDouble(this.bench.getRightChestDirection()))
+        if (this.bench.isChestDouble(this.bench.getRightChestDirection()))
         {
             bindRightChestDouble(this.bench);
         } else
