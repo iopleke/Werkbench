@@ -15,11 +15,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 import werkbench.network.MessageHandler;
 import werkbench.network.message.BenchUpdateMessage;
 import werkbench.reference.Compendium;
+import werkbench.reference.Compendium.AdjacentBlockType;
 
 public class BenchTileEntity extends TileEntity implements IInventory
 {
     private TileEntityChest chestLeft;
-    private final Map<ForgeDirection, Boolean> chestOnSide = new EnumMap<ForgeDirection, Boolean>(ForgeDirection.class);
+    private final Map<ForgeDirection, Enum> chestOnSide = new EnumMap<ForgeDirection, Enum>(ForgeDirection.class);
     private TileEntityChest chestRight;
 
     // The inventory is a 3x3 grid (for crafting)
@@ -30,7 +31,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
         super();
         for (ForgeDirection VALID_DIRECTION : ForgeDirection.VALID_DIRECTIONS)
         {
-            chestOnSide.put(VALID_DIRECTION, false);
+            chestOnSide.put(VALID_DIRECTION, AdjacentBlockType.EMPTY);
         }
 
     }
@@ -91,9 +92,9 @@ public class BenchTileEntity extends TileEntity implements IInventory
      * Check if the bench has a chest on a specific side
      *
      * @param direction direction to check
-     * @return boolean if there's a chest on the given side
+     * @return Enum type for side
      */
-    public boolean getHasChestOnSide(ForgeDirection direction)
+    public Enum getBlockForDirection(ForgeDirection direction)
     {
         return chestOnSide.get(direction);
     }
@@ -101,9 +102,9 @@ public class BenchTileEntity extends TileEntity implements IInventory
     /**
      * Check if the bench has a chest on the left side
      *
-     * @return boolean
+     * @return Enum
      */
-    public boolean getHasLeftChest()
+    public Enum getLeftSideBlock()
     {
         int meta = this.getBlockMetadata();
         switch (meta)
@@ -117,16 +118,16 @@ public class BenchTileEntity extends TileEntity implements IInventory
             case 3:
                 return chestOnSide.get(ForgeDirection.NORTH);
             default:
-                return false;
+                return AdjacentBlockType.EMPTY;
         }
     }
 
     /**
      * Check if the bench has a chest on the right side
      *
-     * @return boolean
+     * @return Enum
      */
-    public boolean getHasRightChest()
+    public Enum getRightSideBlock()
     {
         int meta = this.getBlockMetadata();
         switch (meta)
@@ -140,7 +141,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
             case 3:
                 return chestOnSide.get(ForgeDirection.SOUTH);
             default:
-                return false;
+                return AdjacentBlockType.EMPTY;
         }
     }
 
@@ -380,10 +381,10 @@ public class BenchTileEntity extends TileEntity implements IInventory
             TileEntity potentialChest = this.worldObj.getTileEntity(direction.offsetX + xCoord, direction.offsetY + yCoord, direction.offsetZ + zCoord);
             if (potentialChest instanceof TileEntityChest)
             {
-                chestOnSide.put(direction, true);
+                chestOnSide.put(direction, AdjacentBlockType.CHEST);
             } else
             {
-                chestOnSide.put(direction, false);
+                chestOnSide.put(direction, AdjacentBlockType.EMPTY);
             }
 
         }

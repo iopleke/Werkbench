@@ -12,6 +12,12 @@ public class Compendium
 {
     private static final String modPrefix = Compendium.Naming.id + ":";
 
+    public static enum AdjacentBlockType
+    {
+        CHEST, FURNACE, EMPTY
+
+    }
+
     public static final class Naming
     {
         public static final String id = "werkbench";

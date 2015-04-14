@@ -4,6 +4,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.world.World;
 import werkbench.reference.Compendium;
+import werkbench.reference.Compendium.AdjacentBlockType;
 
 public class BenchGUI extends GuiContainer
 {
@@ -41,7 +42,7 @@ public class BenchGUI extends GuiContainer
         int y = (height - ySize) / 2 + 40;
         drawTexturedModalRect(x, y, 0, 0, 176, 166);
 
-        if (bench.getHasLeftChest())
+        if (bench.getLeftSideBlock() == AdjacentBlockType.CHEST)
         {
             if (bench.chestIsDouble(bench.getLeftChestDirection()))
             {
@@ -51,7 +52,7 @@ public class BenchGUI extends GuiContainer
                 renderSingleChestLeft();
             }
         }
-        if (bench.getHasRightChest())
+        if (bench.getRightSideBlock() == AdjacentBlockType.CHEST)
         {
             if (bench.chestIsDouble(bench.getRightChestDirection()))
             {

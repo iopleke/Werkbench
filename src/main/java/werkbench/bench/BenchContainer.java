@@ -12,6 +12,7 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntityChest;
+import werkbench.reference.Compendium.AdjacentBlockType;
 
 public final class BenchContainer extends Container
 {
@@ -37,7 +38,7 @@ public final class BenchContainer extends Container
         bindPlayerInventory(inventoryPlayer);
         bindCraftGrid();
 
-        if (this.bench.getHasLeftChest())
+        if (this.bench.getLeftSideBlock() == AdjacentBlockType.CHEST)
         {
             if (this.bench.chestIsDouble(this.bench.getLeftChestDirection()))
             {
@@ -47,7 +48,7 @@ public final class BenchContainer extends Container
                 bindLeftChestSingle(this.bench);
             }
         }
-        if (this.bench.getHasRightChest())
+        if (this.bench.getRightSideBlock() == AdjacentBlockType.CHEST)
         {
             if (this.bench.chestIsDouble(this.bench.getRightChestDirection()))
             {
