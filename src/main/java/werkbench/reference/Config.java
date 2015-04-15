@@ -18,6 +18,8 @@ public class Config
     // turns on extra logging printouts
     public static boolean debugMode;
 
+    public static int maxUpdateTickCount = 100;
+
     public static void init()
     {
 

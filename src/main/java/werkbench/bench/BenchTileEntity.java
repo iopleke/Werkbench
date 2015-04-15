@@ -2,6 +2,7 @@ package werkbench.bench;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Random;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -16,12 +17,14 @@ import werkbench.network.MessageHandler;
 import werkbench.network.message.BenchUpdateMessage;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
+import werkbench.reference.Config;
 
 public class BenchTileEntity extends TileEntity implements IInventory
 {
-    private TileEntityChest chestLeft;
     private final Map<ForgeDirection, Enum> chestOnSide = new EnumMap<ForgeDirection, Enum>(ForgeDirection.class);
+    private TileEntityChest chestLeft;
     private TileEntityChest chestRight;
+    private int processingTicks;
 
     // The inventory is a 3x3 grid (for crafting)
     public ItemStack[] craftGrid = new ItemStack[9];
@@ -29,11 +32,27 @@ public class BenchTileEntity extends TileEntity implements IInventory
     public BenchTileEntity()
     {
         super();
+        resetBlockMemory();
+        resetProcessingTicks();
+
+    }
+
+    private void incrementProcessingTicks()
+    {
+        processingTicks++;
+    }
+
+    private void resetBlockMemory()
+    {
         for (ForgeDirection VALID_DIRECTION : ForgeDirection.VALID_DIRECTIONS)
         {
             chestOnSide.put(VALID_DIRECTION, AdjacentBlockType.EMPTY);
         }
+    }
 
+    private void resetProcessingTicks()
+    {
+        processingTicks = new Random().nextInt(Config.maxUpdateTickCount);
     }
 
     @Override
@@ -84,6 +103,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public Packet getDescriptionPacket()
     {
+        // @TODO remove this if I don't end up needing custom packets
         this.writeToNBT(new NBTTagCompound());
         MessageHandler.INSTANCE.sendToServer(new BenchUpdateMessage(this));
         return null;
@@ -370,7 +390,14 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public void updateEntity()
     {
-        updateSideChecks();
+        if (processingTicks >= Config.maxUpdateTickCount)
+        {
+            updateSideChecks();
+            resetProcessingTicks();
+        } else
+        {
+            incrementProcessingTicks();
+        }
     }
 
     public void updateSideChecks()
