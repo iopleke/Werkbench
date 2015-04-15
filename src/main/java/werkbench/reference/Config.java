@@ -45,24 +45,31 @@ public class Config
         Property prop;
         List<String> configList = new ArrayList<String>();
 
-        config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, StatCollector.translateToLocal("config.general.description"));
+        Config.config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, StatCollector.translateToLocal("config.general.description"));
+        Config.config.addCustomCategoryComment(Compendium.Config.categoryPerformance, StatCollector.translateToLocal("config.performance.description"));
 
-        prop = config.get(Configuration.CATEGORY_GENERAL, "debugMode", Config.debugMode);
-        prop.comment = StatCollector.translateToLocal("config.debugMode");
+        prop = Config.config.get(Configuration.CATEGORY_GENERAL, "debugMode", Config.debugMode);
+        prop.comment = StatCollector.translateToLocal("config.debugMode.description");
         prop.setLanguageKey("config.debugMode.tooltip");
-        debugMode = prop.getBoolean();
+        Config.debugMode = prop.getBoolean();
         configList.add(prop.getName());
 
-        if (config.hasChanged())
+        prop = Config.config.get(Compendium.Config.categoryPerformance, "maxUpdateTickCount", Config.maxUpdateTickCount);
+        prop.comment = StatCollector.translateToLocal("config.maxUpdateTickCount.description");
+        prop.setLanguageKey("config.maxUpdateTickCount.tooltip");
+        Config.maxUpdateTickCount = prop.getInt();
+        configList.add(prop.getName());
+
+        if (Config.config.hasChanged())
         {
-            config.save();
+            Config.config.save();
         }
     }
 
     public static List<IConfigElement> getConfigElements()
     {
         List<IConfigElement> list = new ArrayList<IConfigElement>();
-        list.addAll(new ConfigElement(config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements());
+        list.addAll(new ConfigElement(Config.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements());
         return list;
     }
 }

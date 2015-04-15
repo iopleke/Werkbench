@@ -114,6 +114,7 @@ public class Compendium
     {
         public static final String configPrefix = "config/werkbench/";
         public static final String assetPrefix = "/assets/werkbench/";
+        public static final String categoryPerformance = "performance";
     }
 
     public static final class Color
