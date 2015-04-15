@@ -21,7 +21,7 @@ import werkbench.reference.Config;
 
 public class BenchTileEntity extends TileEntity implements IInventory
 {
-    private final Map<ForgeDirection, Enum> chestOnSide = new EnumMap<ForgeDirection, Enum>(ForgeDirection.class);
+    private final Map<ForgeDirection, Enum> blockMemory = new EnumMap<ForgeDirection, Enum>(ForgeDirection.class);
     private TileEntityChest chestLeft;
     private TileEntityChest chestRight;
     private int processingTicks;
@@ -46,7 +46,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     {
         for (ForgeDirection VALID_DIRECTION : ForgeDirection.VALID_DIRECTIONS)
         {
-            chestOnSide.put(VALID_DIRECTION, AdjacentBlockType.EMPTY);
+            blockMemory.put(VALID_DIRECTION, AdjacentBlockType.EMPTY);
         }
     }
 
@@ -97,7 +97,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
      */
     public Enum getBlockForDirection(ForgeDirection direction)
     {
-        return chestOnSide.get(direction);
+        return blockMemory.get(direction);
     }
 
     @Override
@@ -193,13 +193,13 @@ public class BenchTileEntity extends TileEntity implements IInventory
         switch (meta)
         {
             case 0:
-                return chestOnSide.get(ForgeDirection.EAST);
+                return blockMemory.get(ForgeDirection.EAST);
             case 1:
-                return chestOnSide.get(ForgeDirection.SOUTH);
+                return blockMemory.get(ForgeDirection.SOUTH);
             case 2:
-                return chestOnSide.get(ForgeDirection.WEST);
+                return blockMemory.get(ForgeDirection.WEST);
             case 3:
-                return chestOnSide.get(ForgeDirection.NORTH);
+                return blockMemory.get(ForgeDirection.NORTH);
             default:
                 return AdjacentBlockType.EMPTY;
         }
@@ -254,13 +254,13 @@ public class BenchTileEntity extends TileEntity implements IInventory
         switch (meta)
         {
             case 0:
-                return chestOnSide.get(ForgeDirection.WEST);
+                return blockMemory.get(ForgeDirection.WEST);
             case 1:
-                return chestOnSide.get(ForgeDirection.NORTH);
+                return blockMemory.get(ForgeDirection.NORTH);
             case 2:
-                return chestOnSide.get(ForgeDirection.EAST);
+                return blockMemory.get(ForgeDirection.EAST);
             case 3:
-                return chestOnSide.get(ForgeDirection.SOUTH);
+                return blockMemory.get(ForgeDirection.SOUTH);
             default:
                 return AdjacentBlockType.EMPTY;
         }
@@ -402,16 +402,16 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     public void updateSideChecks()
     {
-        for (int i = 0; i < chestOnSide.size(); i++)
+        for (int i = 0; i < blockMemory.size(); i++)
         {
             ForgeDirection direction = ForgeDirection.getOrientation(i);
             TileEntity potentialChest = this.worldObj.getTileEntity(direction.offsetX + xCoord, direction.offsetY + yCoord, direction.offsetZ + zCoord);
             if (potentialChest instanceof TileEntityChest)
             {
-                chestOnSide.put(direction, AdjacentBlockType.CHEST);
+                blockMemory.put(direction, AdjacentBlockType.CHEST);
             } else
             {
-                chestOnSide.put(direction, AdjacentBlockType.EMPTY);
+                blockMemory.put(direction, AdjacentBlockType.EMPTY);
             }
 
         }
