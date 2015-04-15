@@ -64,6 +64,10 @@ public class BenchGUI extends GuiContainer
                 renderSingleChestRight();
             }
         }
+        if (bench.getRightSideBlock() == AdjacentBlockType.FURNACE)
+        {
+            renderFurnaceRight();
+        }
     }
 
     private void renderDoubleChestLeft()
@@ -96,6 +100,15 @@ public class BenchGUI extends GuiContainer
         int x = (width - xSize) / 2 + 298;
         int y = (height - ySize) / 2 + 30;
         drawTexturedModalRect(x, y, 0, 0, 68, 176);
+    }
+
+    private void renderFurnaceRight()
+    {
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
+        // @TODO - make these number self explanitory
+        int x = (width - xSize) / 2 + 298;
+        int y = (height - ySize) / 2 + 40;
+        drawTexturedModalRect(x, y, 0, 0, 76, 76);
     }
 
 }

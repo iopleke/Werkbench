@@ -75,6 +75,7 @@ public class Compendium
             public static final String background = "textures/gui/werkBenchGUIBackground.png";
             public static final String singleChest = "textures/gui/werkBenchGUIBackgroundChestSingle.png";
             public static final String doubleChest = "textures/gui/werkBenchGUIBackgroundChestDouble.png";
+            public static final String furnace = "textures/gui/werkBenchGUIBackgroundFurnace.png";
         }
 
         public static final class Model
@@ -97,6 +98,7 @@ public class Compendium
             public static final ResourceLocation background = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.background);
             public static final ResourceLocation singleChest = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.singleChest);
             public static final ResourceLocation doubleChest = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.doubleChest);
+            public static final ResourceLocation furnace = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.furnace);
         }
 
         public static final class Model

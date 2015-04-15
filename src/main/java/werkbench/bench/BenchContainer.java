@@ -9,9 +9,11 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
+import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityFurnace;
 import werkbench.reference.Compendium.AdjacentBlockType;
 
 public final class BenchContainer extends Container
@@ -45,6 +47,24 @@ public final class BenchContainer extends Container
         if (bench.getRightSideBlock() == AdjacentBlockType.CHEST)
         {
             bindRightChest();
+        }
+        if (bench.getRightSideBlock() == AdjacentBlockType.FURNACE)
+        {
+            bindRightFurnace(inventoryPlayer);
+        }
+    }
+
+    private void bindRightFurnace(InventoryPlayer inventoryPlayer)
+    {
+        TileEntityFurnace furnaceRight = bench.getRightFurnaceTileEntity();
+        if (furnaceRight != null)
+        {
+            // @TODO - make slot positioning less of a black box
+            int x = 328;
+            int y = 38;
+            addSlotToContainer(new Slot(furnaceRight, 0, x - 13, y + 17));
+            addSlotToContainer(new Slot(furnaceRight, 1, x, y + 53));
+            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, furnaceRight, 2, x + 13, y + 17));
         }
     }
 
@@ -203,7 +223,8 @@ public final class BenchContainer extends Container
      */
     private void bindRightChestSingle(BenchTileEntity bench)
     {
-        TileEntityChest chestRight = bench.getRightSingleTileEntity();
+        // @TODO - fix naming for getting the tile entities
+        TileEntityChest chestRight = bench.getRightChestSingleTileEntity();
         if (chestRight != null)
         {
             int slot, x, y;

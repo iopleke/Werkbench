@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import werkbench.network.MessageHandler;
@@ -169,7 +170,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     }
 
     /**
-     * Check if the bench has a chest on the left side
+     * Check if the bench has a block on the left side
      *
      * @return Enum
      */
@@ -230,7 +231,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return chestRight = null;
     }
 
-    public TileEntityChest getRightSingleTileEntity()
+    public TileEntityChest getRightChestSingleTileEntity()
     {
 
         int xOffset = getRightDirection().offsetX + xCoord;
@@ -243,6 +244,20 @@ public class BenchTileEntity extends TileEntity implements IInventory
             return chestRight = ((TileEntityChest) tileEntity);
         }
         return chestRight = null;
+    }
+
+    public TileEntityFurnace getRightFurnaceTileEntity()
+    {
+        int xOffset = getRightDirection().offsetX + xCoord;
+        int yOffset = getRightDirection().offsetY + yCoord;
+        int zOffset = getRightDirection().offsetZ + zCoord;
+
+        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
+        if (tileEntity instanceof TileEntityFurnace)
+        {
+            return ((TileEntityFurnace) tileEntity);
+        }
+        return null;
     }
 
     /**
@@ -392,6 +407,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public void updateEntity()
     {
+        // @TODO - figure out why the game crashes if you don't place a new bench on world load
         if (processingTicks >= Config.maxUpdateTickCount)
         {
             updateSideChecks();
@@ -416,6 +432,10 @@ public class BenchTileEntity extends TileEntity implements IInventory
             if (tileEntity instanceof TileEntityChest)
             {
                 blockMemory.put(direction, AdjacentBlockType.CHEST);
+            } else if (tileEntity instanceof TileEntityFurnace)
+            {
+                // @TODO - figure out why the furnace isn't detected unless you break and re-place after world load
+                blockMemory.put(direction, AdjacentBlockType.FURNACE);
             } else
             {
                 blockMemory.put(direction, AdjacentBlockType.EMPTY);
