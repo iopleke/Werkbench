@@ -83,7 +83,7 @@ public final class BenchContainer extends Container
 
     private void bindLeftChest()
     {
-        if (bench.isChestDouble(bench.getLeftChestDirection()))
+        if (bench.isChestDouble(bench.getLeftDirection()))
         {
             bindLeftChestDouble(bench);
         } else
@@ -96,7 +96,7 @@ public final class BenchContainer extends Container
     {
         bindLeftChestSingle(bench);
 
-        TileEntityChest chestLeft = bench.getLeftChestDoubleTileEntity();
+        TileEntityChest chestLeft = bench.getLeftDoubleTileEntity();
         if (chestLeft != null)
         {
             int slot, x, y;
@@ -120,7 +120,7 @@ public final class BenchContainer extends Container
      */
     private void bindLeftChestSingle(BenchTileEntity bench)
     {
-        TileEntityChest chestLeft = bench.getLeftChestSingleTileEntity();
+        TileEntityChest chestLeft = bench.getLeftSingleTileEntity();
         if (chestLeft != null)
         {
             int slot, x, y;
@@ -165,7 +165,7 @@ public final class BenchContainer extends Container
 
     private void bindRightChest()
     {
-        if (this.bench.isChestDouble(this.bench.getRightChestDirection()))
+        if (this.bench.isChestDouble(this.bench.getRightDirection()))
         {
             bindRightChestDouble(this.bench);
         } else
@@ -178,7 +178,7 @@ public final class BenchContainer extends Container
     {
         bindRightChestSingle(bench);
 
-        TileEntityChest chestRight = bench.getRightChestDoubleTileEntity();
+        TileEntityChest chestRight = bench.getRightDoubleTileEntity();
         if (chestRight != null)
         {
             int slot, x, y;
@@ -203,7 +203,7 @@ public final class BenchContainer extends Container
      */
     private void bindRightChestSingle(BenchTileEntity bench)
     {
-        TileEntityChest chestRight = bench.getRightChestSingleTileEntity();
+        TileEntityChest chestRight = bench.getRightSingleTileEntity();
         if (chestRight != null)
         {
             int slot, x, y;

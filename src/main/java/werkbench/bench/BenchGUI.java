@@ -46,7 +46,7 @@ public class BenchGUI extends GuiContainer
 
         if (bench.getLeftSideBlock() == AdjacentBlockType.CHEST)
         {
-            if (bench.isChestDouble(bench.getLeftChestDirection()))
+            if (bench.isChestDouble(bench.getLeftDirection()))
             {
                 renderDoubleChestLeft();
             } else
@@ -56,7 +56,7 @@ public class BenchGUI extends GuiContainer
         }
         if (bench.getRightSideBlock() == AdjacentBlockType.CHEST)
         {
-            if (bench.isChestDouble(bench.getRightChestDirection()))
+            if (bench.isChestDouble(bench.getRightDirection()))
             {
                 renderDoubleChestRight();
             } else
