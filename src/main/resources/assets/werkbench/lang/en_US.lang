@@ -4,4 +4,11 @@ language.code=en_US
 
 tile.werkbench.name=Werkbench
 
-config.debugMode=Enable extra debugging messages
+config.general.description=General options, things that didn't fit anywhere else
+config.performance.description=Performance tweaks, generally already pretty nicely balanced, change at your own risk
+
+config.maxUpdateTickCount.description=Maximum number of ticks before a werkbench checks for blocks around it. Increase to improve performance.
+config.maxUpdateTickCount.tooltip=Maximum ticks between side check updates
+
+config.debugMode.tooltip=Debug Mode
+config.debugMode.description=Enable extra debugging messages
