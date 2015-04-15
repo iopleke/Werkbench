@@ -3,3 +3,5 @@ language.region=US
 language.code=en_US
 
 tile.werkbench.name=Werkbench
+
+config.debugMode=Enable extra debugging messages
