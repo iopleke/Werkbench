@@ -14,7 +14,7 @@ public class Compendium
 
     public static enum AdjacentBlockType
     {
-        CHEST, FURNACE, EMPTY
+        CHEST, FURNACE, FURNACE_ACTIVE, EMPTY
 
     }
 

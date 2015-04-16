@@ -3,7 +3,9 @@ package werkbench.bench;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -435,13 +437,34 @@ public class BenchTileEntity extends TileEntity implements IInventory
             } else if (tileEntity instanceof TileEntityFurnace)
             {
                 // @TODO - figure out why the furnace isn't detected unless you break and re-place after world load
-                blockMemory.put(direction, AdjacentBlockType.FURNACE);
+                if (this.isFurnaceActive(xOffset, yOffset, zOffset))
+                {
+                    blockMemory.put(direction, AdjacentBlockType.FURNACE_ACTIVE);
+                } else
+                {
+                    blockMemory.put(direction, AdjacentBlockType.FURNACE);
+                }
             } else
             {
                 blockMemory.put(direction, AdjacentBlockType.EMPTY);
             }
 
         }
+    }
+
+    private boolean isFurnaceActive(int x, int y, int z)
+    {
+
+        Block furnaceBlock = worldObj.getBlock(x, y, z);
+        if (furnaceBlock != null)
+        {
+            if (furnaceBlock.equals(Blocks.lit_furnace))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
