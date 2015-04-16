@@ -45,6 +45,11 @@ public final class BenchContainer extends Container
         {
             bindLeftChest();
         }
+
+        if (bench.getLeftSideBlock() == AdjacentBlockType.FURNACE || bench.getLeftSideBlock() == AdjacentBlockType.FURNACE_ACTIVE)
+        {
+            bindLeftFurnace(inventoryPlayer);
+        }
         if (bench.getRightSideBlock() == AdjacentBlockType.CHEST)
         {
             bindRightChest();
@@ -62,6 +67,20 @@ public final class BenchContainer extends Container
         {
             // @TODO - make slot positioning less of a black box
             int x = 328;
+            int y = 38;
+            addSlotToContainer(new Slot(furnaceRight, 0, x - 21, y + 13));
+            addSlotToContainer(new Slot(furnaceRight, 1, x, y + 57));
+            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, furnaceRight, 2, x + 21, y + 13));
+        }
+    }
+
+    private void bindLeftFurnace(InventoryPlayer inventoryPlayer)
+    {
+        TileEntityFurnace furnaceRight = bench.getLeftFurnaceTileEntity();
+        if (furnaceRight != null)
+        {
+            // @TODO - make slot positioning less of a black box
+            int x = 76;
             int y = 38;
             addSlotToContainer(new Slot(furnaceRight, 0, x - 21, y + 13));
             addSlotToContainer(new Slot(furnaceRight, 1, x, y + 57));

@@ -262,6 +262,20 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return null;
     }
 
+    public TileEntityFurnace getLeftFurnaceTileEntity()
+    {
+        int xOffset = getLeftDirection().offsetX + xCoord;
+        int yOffset = getLeftDirection().offsetY + yCoord;
+        int zOffset = getLeftDirection().offsetZ + zCoord;
+
+        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
+        if (tileEntity instanceof TileEntityFurnace)
+        {
+            return ((TileEntityFurnace) tileEntity);
+        }
+        return null;
+    }
+
     /**
      * Check if the bench has a chest on the right side
      *

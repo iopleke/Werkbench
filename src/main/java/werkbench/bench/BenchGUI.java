@@ -52,6 +52,11 @@ public class BenchGUI extends GuiContainer
                 renderSingleChestLeft();
             }
         }
+
+        if (bench.getLeftSideBlock() == AdjacentBlockType.FURNACE || bench.getLeftSideBlock() == AdjacentBlockType.FURNACE_ACTIVE)
+        {
+            renderFurnaceLeft();
+        }
         if (bench.getRightSideBlock() == AdjacentBlockType.CHEST)
         {
             if (bench.isChestDouble(bench.getRightDirection()))
@@ -103,12 +108,46 @@ public class BenchGUI extends GuiContainer
     private void renderFurnaceRight()
     {
         this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
+        /* @TODO - get burn times from the tileEntity
+         TileEntityFurnace furnace = bench.getRightFurnaceTileEntity();
+         if (furnace != null)
+         {
+         if (furnace.isBurning())
+         {
+         drawTexturedModalRect(x, y + 38, 0, 76, 76, furnace.getBurnTimeRemainingScaled(38));
+         } else
+         {
+         drawTexturedModalRect(x, y + 38, 0, 115, 76, 38);
+         }
+
+         }
+         */
 
         // @TODO - make these number self explanitory
         int x = (width - xSize) / 2 + 298;
         int y = (height - ySize) / 2 + 40;
 
         if (bench.getRightSideBlock() == AdjacentBlockType.FURNACE_ACTIVE)
+        {
+            drawTexturedModalRect(x, y + 38, 0, 76, 76, 38);
+        } else
+        {
+            drawTexturedModalRect(x, y + 38, 0, 115, 76, 38);
+        }
+
+        drawTexturedModalRect(x, y, 0, 0, 76, 76);
+
+    }
+
+    private void renderFurnaceLeft()
+    {
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
+
+        // @TODO - make these number self explanitory
+        int x = (width - xSize) / 2 + 46;
+        int y = (height - ySize) / 2 + 40;
+
+        if (bench.getLeftSideBlock() == AdjacentBlockType.FURNACE_ACTIVE)
         {
             drawTexturedModalRect(x, y + 38, 0, 76, 76, 38);
         } else
