@@ -18,8 +18,6 @@ public class BenchGUI extends GuiContainer
         super(new BenchContainer(inventoryPlayer, bench));
         this.bench = bench;
 
-        this.bench.updateSideChecks();
-
         this.xSize = 420;
 
         this.ySize = 206;
