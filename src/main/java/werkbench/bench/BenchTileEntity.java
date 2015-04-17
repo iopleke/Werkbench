@@ -155,18 +155,13 @@ public class BenchTileEntity extends TileEntity implements IInventory
         }
     }
 
-    public TileEntityChest getLeftDoubleTileEntity()
+    public TileEntity getDoubleTileEntityForSide(ForgeDirection direction)
     {
-        int xOffset = getLeftDirection().offsetX + getLeftDirection().offsetX + xCoord;
-        int yOffset = getLeftDirection().offsetY + getLeftDirection().offsetY + yCoord;
-        int zOffset = getLeftDirection().offsetZ + getLeftDirection().offsetZ + zCoord;
 
-        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
-        if (tileEntity instanceof TileEntityChest)
-        {
-            return ((TileEntityChest) tileEntity);
-        }
-        return null;
+        int xOffset = direction.offsetX + direction.offsetX + xCoord;
+        int yOffset = direction.offsetY + direction.offsetY + yCoord;
+        int zOffset = direction.offsetZ + direction.offsetZ + zCoord;
+        return worldObj.getTileEntity(xOffset, yOffset, zOffset);
     }
 
     public TileEntity getTileEntityForSide(ForgeDirection direction)
@@ -185,48 +180,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
     public ForgeDirection getRightDirection()
     {
         return getLeftDirection().getOpposite();
-    }
-
-    public TileEntityChest getRightDoubleTileEntity()
-    {
-        int xOffset = getRightDirection().offsetX + getRightDirection().offsetX + xCoord;
-        int yOffset = getRightDirection().offsetY + getRightDirection().offsetY + yCoord;
-        int zOffset = getRightDirection().offsetZ + getRightDirection().offsetZ + zCoord;
-
-        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
-        if (tileEntity instanceof TileEntityChest)
-        {
-            return ((TileEntityChest) tileEntity);
-        }
-        return null;
-    }
-
-    public TileEntityFurnace getRightFurnaceTileEntity()
-    {
-        int xOffset = getRightDirection().offsetX + xCoord;
-        int yOffset = getRightDirection().offsetY + yCoord;
-        int zOffset = getRightDirection().offsetZ + zCoord;
-
-        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
-        if (tileEntity instanceof TileEntityFurnace)
-        {
-            return ((TileEntityFurnace) tileEntity);
-        }
-        return null;
-    }
-
-    public TileEntityFurnace getLeftFurnaceTileEntity()
-    {
-        int xOffset = getLeftDirection().offsetX + xCoord;
-        int yOffset = getLeftDirection().offsetY + yCoord;
-        int zOffset = getLeftDirection().offsetZ + zCoord;
-
-        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
-        if (tileEntity instanceof TileEntityFurnace)
-        {
-            return ((TileEntityFurnace) tileEntity);
-        }
-        return null;
     }
 
     /**

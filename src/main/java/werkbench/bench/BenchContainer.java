@@ -63,29 +63,29 @@ public final class BenchContainer extends Container
 
     private void bindRightFurnace(InventoryPlayer inventoryPlayer)
     {
-        TileEntityFurnace furnaceRight = bench.getRightFurnaceTileEntity();
-        if (furnaceRight != null)
+        TileEntity tileEntity = bench.getTileEntityForSide(bench.getRightDirection());
+        if (tileEntity instanceof TileEntityFurnace)
         {
             // @TODO - make slot positioning less of a black box
             int x = 328;
             int y = 38;
-            addSlotToContainer(new Slot(furnaceRight, 0, x - 21, y + 13));
-            addSlotToContainer(new Slot(furnaceRight, 1, x, y + 57));
-            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, furnaceRight, 2, x + 21, y + 13));
+            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 0, x - 21, y + 13));
+            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 1, x, y + 57));
+            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, ((TileEntityFurnace) tileEntity), 2, x + 21, y + 13));
         }
     }
 
     private void bindLeftFurnace(InventoryPlayer inventoryPlayer)
     {
-        TileEntityFurnace furnaceRight = bench.getLeftFurnaceTileEntity();
-        if (furnaceRight != null)
+        TileEntity tileEntity = bench.getTileEntityForSide(bench.getLeftDirection());
+        if (tileEntity instanceof TileEntityFurnace)
         {
             // @TODO - make slot positioning less of a black box
             int x = 76;
             int y = 38;
-            addSlotToContainer(new Slot(furnaceRight, 0, x - 21, y + 13));
-            addSlotToContainer(new Slot(furnaceRight, 1, x, y + 57));
-            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, furnaceRight, 2, x + 21, y + 13));
+            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 0, x - 21, y + 13));
+            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 1, x, y + 57));
+            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, ((TileEntityFurnace) tileEntity), 2, x + 21, y + 13));
         }
     }
 
@@ -137,8 +137,8 @@ public final class BenchContainer extends Container
     {
         bindLeftChestSingle(bench);
 
-        TileEntityChest chestLeft = bench.getLeftDoubleTileEntity();
-        if (chestLeft != null)
+        TileEntity tileEntity = bench.getDoubleTileEntityForSide(bench.getLeftDirection());
+        if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)
@@ -148,7 +148,7 @@ public final class BenchContainer extends Container
                     slot = j + i * 9;
                     x = 8 + i * 18;
                     y = 38 + j * 18;
-                    addSlotToContainer(new Slot(chestLeft, slot, x, y));
+                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
                 }
             }
         }
@@ -220,8 +220,8 @@ public final class BenchContainer extends Container
     {
         bindRightChestSingle(bench);
 
-        TileEntityChest chestRight = bench.getRightDoubleTileEntity();
-        if (chestRight != null)
+        TileEntity tileEntity = bench.getDoubleTileEntityForSide(bench.getRightDirection());
+        if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)
@@ -231,7 +231,7 @@ public final class BenchContainer extends Container
                     slot = j + i * 9;
                     x = 360 + i * 18;
                     y = 38 + j * 18;
-                    addSlotToContainer(new Slot(chestRight, slot, x, y));
+                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
                 }
             }
         }
