@@ -306,7 +306,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public void updateEntity()
     {
-        // @TODO - figure out why the game crashes if you don't place a new bench on world load
         if (processingTicks >= Config.maxUpdateTickCount)
         {
             updateSideChecks();
