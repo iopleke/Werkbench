@@ -12,6 +12,7 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import werkbench.reference.Compendium.AdjacentBlockType;
@@ -41,20 +42,20 @@ public final class BenchContainer extends Container
         bindPlayerInventory(inventoryPlayer);
         bindCraftGrid(inventoryPlayer);
 
-        if (bench.getLeftSideBlock() == AdjacentBlockType.CHEST)
+        if (bench.getBlockForDirection(bench.getLeftDirection()) == AdjacentBlockType.CHEST)
         {
             bindLeftChest();
         }
 
-        if (bench.getLeftSideBlock() == AdjacentBlockType.FURNACE || bench.getLeftSideBlock() == AdjacentBlockType.FURNACE_ACTIVE)
+        if (bench.getBlockForDirection(bench.getLeftDirection()) == AdjacentBlockType.FURNACE || bench.getBlockForDirection(bench.getLeftDirection()) == AdjacentBlockType.FURNACE_ACTIVE)
         {
             bindLeftFurnace(inventoryPlayer);
         }
-        if (bench.getRightSideBlock() == AdjacentBlockType.CHEST)
+        if (bench.getBlockForDirection(bench.getRightDirection()) == AdjacentBlockType.CHEST)
         {
             bindRightChest();
         }
-        if (bench.getRightSideBlock() == AdjacentBlockType.FURNACE || bench.getRightSideBlock() == AdjacentBlockType.FURNACE_ACTIVE)
+        if (bench.getBlockForDirection(bench.getRightDirection()) == AdjacentBlockType.FURNACE || bench.getBlockForDirection(bench.getRightDirection()) == AdjacentBlockType.FURNACE_ACTIVE)
         {
             bindRightFurnace(inventoryPlayer);
         }
@@ -160,8 +161,9 @@ public final class BenchContainer extends Container
      */
     private void bindLeftChestSingle(BenchTileEntity bench)
     {
-        TileEntityChest chestLeft = bench.getLeftSingleTileEntity();
-        if (chestLeft != null)
+        TileEntity tileEntity = bench.getTileEntityForSide(bench.getLeftDirection());
+
+        if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)
@@ -171,7 +173,7 @@ public final class BenchContainer extends Container
                     slot = j + i * 9;
                     x = 62 + i * 18;
                     y = 38 + j * 18;
-                    addSlotToContainer(new Slot(chestLeft, slot, x, y));
+                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
                 }
             }
         }
@@ -244,8 +246,8 @@ public final class BenchContainer extends Container
     private void bindRightChestSingle(BenchTileEntity bench)
     {
         // @TODO - fix naming for getting the tile entities
-        TileEntityChest chestRight = bench.getRightChestSingleTileEntity();
-        if (chestRight != null)
+        TileEntity tileEntity = bench.getTileEntityForSide(bench.getRightDirection());
+        if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)
@@ -255,9 +257,10 @@ public final class BenchContainer extends Container
                     slot = j + i * 9;
                     x = 306 + i * 18;
                     y = 38 + j * 18;
-                    addSlotToContainer(new Slot(chestRight, slot, x, y));
+                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
                 }
             }
+
         }
     }
 
