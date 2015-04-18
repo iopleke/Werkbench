@@ -18,6 +18,11 @@ public class Compendium
 
     }
 
+    public static enum RelativeBenchSide
+    {
+        LEFT, RIGHT, BACK, FRONT, TOP, BOTTOM
+    }
+
     public static final class Naming
     {
         public static final String id = "werkbench";
