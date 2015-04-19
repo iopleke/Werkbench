@@ -14,10 +14,10 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.util.ForgeDirection;
-import org.lwjgl.input.Mouse;
 import werkbench.reference.Compendium.AdjacentBlockType;
 import werkbench.reference.Compendium.RelativeBenchSide;
 
@@ -48,20 +48,23 @@ public final class BenchContainer extends Container
         bindPlayerInventory(inventoryPlayer);
         bindCraftGrid(inventoryPlayer);
 
-        if (bench.getLeftSideBlock() == AdjacentBlockType.CHEST)
+        AdjacentBlockType leftBlock = bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT));
+        AdjacentBlockType rightBlock = bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT));
+
+        if (leftBlock == AdjacentBlockType.CHEST)
         {
             bindLeftChest();
         }
 
-        if (bench.getLeftSideBlock() == AdjacentBlockType.FURNACE || bench.getLeftSideBlock() == AdjacentBlockType.FURNACE_ACTIVE)
+        if (leftBlock == AdjacentBlockType.FURNACE || leftBlock == AdjacentBlockType.FURNACE_ACTIVE)
         {
             bindLeftFurnace(inventoryPlayer);
         }
-        if (bench.getRightSideBlock() == AdjacentBlockType.CHEST)
+        if (rightBlock == AdjacentBlockType.CHEST)
         {
             bindRightChest();
         }
-        if (bench.getRightSideBlock() == AdjacentBlockType.FURNACE || bench.getRightSideBlock() == AdjacentBlockType.FURNACE_ACTIVE)
+        if (rightBlock == AdjacentBlockType.FURNACE || rightBlock == AdjacentBlockType.FURNACE_ACTIVE)
         {
             bindRightFurnace(inventoryPlayer);
         }
@@ -69,29 +72,29 @@ public final class BenchContainer extends Container
 
     private void bindRightFurnace(InventoryPlayer inventoryPlayer)
     {
-        TileEntityFurnace furnaceRight = bench.getRightFurnaceTileEntity();
-        if (furnaceRight != null)
+        TileEntity tileEntity = bench.getTileEntityForSide(bench.getRightDirection());
+        if (tileEntity instanceof TileEntityFurnace)
         {
             // @TODO - make slot positioning less of a black box
             int x = 328;
             int y = 38;
-            addSlotToContainer(new Slot(furnaceRight, 0, x - 21, y + 13));
-            addSlotToContainer(new Slot(furnaceRight, 1, x, y + 57));
-            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, furnaceRight, 2, x + 21, y + 13));
+            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 0, x - 21, y + 13));
+            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 1, x, y + 57));
+            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, ((TileEntityFurnace) tileEntity), 2, x + 21, y + 13));
         }
     }
 
     private void bindLeftFurnace(InventoryPlayer inventoryPlayer)
     {
-        TileEntityFurnace furnaceRight = bench.getLeftFurnaceTileEntity();
-        if (furnaceRight != null)
+        TileEntity tileEntity = bench.getTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT));
+        if (tileEntity instanceof TileEntityFurnace)
         {
             // @TODO - make slot positioning less of a black box
             int x = 76;
             int y = 38;
-            addSlotToContainer(new Slot(furnaceRight, 0, x - 21, y + 13));
-            addSlotToContainer(new Slot(furnaceRight, 1, x, y + 57));
-            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, furnaceRight, 2, x + 21, y + 13));
+            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 0, x - 21, y + 13));
+            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 1, x, y + 57));
+            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, ((TileEntityFurnace) tileEntity), 2, x + 21, y + 13));
         }
     }
 
@@ -130,7 +133,6 @@ public final class BenchContainer extends Container
 
     private void bindLeftChest()
     {
-        Mouse.setGrabbed(false);
         if (bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT)))
         {
             bindLeftChestDouble(bench);
@@ -144,8 +146,8 @@ public final class BenchContainer extends Container
     {
         bindLeftChestSingle(bench);
 
-        TileEntityChest chestLeft = bench.getLeftDoubleTileEntity();
-        if (chestLeft != null)
+        TileEntity tileEntity = bench.getDoubleTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT));
+        if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)
@@ -155,7 +157,7 @@ public final class BenchContainer extends Container
                     slot = j + i * 9;
                     x = 8 + i * 18;
                     y = 38 + j * 18;
-                    addSlotToContainer(new Slot(chestLeft, slot, x, y));
+                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
                 }
             }
         }
@@ -168,8 +170,9 @@ public final class BenchContainer extends Container
      */
     private void bindLeftChestSingle(BenchTileEntity bench)
     {
-        TileEntityChest chestLeft = bench.getLeftSingleTileEntity();
-        if (chestLeft != null)
+        TileEntity tileEntity = bench.getTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT));
+
+        if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y, count;
             count = 0;
@@ -182,7 +185,7 @@ public final class BenchContainer extends Container
                     x = 62 + i * 18;
                     y = 38 + j * 18;
                     slotArray[count] = slot;
-                    addSlotToContainer(new Slot(chestLeft, slot, x, y));
+                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
                 }
             }
 
@@ -231,8 +234,8 @@ public final class BenchContainer extends Container
     {
         bindRightChestSingle(bench);
 
-        TileEntityChest chestRight = bench.getRightDoubleTileEntity();
-        if (chestRight != null)
+        TileEntity tileEntity = bench.getDoubleTileEntityForSide(bench.getRightDirection());
+        if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)
@@ -242,7 +245,7 @@ public final class BenchContainer extends Container
                     slot = j + i * 9;
                     x = 360 + i * 18;
                     y = 38 + j * 18;
-                    addSlotToContainer(new Slot(chestRight, slot, x, y));
+                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
                 }
             }
         }
@@ -266,8 +269,8 @@ public final class BenchContainer extends Container
     private void bindRightChestSingle(BenchTileEntity bench)
     {
         // @TODO - fix naming for getting the tile entities
-        TileEntityChest chestRight = bench.getRightChestSingleTileEntity();
-        if (chestRight != null)
+        TileEntity tileEntity = bench.getTileEntityForSide(bench.getRightDirection());
+        if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
             for (int i = 0; i < 3; i++)
@@ -277,9 +280,10 @@ public final class BenchContainer extends Container
                     slot = j + i * 9;
                     x = 306 + i * 18;
                     y = 38 + j * 18;
-                    addSlotToContainer(new Slot(chestRight, slot, x, y));
+                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
                 }
             }
+
         }
     }
 

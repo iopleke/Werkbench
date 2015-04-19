@@ -25,9 +25,7 @@ import werkbench.reference.Config;
 
 public class BenchTileEntity extends TileEntity implements IInventory
 {
-    private final Map<ForgeDirection, Enum> blockMemory = new EnumMap<ForgeDirection, Enum>(ForgeDirection.class);
-    private TileEntityChest chestLeft;
-    private TileEntityChest chestRight;
+    private final Map<ForgeDirection, AdjacentBlockType> blockMemory = new EnumMap<ForgeDirection, AdjacentBlockType>(ForgeDirection.class);
     private int processingTicks;
 
     // The inventory is a 3x3 grid (for crafting)
@@ -99,7 +97,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
      * @param direction direction to check
      * @return Enum type for side
      */
-    public Enum getBlockForDirection(ForgeDirection direction)
+    public AdjacentBlockType getBlockForDirection(ForgeDirection direction)
     {
         return blockMemory.get(direction);
     }
@@ -186,39 +184,21 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return offsets;
     }
 
-    public TileEntityChest getLeftDoubleTileEntity()
+    public TileEntity getDoubleTileEntityForSide(ForgeDirection direction)
     {
-        int[] offsets = getOffsetForRelativeSide(RelativeBenchSide.LEFT, 2);
 
-        TileEntity tileEntity = worldObj.getTileEntity(offsets[0], offsets[1], offsets[2]);
-        if (tileEntity instanceof TileEntityChest)
-        {
-            return chestLeft = ((TileEntityChest) tileEntity);
-        }
-        return chestLeft = null;
+        int xOffset = direction.offsetX + direction.offsetX + xCoord;
+        int yOffset = direction.offsetY + direction.offsetY + yCoord;
+        int zOffset = direction.offsetZ + direction.offsetZ + zCoord;
+        return worldObj.getTileEntity(xOffset, yOffset, zOffset);
     }
 
-    /**
-     * Check if the bench has a block on the left side
-     *
-     * @return Enum
-     */
-    public Enum getLeftSideBlock()
+    public TileEntity getTileEntityForSide(ForgeDirection direction)
     {
-        int meta = this.getBlockMetadata();
-        switch (meta)
-        {
-            case 0:
-                return blockMemory.get(ForgeDirection.EAST);
-            case 1:
-                return blockMemory.get(ForgeDirection.SOUTH);
-            case 2:
-                return blockMemory.get(ForgeDirection.WEST);
-            case 3:
-                return blockMemory.get(ForgeDirection.NORTH);
-            default:
-                return AdjacentBlockType.EMPTY;
-        }
+        int xOffset = direction.offsetX + xCoord;
+        int yOffset = direction.offsetY + yCoord;
+        int zOffset = direction.offsetZ + zCoord;
+        return worldObj.getTileEntity(xOffset, yOffset, zOffset);
     }
 
     public TileEntityChest getLeftSingleTileEntity()
@@ -228,9 +208,9 @@ public class BenchTileEntity extends TileEntity implements IInventory
         TileEntity tileEntity = worldObj.getTileEntity(offsets[0], offsets[1], offsets[2]);
         if (tileEntity instanceof TileEntityChest)
         {
-            return chestLeft = ((TileEntityChest) tileEntity);
+            return ((TileEntityChest) tileEntity);
         }
-        return chestLeft = null;
+        return null;
     }
 
     public TileEntityChest getRightDoubleTileEntity()
@@ -241,9 +221,9 @@ public class BenchTileEntity extends TileEntity implements IInventory
         TileEntity tileEntity = worldObj.getTileEntity(offsets[0], offsets[1], offsets[2]);
         if (tileEntity instanceof TileEntityChest)
         {
-            return chestRight = ((TileEntityChest) tileEntity);
+            return ((TileEntityChest) tileEntity);
         }
-        return chestRight = null;
+        return null;
     }
 
     public TileEntityChest getRightChestSingleTileEntity()
@@ -253,9 +233,9 @@ public class BenchTileEntity extends TileEntity implements IInventory
         TileEntity tileEntity = worldObj.getTileEntity(offsets[0], offsets[1], offsets[2]);
         if (tileEntity instanceof TileEntityChest)
         {
-            return chestRight = ((TileEntityChest) tileEntity);
+            return ((TileEntityChest) tileEntity);
         }
-        return chestRight = null;
+        return null;
     }
 
     public TileEntityFurnace getRightFurnaceTileEntity()
@@ -430,7 +410,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
     @Override
     public void updateEntity()
     {
-        // @TODO - figure out why the game crashes if you don't place a new bench on world load
         if (processingTicks >= Config.maxUpdateTickCount)
         {
             updateSideChecks();
@@ -447,44 +426,41 @@ public class BenchTileEntity extends TileEntity implements IInventory
         {
             ForgeDirection direction = ForgeDirection.getOrientation(i);
 
-            int xOffset = direction.offsetX + xCoord;
-            int yOffset = direction.offsetY + yCoord;
-            int zOffset = direction.offsetZ + zCoord;
-
-            TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
-            if (tileEntity instanceof TileEntityChest)
-            {
-                blockMemory.put(direction, AdjacentBlockType.CHEST);
-            } else if (tileEntity instanceof TileEntityFurnace)
-            {
-                // @TODO - figure out why the furnace isn't detected unless you break and re-place after world load
-                if (this.isFurnaceActive(xOffset, yOffset, zOffset))
-                {
-                    blockMemory.put(direction, AdjacentBlockType.FURNACE_ACTIVE);
-                } else
-                {
-                    blockMemory.put(direction, AdjacentBlockType.FURNACE);
-                }
-            } else
-            {
-                blockMemory.put(direction, AdjacentBlockType.EMPTY);
-            }
-
+            TileEntity tileEntity = getTileEntityForSide(direction);
+            blockMemory.put(direction, getTypeFromTileEntity(tileEntity));
         }
     }
 
-    private boolean isFurnaceActive(int x, int y, int z)
+    private AdjacentBlockType getTypeFromTileEntity(TileEntity tileEntity)
     {
-
-        Block furnaceBlock = worldObj.getBlock(x, y, z);
-        if (furnaceBlock != null)
+        if (tileEntity instanceof TileEntityChest)
         {
-            if (furnaceBlock.equals(Blocks.lit_furnace))
+            return AdjacentBlockType.CHEST;
+        } else if (tileEntity instanceof TileEntityFurnace)
+        {
+            if (isActiveFurnace(tileEntity))
+            {
+                return AdjacentBlockType.FURNACE_ACTIVE;
+            } else
+            {
+                return AdjacentBlockType.FURNACE;
+            }
+        } else
+        {
+            return AdjacentBlockType.EMPTY;
+        }
+    }
+
+    private boolean isActiveFurnace(TileEntity tileEntity)
+    {
+        Block block = worldObj.getBlock(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+        if (block != null)
+        {
+            if (block.equals(Blocks.lit_furnace))
             {
                 return true;
             }
         }
-
         return false;
     }
 
