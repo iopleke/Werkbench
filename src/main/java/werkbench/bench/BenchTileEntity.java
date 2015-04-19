@@ -20,6 +20,7 @@ import werkbench.network.MessageHandler;
 import werkbench.network.message.BenchUpdateMessage;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
+import werkbench.reference.Compendium.RelativeBenchSide;
 import werkbench.reference.Config;
 
 public class BenchTileEntity extends TileEntity implements IInventory
@@ -135,35 +136,61 @@ public class BenchTileEntity extends TileEntity implements IInventory
     }
 
     /**
-     * Get the ForgeDirection for the bench's left side
+     * Get the ForgeDirection for a given side
      *
+     * @param side relative side of the bench
      * @return ForgeDirection
      */
-    public ForgeDirection getLeftDirection()
+    public ForgeDirection getDirectionFromRelativeSide(RelativeBenchSide side)
     {
-        int meta = this.getBlockMetadata();
-        switch (meta)
+        int meta = getBlockMetadata();
+        ForgeDirection orientation = ForgeDirection.UNKNOWN;
+        if (side == RelativeBenchSide.LEFT || side == RelativeBenchSide.RIGHT)
         {
-            case 0:
-                return ForgeDirection.EAST;
-            case 1:
-                return ForgeDirection.SOUTH;
-            case 2:
-                return ForgeDirection.WEST;
-            case 3:
-                return ForgeDirection.NORTH;
-            default:
-                return ForgeDirection.UNKNOWN;
+            switch (meta)
+            {
+                case 0:
+                    orientation = ForgeDirection.EAST;
+                    break;
+                case 1:
+                    orientation = ForgeDirection.SOUTH;
+                    break;
+                case 2:
+                    orientation = ForgeDirection.WEST;
+                    break;
+                case 3:
+                    orientation = ForgeDirection.NORTH;
+                    break;
+            }
+            if (side == RelativeBenchSide.RIGHT)
+            {
+                orientation = orientation.getOpposite();
+            }
         }
+
+        return orientation;
+    }
+
+    private int[] getOffsetForRelativeSide(RelativeBenchSide side)
+    {
+        return getOffsetForRelativeSide(side, 1);
+    }
+
+    private int[] getOffsetForRelativeSide(RelativeBenchSide side, int multiplier)
+    {
+        int[] offsets = new int[3];
+
+        offsets[0] = getDirectionFromRelativeSide(side).offsetX * multiplier + xCoord;
+        offsets[1] = getDirectionFromRelativeSide(side).offsetY * multiplier + yCoord;
+        offsets[2] = getDirectionFromRelativeSide(side).offsetZ * multiplier + zCoord;
+        return offsets;
     }
 
     public TileEntityChest getLeftDoubleTileEntity()
     {
-        int xOffset = getLeftDirection().offsetX + getLeftDirection().offsetX + xCoord;
-        int yOffset = getLeftDirection().offsetY + getLeftDirection().offsetY + yCoord;
-        int zOffset = getLeftDirection().offsetZ + getLeftDirection().offsetZ + zCoord;
+        int[] offsets = getOffsetForRelativeSide(RelativeBenchSide.LEFT, 2);
 
-        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
+        TileEntity tileEntity = worldObj.getTileEntity(offsets[0], offsets[1], offsets[2]);
         if (tileEntity instanceof TileEntityChest)
         {
             return chestLeft = ((TileEntityChest) tileEntity);
@@ -196,12 +223,9 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     public TileEntityChest getLeftSingleTileEntity()
     {
+        int[] offsets = getOffsetForRelativeSide(RelativeBenchSide.LEFT);
 
-        int xOffset = getLeftDirection().offsetX + xCoord;
-        int yOffset = getLeftDirection().offsetY + yCoord;
-        int zOffset = getLeftDirection().offsetZ + zCoord;
-
-        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
+        TileEntity tileEntity = worldObj.getTileEntity(offsets[0], offsets[1], offsets[2]);
         if (tileEntity instanceof TileEntityChest)
         {
             return chestLeft = ((TileEntityChest) tileEntity);
@@ -209,23 +233,12 @@ public class BenchTileEntity extends TileEntity implements IInventory
         return chestLeft = null;
     }
 
-    /**
-     * Get the ForgeDirection for the bench's right side
-     *
-     * @return ForgeDirection
-     */
-    public ForgeDirection getRightDirection()
-    {
-        return getLeftDirection().getOpposite();
-    }
-
     public TileEntityChest getRightDoubleTileEntity()
     {
-        int xOffset = getRightDirection().offsetX + getRightDirection().offsetX + xCoord;
-        int yOffset = getRightDirection().offsetY + getRightDirection().offsetY + yCoord;
-        int zOffset = getRightDirection().offsetZ + getRightDirection().offsetZ + zCoord;
 
-        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
+        int[] offsets = getOffsetForRelativeSide(RelativeBenchSide.RIGHT, 2);
+
+        TileEntity tileEntity = worldObj.getTileEntity(offsets[0], offsets[1], offsets[2]);
         if (tileEntity instanceof TileEntityChest)
         {
             return chestRight = ((TileEntityChest) tileEntity);
@@ -235,12 +248,9 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     public TileEntityChest getRightChestSingleTileEntity()
     {
+        int[] offsets = getOffsetForRelativeSide(RelativeBenchSide.RIGHT);
 
-        int xOffset = getRightDirection().offsetX + xCoord;
-        int yOffset = getRightDirection().offsetY + yCoord;
-        int zOffset = getRightDirection().offsetZ + zCoord;
-
-        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
+        TileEntity tileEntity = worldObj.getTileEntity(offsets[0], offsets[1], offsets[2]);
         if (tileEntity instanceof TileEntityChest)
         {
             return chestRight = ((TileEntityChest) tileEntity);
@@ -250,11 +260,10 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     public TileEntityFurnace getRightFurnaceTileEntity()
     {
-        int xOffset = getRightDirection().offsetX + xCoord;
-        int yOffset = getRightDirection().offsetY + yCoord;
-        int zOffset = getRightDirection().offsetZ + zCoord;
 
-        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
+        int[] offsets = getOffsetForRelativeSide(RelativeBenchSide.RIGHT);
+
+        TileEntity tileEntity = worldObj.getTileEntity(offsets[0], offsets[1], offsets[2]);
         if (tileEntity instanceof TileEntityFurnace)
         {
             return ((TileEntityFurnace) tileEntity);
@@ -264,11 +273,9 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     public TileEntityFurnace getLeftFurnaceTileEntity()
     {
-        int xOffset = getLeftDirection().offsetX + xCoord;
-        int yOffset = getLeftDirection().offsetY + yCoord;
-        int zOffset = getLeftDirection().offsetZ + zCoord;
+        int[] offsets = getOffsetForRelativeSide(RelativeBenchSide.LEFT);
 
-        TileEntity tileEntity = worldObj.getTileEntity(xOffset, yOffset, zOffset);
+        TileEntity tileEntity = worldObj.getTileEntity(offsets[0], offsets[1], offsets[2]);
         if (tileEntity instanceof TileEntityFurnace)
         {
             return ((TileEntityFurnace) tileEntity);
@@ -349,7 +356,7 @@ public class BenchTileEntity extends TileEntity implements IInventory
 
     public boolean isChestDouble(ForgeDirection direction)
     {
-        TileEntity potentialChest = this.worldObj.getTileEntity(direction.offsetX + direction.offsetX + xCoord, direction.offsetY + direction.offsetY + yCoord, direction.offsetZ + direction.offsetZ + zCoord);
+        TileEntity potentialChest = worldObj.getTileEntity(direction.offsetX + direction.offsetX + xCoord, direction.offsetY + direction.offsetY + yCoord, direction.offsetZ + direction.offsetZ + zCoord);
         if (potentialChest instanceof TileEntityChest)
         {
             return true;

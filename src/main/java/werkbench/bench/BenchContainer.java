@@ -1,5 +1,7 @@
 package werkbench.bench;
 
+import java.util.EnumMap;
+import java.util.Map;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -14,12 +16,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.common.util.ForgeDirection;
+import org.lwjgl.input.Mouse;
 import werkbench.reference.Compendium.AdjacentBlockType;
+import werkbench.reference.Compendium.RelativeBenchSide;
 
 public final class BenchContainer extends Container
 {
 
     private final BenchTileEntity bench;
+
+    private Map<ForgeDirection, int[]> directionalSlots = new EnumMap<ForgeDirection, int[]>(ForgeDirection.class);
 
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
@@ -123,7 +130,8 @@ public final class BenchContainer extends Container
 
     private void bindLeftChest()
     {
-        if (bench.isChestDouble(bench.getLeftDirection()))
+        Mouse.setGrabbed(false);
+        if (bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT)))
         {
             bindLeftChestDouble(bench);
         } else
@@ -163,7 +171,9 @@ public final class BenchContainer extends Container
         TileEntityChest chestLeft = bench.getLeftSingleTileEntity();
         if (chestLeft != null)
         {
-            int slot, x, y;
+            int slot, x, y, count;
+            count = 0;
+            int[] slotArray = new int[27];
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 9; j++)
@@ -171,9 +181,12 @@ public final class BenchContainer extends Container
                     slot = j + i * 9;
                     x = 62 + i * 18;
                     y = 38 + j * 18;
+                    slotArray[count] = slot;
                     addSlotToContainer(new Slot(chestLeft, slot, x, y));
                 }
             }
+
+            directionalSlots.put(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT), slotArray);
         }
     }
 
@@ -205,7 +218,7 @@ public final class BenchContainer extends Container
 
     private void bindRightChest()
     {
-        if (this.bench.isChestDouble(this.bench.getRightDirection()))
+        if (this.bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT)))
         {
             bindRightChestDouble(this.bench);
         } else
@@ -234,6 +247,15 @@ public final class BenchContainer extends Container
             }
         }
 
+    }
+
+    protected void resetSlotsForDirection(ForgeDirection direction)
+    {
+        int[] slotArray = this.directionalSlots.get(direction);
+        for (int i = 0; i < slotArray.length; i++)
+        {
+            this.inventorySlots.remove(slotArray[i]);
+        }
     }
 
     /**

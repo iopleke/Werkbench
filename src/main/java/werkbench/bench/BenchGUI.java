@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.world.World;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
+import werkbench.reference.Compendium.RelativeBenchSide;
 
 public class BenchGUI extends GuiContainer
 {
@@ -44,7 +45,7 @@ public class BenchGUI extends GuiContainer
 
         if (bench.getLeftSideBlock() == AdjacentBlockType.CHEST)
         {
-            if (bench.isChestDouble(bench.getLeftDirection()))
+            if (bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT)))
             {
                 renderDoubleChestLeft();
             } else
@@ -59,7 +60,7 @@ public class BenchGUI extends GuiContainer
         }
         if (bench.getRightSideBlock() == AdjacentBlockType.CHEST)
         {
-            if (bench.isChestDouble(bench.getRightDirection()))
+            if (bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT)))
             {
                 renderDoubleChestRight();
             } else
