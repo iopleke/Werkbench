@@ -72,7 +72,7 @@ public final class BenchContainer extends Container
 
     private void bindRightFurnace(InventoryPlayer inventoryPlayer)
     {
-        TileEntity tileEntity = bench.getTileEntityForSide(bench.getRightDirection());
+        TileEntity tileEntity = bench.getTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT));
         if (tileEntity instanceof TileEntityFurnace)
         {
             // @TODO - make slot positioning less of a black box
@@ -234,7 +234,7 @@ public final class BenchContainer extends Container
     {
         bindRightChestSingle(bench);
 
-        TileEntity tileEntity = bench.getDoubleTileEntityForSide(bench.getRightDirection());
+        TileEntity tileEntity = bench.getDoubleTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT));
         if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
@@ -269,7 +269,7 @@ public final class BenchContainer extends Container
     private void bindRightChestSingle(BenchTileEntity bench)
     {
         // @TODO - fix naming for getting the tile entities
-        TileEntity tileEntity = bench.getTileEntityForSide(bench.getRightDirection());
+        TileEntity tileEntity = bench.getTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT));
         if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;

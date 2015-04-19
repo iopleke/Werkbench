@@ -40,7 +40,10 @@ public class BenchGUI extends GuiContainer
         int y = (height - ySize) / 2 + 40;
         drawTexturedModalRect(x, y, 0, 0, 176, 166);
 
-        if (bench.getBlockForDirection(bench.getLeftDirection()) == AdjacentBlockType.CHEST)
+        AdjacentBlockType leftBlock = bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT));
+        AdjacentBlockType rightBlock = bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT));
+
+        if (leftBlock == AdjacentBlockType.CHEST)
         {
             if (bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT)))
             {
@@ -51,11 +54,11 @@ public class BenchGUI extends GuiContainer
             }
         }
 
-        if (bench.getBlockForDirection(bench.getLeftDirection()) == AdjacentBlockType.FURNACE || bench.getBlockForDirection(bench.getLeftDirection()) == AdjacentBlockType.FURNACE_ACTIVE)
+        if (leftBlock == AdjacentBlockType.FURNACE || leftBlock == AdjacentBlockType.FURNACE_ACTIVE)
         {
             renderFurnaceLeft();
         }
-        if (bench.getBlockForDirection(bench.getRightDirection()) == AdjacentBlockType.CHEST)
+        if (rightBlock == AdjacentBlockType.CHEST)
         {
             if (bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT)))
             {
@@ -65,7 +68,7 @@ public class BenchGUI extends GuiContainer
                 renderSingleChestRight();
             }
         }
-        if (bench.getBlockForDirection(bench.getRightDirection()) == AdjacentBlockType.FURNACE || bench.getBlockForDirection(bench.getRightDirection()) == AdjacentBlockType.FURNACE_ACTIVE)
+        if (rightBlock == AdjacentBlockType.FURNACE || rightBlock == AdjacentBlockType.FURNACE_ACTIVE)
         {
             renderFurnaceRight();
         }
@@ -126,7 +129,7 @@ public class BenchGUI extends GuiContainer
         int x = (width - xSize) / 2 + 298;
         int y = (height - ySize) / 2 + 40;
 
-        if (bench.getBlockForDirection(bench.getRightDirection()) == AdjacentBlockType.FURNACE_ACTIVE)
+        if (bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT)) == AdjacentBlockType.FURNACE_ACTIVE)
         {
             drawTexturedModalRect(x, y + 38, 0, 76, 76, 38);
         } else
@@ -146,7 +149,7 @@ public class BenchGUI extends GuiContainer
         int x = (width - xSize) / 2 + 46;
         int y = (height - ySize) / 2 + 40;
 
-        if (bench.getBlockForDirection(bench.getLeftDirection()) == AdjacentBlockType.FURNACE_ACTIVE)
+        if (bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT)) == AdjacentBlockType.FURNACE_ACTIVE)
         {
             drawTexturedModalRect(x, y + 38, 0, 76, 76, 38);
         } else
