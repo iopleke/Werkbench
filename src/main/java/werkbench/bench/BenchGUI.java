@@ -3,6 +3,7 @@ package werkbench.bench;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.world.World;
+import werkbench.helper.SpatialHelper;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
 import werkbench.reference.Compendium.RelativeBenchSide;
@@ -40,12 +41,12 @@ public class BenchGUI extends GuiContainer
         int y = (height - ySize) / 2 + 40;
         drawTexturedModalRect(x, y, 0, 0, 176, 166);
 
-        AdjacentBlockType leftBlock = bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT));
-        AdjacentBlockType rightBlock = bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT));
+        AdjacentBlockType leftBlock = SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.LEFT);
+        AdjacentBlockType rightBlock = SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.RIGHT);
 
         if (leftBlock == AdjacentBlockType.CHEST)
         {
-            if (bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT)))
+            if (bench.isChestDouble(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.LEFT)))
             {
                 renderDoubleChestLeft();
             } else
@@ -60,7 +61,7 @@ public class BenchGUI extends GuiContainer
         }
         if (rightBlock == AdjacentBlockType.CHEST)
         {
-            if (bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT)))
+            if (bench.isChestDouble(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.RIGHT)))
             {
                 renderDoubleChestRight();
             } else
@@ -129,7 +130,7 @@ public class BenchGUI extends GuiContainer
         int x = (width - xSize) / 2 + 298;
         int y = (height - ySize) / 2 + 40;
 
-        if (bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT)) == AdjacentBlockType.FURNACE_ACTIVE)
+        if (SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.RIGHT) == AdjacentBlockType.FURNACE_ACTIVE)
         {
             drawTexturedModalRect(x, y + 38, 0, 76, 76, 38);
         } else
@@ -149,7 +150,7 @@ public class BenchGUI extends GuiContainer
         int x = (width - xSize) / 2 + 46;
         int y = (height - ySize) / 2 + 40;
 
-        if (bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT)) == AdjacentBlockType.FURNACE_ACTIVE)
+        if (SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.LEFT) == AdjacentBlockType.FURNACE_ACTIVE)
         {
             drawTexturedModalRect(x, y + 38, 0, 76, 76, 38);
         } else

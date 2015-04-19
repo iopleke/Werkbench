@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.util.ForgeDirection;
+import werkbench.helper.SpatialHelper;
 import werkbench.reference.Compendium.AdjacentBlockType;
 import werkbench.reference.Compendium.RelativeBenchSide;
 
@@ -48,8 +49,8 @@ public final class BenchContainer extends Container
         bindPlayerInventory(inventoryPlayer);
         bindCraftGrid(inventoryPlayer);
 
-        AdjacentBlockType leftBlock = bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT));
-        AdjacentBlockType rightBlock = bench.getBlockForDirection(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT));
+        AdjacentBlockType leftBlock = SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.LEFT);
+        AdjacentBlockType rightBlock = SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.RIGHT);
 
         if (leftBlock == AdjacentBlockType.CHEST)
         {
@@ -72,7 +73,7 @@ public final class BenchContainer extends Container
 
     private void bindRightFurnace(InventoryPlayer inventoryPlayer)
     {
-        TileEntity tileEntity = bench.getTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT));
+        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.RIGHT);
         if (tileEntity instanceof TileEntityFurnace)
         {
             // @TODO - make slot positioning less of a black box
@@ -86,7 +87,8 @@ public final class BenchContainer extends Container
 
     private void bindLeftFurnace(InventoryPlayer inventoryPlayer)
     {
-        TileEntity tileEntity = bench.getTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT));
+
+        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.LEFT);
         if (tileEntity instanceof TileEntityFurnace)
         {
             // @TODO - make slot positioning less of a black box
@@ -133,7 +135,7 @@ public final class BenchContainer extends Container
 
     private void bindLeftChest()
     {
-        if (bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT)))
+        if (bench.isChestDouble(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.LEFT)))
         {
             bindLeftChestDouble(bench);
         } else
@@ -146,7 +148,7 @@ public final class BenchContainer extends Container
     {
         bindLeftChestSingle(bench);
 
-        TileEntity tileEntity = bench.getDoubleTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT));
+        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.LEFT, 2);
         if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
@@ -170,8 +172,7 @@ public final class BenchContainer extends Container
      */
     private void bindLeftChestSingle(BenchTileEntity bench)
     {
-        TileEntity tileEntity = bench.getTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT));
-
+        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.LEFT);
         if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y, count;
@@ -189,7 +190,7 @@ public final class BenchContainer extends Container
                 }
             }
 
-            directionalSlots.put(bench.getDirectionFromRelativeSide(RelativeBenchSide.LEFT), slotArray);
+            directionalSlots.put(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.LEFT), slotArray);
         }
     }
 
@@ -221,12 +222,12 @@ public final class BenchContainer extends Container
 
     private void bindRightChest()
     {
-        if (this.bench.isChestDouble(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT)))
+        if (bench.isChestDouble(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.RIGHT)))
         {
-            bindRightChestDouble(this.bench);
+            bindRightChestDouble(bench);
         } else
         {
-            bindRightChestSingle(this.bench);
+            bindRightChestSingle(bench);
         }
     }
 
@@ -234,7 +235,7 @@ public final class BenchContainer extends Container
     {
         bindRightChestSingle(bench);
 
-        TileEntity tileEntity = bench.getDoubleTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT));
+        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.RIGHT, 2);
         if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
@@ -269,7 +270,8 @@ public final class BenchContainer extends Container
     private void bindRightChestSingle(BenchTileEntity bench)
     {
         // @TODO - fix naming for getting the tile entities
-        TileEntity tileEntity = bench.getTileEntityForSide(bench.getDirectionFromRelativeSide(RelativeBenchSide.RIGHT));
+
+        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.RIGHT);
         if (tileEntity instanceof TileEntityChest)
         {
             int slot, x, y;
