@@ -12,12 +12,48 @@ public class Compendium
 {
 	public static enum AdjacentBlockType
 	{
-		CHEST_DOUBLE(new int[]{0, 0}, new int[]{54, 0}),
-		CHEST_SINGLE(new int[]{64, 0}, new int[]{0, 0}),
-		FURNACE_INACTIVE(new int[]{47, 13}, new int[]{1, 13}),
-		FURNACE_ACTIVE(new int[]{47, 13}, new int[]{1, 13}),
-		EMPTY(new int[]{0, 0}, new int[]{0, 0}),
-		OFFSET(new int[]{8, 38}, new int[]{306, 38});
+		CHEST_DOUBLE(new int[]
+		{
+			0, 0
+		}, new int[]
+		{
+			54, 0
+		}),
+		CHEST_SINGLE(new int[]
+		{
+			64, 0
+		}, new int[]
+		{
+			0, 0
+		}),
+		FURNACE_INACTIVE(new int[]
+		{
+			47, 13
+		}, new int[]
+		{
+			1, 13
+		}),
+		FURNACE_ACTIVE(new int[]
+		{
+			47, 13
+		}, new int[]
+		{
+			1, 13
+		}),
+		EMPTY(new int[]
+		{
+			0, 0
+		}, new int[]
+		{
+			0, 0
+		}),
+		OFFSET(new int[]
+		{
+			8, 38
+		}, new int[]
+		{
+			306, 38
+		});
 
 		private final int[] left, right;
 
@@ -29,10 +65,20 @@ public class Compendium
 
 		public static int[] getGUICoordinate(RelativeBenchSide side, AdjacentBlockType type)
 		{
-			if (side == RelativeBenchSide.LEFT) {
-				return type.left;
+			if (side == RelativeBenchSide.LEFT)
+			{
+				int offsets[] = type.left;
+				offsets[0] += AdjacentBlockType.OFFSET.left[0];
+				offsets[1] += AdjacentBlockType.OFFSET.left[1];
+				return offsets;
+			} else
+			{
+
+				int offsets[] = type.right;
+				offsets[0] += AdjacentBlockType.OFFSET.right[0];
+				offsets[1] += AdjacentBlockType.OFFSET.right[1];
+				return offsets;
 			}
-			return type.right;
 		}
 	}
 
