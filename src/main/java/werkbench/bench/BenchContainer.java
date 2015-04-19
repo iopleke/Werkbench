@@ -25,370 +25,370 @@ import werkbench.reference.Compendium.RelativeBenchSide;
 public final class BenchContainer extends Container
 {
 
-    private final BenchTileEntity bench;
+	private final BenchTileEntity bench;
 
-    private Map<ForgeDirection, int[]> directionalSlots = new EnumMap<ForgeDirection, int[]>(ForgeDirection.class);
+	private Map<ForgeDirection, int[]> directionalSlots = new EnumMap<ForgeDirection, int[]>(ForgeDirection.class);
+	public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
+	public IInventory craftResult = new InventoryCraftResult();
+	boolean loading = false;
 
-    public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
-    public IInventory craftResult = new InventoryCraftResult();
-    boolean loading = false;
+	/**
+	 * Container object for the workbench
+	 *
+	 * @param inventoryPlayer the player's inventory
+	 * @param bench           the bench TileEntity
+	 */
+	public BenchContainer(InventoryPlayer inventoryPlayer, BenchTileEntity bench)
+	{
+		this.bench = bench;
+		this.bench.updateSideChecks();
 
-    /**
-     * Container object for the workbench
-     *
-     * @param inventoryPlayer the player's inventory
-     * @param bench           the bench TileEntity
-     */
-    public BenchContainer(InventoryPlayer inventoryPlayer, BenchTileEntity bench)
-    {
-        this.bench = bench;
-        this.bench.updateSideChecks();
+		loadCraftGridFromTileEntity();
 
-        loadCraftGridFromTileEntity();
+		bindPlayerInventory(inventoryPlayer);
+		bindCraftGrid(inventoryPlayer);
 
-        bindPlayerInventory(inventoryPlayer);
-        bindCraftGrid(inventoryPlayer);
+		AdjacentBlockType leftBlock = SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.LEFT);
+		AdjacentBlockType rightBlock = SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.RIGHT);
 
-        AdjacentBlockType leftBlock = SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.LEFT);
-        AdjacentBlockType rightBlock = SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.RIGHT);
+		if (leftBlock == AdjacentBlockType.CHEST_SINGLE || leftBlock == AdjacentBlockType.CHEST_DOUBLE)
+		{
+			bindLeftChest();
+		}
 
-        if (leftBlock == AdjacentBlockType.CHEST)
-        {
-            bindLeftChest();
-        }
+		if (leftBlock == AdjacentBlockType.FURNACE_INACTIVE || leftBlock == AdjacentBlockType.FURNACE_ACTIVE)
+		{
+			bindLeftFurnace(inventoryPlayer);
+		}
+		if (rightBlock == AdjacentBlockType.CHEST_SINGLE || rightBlock == AdjacentBlockType.CHEST_DOUBLE)
+		{
+			bindRightChest();
+		}
+		if (rightBlock == AdjacentBlockType.FURNACE_INACTIVE || rightBlock == AdjacentBlockType.FURNACE_ACTIVE)
+		{
+			bindRightFurnace(inventoryPlayer);
+		}
+	}
 
-        if (leftBlock == AdjacentBlockType.FURNACE || leftBlock == AdjacentBlockType.FURNACE_ACTIVE)
-        {
-            bindLeftFurnace(inventoryPlayer);
-        }
-        if (rightBlock == AdjacentBlockType.CHEST)
-        {
-            bindRightChest();
-        }
-        if (rightBlock == AdjacentBlockType.FURNACE || rightBlock == AdjacentBlockType.FURNACE_ACTIVE)
-        {
-            bindRightFurnace(inventoryPlayer);
-        }
-    }
+	/**
+	 * Add the crafting grid to the GUI
+	 *
+	 * @param bench the bench TileEntity
+	 */
+	private void bindCraftGrid(InventoryPlayer inventoryPlayer)
+	{
+		bindCraftGridInput();
 
-    private void bindRightFurnace(InventoryPlayer inventoryPlayer)
-    {
-        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.RIGHT);
-        if (tileEntity instanceof TileEntityFurnace)
-        {
-            // @TODO - make slot positioning less of a black box
-            int x = 328;
-            int y = 38;
-            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 0, x - 21, y + 13));
-            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 1, x, y + 57));
-            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, ((TileEntityFurnace) tileEntity), 2, x + 21, y + 13));
-        }
-    }
+		bindCraftGridOutput(inventoryPlayer);
+	}
 
-    private void bindLeftFurnace(InventoryPlayer inventoryPlayer)
-    {
+	private void bindCraftGridInput()
+	{
+		int slot, x, y;
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				slot = j + i * 3;
+				x = 184 + j * 18;
+				y = 52 + i * 18;
 
-        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.LEFT);
-        if (tileEntity instanceof TileEntityFurnace)
-        {
-            // @TODO - make slot positioning less of a black box
-            int x = 76;
-            int y = 38;
-            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 0, x - 21, y + 13));
-            addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 1, x, y + 57));
-            addSlotToContainer(new SlotFurnace(inventoryPlayer.player, ((TileEntityFurnace) tileEntity), 2, x + 21, y + 13));
-        }
-    }
+				addSlotToContainer(new Slot(this.craftMatrix, slot, x, y));
+			}
+		}
+	}
 
-    /**
-     * Add the crafting grid to the GUI
-     *
-     * @param bench the bench TileEntity
-     */
-    private void bindCraftGrid(InventoryPlayer inventoryPlayer)
-    {
-        bindCraftGridInput();
+	private void bindCraftGridOutput(InventoryPlayer inventoryPlayer)
+	{
+		addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
+	}
 
-        bindCraftGridOutput(inventoryPlayer);
-    }
+	private void bindLeftChest()
+	{
+		if (bench.isChestDouble(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.LEFT)))
+		{
+			bindLeftChestDouble(bench);
+		} else
+		{
+			bindLeftChestSingle(bench);
+		}
+	}
 
-    private void bindCraftGridInput()
-    {
-        int slot, x, y;
-        for (int i = 0; i < 3; ++i)
-        {
-            for (int j = 0; j < 3; ++j)
-            {
-                slot = j + i * 3;
-                x = 184 + j * 18;
-                y = 52 + i * 18;
+	private void bindLeftChestDouble(BenchTileEntity bench)
+	{
+		bindLeftChestSingle(bench);
 
-                addSlotToContainer(new Slot(this.craftMatrix, slot, x, y));
-            }
-        }
-    }
+		TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.LEFT, 2);
+		if (tileEntity instanceof TileEntityChest)
+		{
+			int slot, x, y;
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 9; j++)
+				{
+					slot = j + i * 9;
+					x = 8 + i * 18;
+					y = 38 + j * 18;
+					addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
+				}
+			}
+		}
+	}
 
-    private void bindCraftGridOutput(InventoryPlayer inventoryPlayer)
-    {
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
-    }
+	/**
+	 * Add the left chest slots
+	 *
+	 * @param BenchTileEntity the bench tile entity
+	 */
+	private void bindLeftChestSingle(BenchTileEntity bench)
+	{
+		TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.LEFT);
+		if (tileEntity instanceof TileEntityChest)
+		{
+			int slot, x, y, count;
+			count = 0;
+			int[] slotArray = new int[27];
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 9; j++)
+				{
+					slot = j + i * 9;
+					x = 62 + i * 18;
+					y = 38 + j * 18;
+					slotArray[count] = slot;
+					addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
+				}
+			}
 
-    private void bindLeftChest()
-    {
-        if (bench.isChestDouble(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.LEFT)))
-        {
-            bindLeftChestDouble(bench);
-        } else
-        {
-            bindLeftChestSingle(bench);
-        }
-    }
+			directionalSlots.put(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.LEFT), slotArray);
+		}
+	}
 
-    private void bindLeftChestDouble(BenchTileEntity bench)
-    {
-        bindLeftChestSingle(bench);
+	private void bindLeftFurnace(InventoryPlayer inventoryPlayer)
+	{
 
-        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.LEFT, 2);
-        if (tileEntity instanceof TileEntityChest)
-        {
-            int slot, x, y;
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 9; j++)
-                {
-                    slot = j + i * 9;
-                    x = 8 + i * 18;
-                    y = 38 + j * 18;
-                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
-                }
-            }
-        }
-    }
+		TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.LEFT);
+		if (tileEntity instanceof TileEntityFurnace)
+		{
+			// @TODO - make slot positioning less of a black box
+			int x = 55;
+			int y = 51;
+			addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 0, x, y));
+			addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 1, x + 21, y + 44));
+			addSlotToContainer(new SlotFurnace(inventoryPlayer.player, ((TileEntityFurnace) tileEntity), 2, x + 42, y));
+		}
+	}
 
-    /**
-     * Add the left chest slots
-     *
-     * @param BenchTileEntity the bench tile entity
-     */
-    private void bindLeftChestSingle(BenchTileEntity bench)
-    {
-        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.LEFT);
-        if (tileEntity instanceof TileEntityChest)
-        {
-            int slot, x, y, count;
-            count = 0;
-            int[] slotArray = new int[27];
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 9; j++)
-                {
-                    slot = j + i * 9;
-                    x = 62 + i * 18;
-                    y = 38 + j * 18;
-                    slotArray[count] = slot;
-                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
-                }
-            }
+	/**
+	 * Add the player's inventory slots to the GUI
+	 *
+	 * @param inventoryPlayer the player's inventory
+	 */
+	private void bindPlayerInventory(InventoryPlayer inventoryPlayer)
+	{
+		int slot, x, y;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				slot = j + i * 9 + 9;
+				x = 130 + j * 18;
+				y = 124 + i * 18;
+				addSlotToContainer(new Slot(inventoryPlayer, slot, x, y));
+				if (i == 0)
+				{
+					x = 130 + j * 18;
+					y = 182;
+					addSlotToContainer(new Slot(inventoryPlayer, j, x, y));
+				}
+			}
+		}
+	}
 
-            directionalSlots.put(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.LEFT), slotArray);
-        }
-    }
+	private void bindRightChest()
+	{
+		if (bench.isChestDouble(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.RIGHT)))
+		{
+			bindRightChestDouble(bench);
+		} else
+		{
+			bindRightChestSingle(bench);
+		}
+	}
 
-    /**
-     * Add the player's inventory slots to the GUI
-     *
-     * @param inventoryPlayer the player's inventory
-     */
-    private void bindPlayerInventory(InventoryPlayer inventoryPlayer)
-    {
-        int slot, x, y;
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                slot = j + i * 9 + 9;
-                x = 130 + j * 18;
-                y = 124 + i * 18;
-                addSlotToContainer(new Slot(inventoryPlayer, slot, x, y));
-                if (i == 0)
-                {
-                    x = 130 + j * 18;
-                    y = 182;
-                    addSlotToContainer(new Slot(inventoryPlayer, j, x, y));
-                }
-            }
-        }
-    }
+	private void bindRightChestDouble(BenchTileEntity bench)
+	{
+		bindRightChestSingle(bench);
 
-    private void bindRightChest()
-    {
-        if (bench.isChestDouble(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.RIGHT)))
-        {
-            bindRightChestDouble(bench);
-        } else
-        {
-            bindRightChestSingle(bench);
-        }
-    }
+		TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.RIGHT, 2);
+		if (tileEntity instanceof TileEntityChest)
+		{
+			int slot, x, y;
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 9; j++)
+				{
+					slot = j + i * 9;
+					x = 360 + i * 18;
+					y = 38 + j * 18;
+					addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
+				}
+			}
+		}
 
-    private void bindRightChestDouble(BenchTileEntity bench)
-    {
-        bindRightChestSingle(bench);
+	}
 
-        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.RIGHT, 2);
-        if (tileEntity instanceof TileEntityChest)
-        {
-            int slot, x, y;
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 9; j++)
-                {
-                    slot = j + i * 9;
-                    x = 360 + i * 18;
-                    y = 38 + j * 18;
-                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
-                }
-            }
-        }
+	/**
+	 * Add the right chest slots
+	 *
+	 * @param BenchTileEntity the bench tile entity
+	 */
+	private void bindRightChestSingle(BenchTileEntity bench)
+	{
+		// @TODO - fix naming for getting the tile entities
 
-    }
+		TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.RIGHT);
+		if (tileEntity instanceof TileEntityChest)
+		{
+			int slot, x, y;
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 9; j++)
+				{
+					slot = j + i * 9;
+					x = 306 + i * 18;
+					y = 38 + j * 18;
+					addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
+				}
+			}
 
-    protected void resetSlotsForDirection(ForgeDirection direction)
-    {
-        int[] slotArray = this.directionalSlots.get(direction);
-        for (int i = 0; i < slotArray.length; i++)
-        {
-            this.inventorySlots.remove(slotArray[i]);
-        }
-    }
+		}
+	}
 
-    /**
-     * Add the right chest slots
-     *
-     * @param BenchTileEntity the bench tile entity
-     */
-    private void bindRightChestSingle(BenchTileEntity bench)
-    {
-        // @TODO - fix naming for getting the tile entities
+	private void bindRightFurnace(InventoryPlayer inventoryPlayer)
+	{
+		TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.RIGHT);
+		if (tileEntity instanceof TileEntityFurnace)
+		{
+			// @TODO - make slot positioning less of a black box
+			int x = 307;
+			int y = 51;
+			addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 0, x, y));
+			addSlotToContainer(new Slot(((TileEntityFurnace) tileEntity), 1, x + 21, y + 44));
+			addSlotToContainer(new SlotFurnace(inventoryPlayer.player, ((TileEntityFurnace) tileEntity), 2, x + 42, y));
+		}
+	}
 
-        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, RelativeBenchSide.RIGHT);
-        if (tileEntity instanceof TileEntityChest)
-        {
-            int slot, x, y;
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 9; j++)
-                {
-                    slot = j + i * 9;
-                    x = 306 + i * 18;
-                    y = 38 + j * 18;
-                    addSlotToContainer(new Slot(((TileEntityChest) tileEntity), slot, x, y));
-                }
-            }
+	protected void resetSlotsForDirection(ForgeDirection direction)
+	{
+		int[] slotArray = this.directionalSlots.get(direction);
+		for (int i = 0; i < slotArray.length; i++)
+		{
+			this.inventorySlots.remove(slotArray[i]);
+		}
+	}
 
-        }
-    }
+	/**
+	 * Determine if the player can interact with the container
+	 *
+	 * @param entityPlayer the player entity
+	 * @return boolean
+	 */
+	@Override
+	public boolean canInteractWith(EntityPlayer entityPlayer)
+	{
+		return true;
+	}
 
-    /**
-     * Determine if the player can interact with the container
-     *
-     * @param entityPlayer the player entity
-     * @return boolean
-     */
-    @Override
-    public boolean canInteractWith(EntityPlayer entityPlayer)
-    {
-        return true;
-    }
+	/**
+	 * Send inventory changes to listeners and sync craftMatrix with TE
+	 * inventory
+	 */
+	@Override
+	public void detectAndSendChanges()
+	{
+		for (int i = 0; i < this.inventorySlots.size(); ++i)
+		{
+			ItemStack itemstack = ((Slot) this.inventorySlots.get(i)).getStack();
+			ItemStack itemstack1 = (ItemStack) this.inventoryItemStacks.get(i);
 
-    /**
-     * Send inventory changes to listeners and sync craftMatrix with TE inventory
-     */
-    @Override
-    public void detectAndSendChanges()
-    {
-        for (int i = 0; i < this.inventorySlots.size(); ++i)
-        {
-            ItemStack itemstack = ((Slot) this.inventorySlots.get(i)).getStack();
-            ItemStack itemstack1 = (ItemStack) this.inventoryItemStacks.get(i);
+			if (!ItemStack.areItemStacksEqual(itemstack1, itemstack))
+			{
+				itemstack1 = itemstack == null ? null : itemstack.copy();
+				this.inventoryItemStacks.set(i, itemstack1);
 
-            if (!ItemStack.areItemStacksEqual(itemstack1, itemstack))
-            {
-                itemstack1 = itemstack == null ? null : itemstack.copy();
-                this.inventoryItemStacks.set(i, itemstack1);
+				for (int j = 0; j < this.crafters.size(); ++j)
+				{
+					((ICrafting) this.crafters.get(j)).sendSlotContents(this, i, itemstack1);
+				}
+			}
+		}
+		loadCraftGridFromTileEntity();
+	}
 
-                for (int j = 0; j < this.crafters.size(); ++j)
-                {
-                    ((ICrafting) this.crafters.get(j)).sendSlotContents(this, i, itemstack1);
-                }
-            }
-        }
-        loadCraftGridFromTileEntity();
-    }
+	public void loadCraftGridFromTileEntity()
+	{
+		if (bench.getWorldObj().isRemote && !loading)
+		{
+			bench.getDescriptionPacket();
+		}
+		loading = true;
+		for (int s = 0; s < bench.getSizeInventory(); s++)
+		{
+			craftMatrix.setInventorySlotContents(s, bench.getStackInSlot(s));
+		}
+		loading = false;
+	}
 
-    public void loadCraftGridFromTileEntity()
-    {
-        if (bench.getWorldObj().isRemote && !loading)
-        {
-            bench.getDescriptionPacket();
-        }
-        loading = true;
-        for (int s = 0; s < bench.getSizeInventory(); s++)
-        {
-            craftMatrix.setInventorySlotContents(s, bench.getStackInSlot(s));
-        }
-        loading = false;
-    }
+	/**
+	 * Update the crafting result when the grid changes
+	 *
+	 * @param inventory
+	 */
+	@Override
+	public void onCraftMatrixChanged(IInventory inventory)
+	{
+		if (bench.getWorldObj().isRemote && !loading)
+		{
+			bench.getDescriptionPacket();
+		}
+		craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.bench.getWorldObj()));
+		if (!bench.getWorldObj().isRemote && !loading)
+		{
+			saveCraftGridToTileEntity();
+		}
+	}
 
-    /**
-     * Update the crafting result when the grid changes
-     *
-     * @param inventory
-     */
-    @Override
-    public void onCraftMatrixChanged(IInventory inventory)
-    {
-        if (bench.getWorldObj().isRemote && !loading)
-        {
-            bench.getDescriptionPacket();
-        }
-        craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.bench.getWorldObj()));
-        if (!bench.getWorldObj().isRemote && !loading)
-        {
-            saveCraftGridToTileEntity();
-        }
-    }
+	public void resetCraftingGrid()
+	{
+		craftMatrix = new InventoryCrafting(this, 3, 3);
+		saveCraftGridToTileEntity();
+	}
 
-    public void resetCraftingGrid()
-    {
-        craftMatrix = new InventoryCrafting(this, 3, 3);
-        saveCraftGridToTileEntity();
-    }
+	public void saveCraftGridToTileEntity()
+	{
+		for (int s = 0; s < bench.getSizeInventory(); s++)
+		{
+			bench.setInventorySlotContents(s, craftMatrix.getStackInSlot(s));
+		}
+	}
 
-    public void saveCraftGridToTileEntity()
-    {
-        for (int s = 0; s < bench.getSizeInventory(); s++)
-        {
-            bench.setInventorySlotContents(s, craftMatrix.getStackInSlot(s));
-        }
-    }
+	/**
+	 * Shift click transfer mechanic
+	 *
+	 * @param player the player object
+	 * @param slotID int ID of the slot
+	 * @return itemstack from the slot
+	 */
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
+	{
+		// @TODO - implement shift clicking
+		// I've opted to remove this for now.
+		// Shift clicking is difficult for me to get working well in most ideal case,
+		// and this expanded craft grid has so much to take into account.
 
-    /**
-     * Shift click transfer mechanic
-     *
-     * @param player the player object
-     * @param slotID int ID of the slot
-     * @return itemstack from the slot
-     */
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
-    {
-        // @TODO - implement shift clicking
-        // I've opted to remove this for now.
-        // Shift clicking is difficult for me to get working well in most ideal case,
-        // and this expanded craft grid has so much to take into account.
-
-        return null;
-    }
+		return null;
+	}
 
 }
