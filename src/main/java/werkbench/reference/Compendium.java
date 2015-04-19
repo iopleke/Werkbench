@@ -10,12 +10,9 @@ import net.minecraft.util.ResourceLocation;
  */
 public class Compendium
 {
-    private static final String modPrefix = Compendium.Naming.id + ":";
-
     public static enum AdjacentBlockType
     {
         CHEST, FURNACE, FURNACE_ACTIVE, EMPTY
-
     }
 
     public static enum RelativeBenchSide
