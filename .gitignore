@@ -48,3 +48,4 @@ eclipse/
 ## netbeans
 nbbuild/
 nbproject/
+dist/
