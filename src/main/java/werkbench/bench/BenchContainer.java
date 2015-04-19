@@ -279,6 +279,39 @@ public final class BenchContainer extends Container
 		}
 	}
 
+//	private void bindSlotsForChest(TileEntityChest chest, RelativeBenchSide side)
+//	{
+//		int slot, xOffset, yOffset;
+//		int[] guiOffsets;
+//		for (int i = 0; i < 3; i++)
+//		{
+//			for (int j = 0; j < 9; j++)
+//			{
+//				slot = j + i * 9;
+//				xOffset = i * 18;
+//				yOffset = j * 18;
+//				guiOffsets = AdjacentBlockType.getGUICoordinate(side, AdjacentBlockType.CHEST_SINGLE);
+//				addSlotToContainer(new Slot(chest, slot, guiOffsets[0] + xOffset, guiOffsets[1] + yOffset));
+//			}
+//		}
+//	}
+//
+//	private void bindTileEntitySlotsForSide(RelativeBenchSide side)
+//	{
+//		TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, side);
+//		if (tileEntity instanceof TileEntityChest)
+//		{
+//			bindSlotsForChest(((TileEntityChest) tileEntity), side);
+//			TileEntity offsetTileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, side, 2);
+//			if (offsetTileEntity instanceof TileEntityChest)
+//			{
+//				bindSlotsForChest(((TileEntityChest) offsetTileEntity), side);
+//			}
+//		} else if (tileEntity instanceof TileEntityFurnace)
+//		{
+//
+//		}
+//	}
 	protected void resetSlotsForDirection(ForgeDirection direction)
 	{
 		int[] slotArray = this.directionalSlots.get(direction);
