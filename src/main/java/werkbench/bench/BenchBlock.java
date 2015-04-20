@@ -123,14 +123,13 @@ public class BenchBlock extends BlockContainer
         world.setBlockMetadataWithNotify(x, y, z, facing, 2);
     }
 
-
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof IInventory)
         {
-            IInventory inventory = (IInventory)te;
+            IInventory inventory = (IInventory) te;
             for (int i = 0; i < inventory.getSizeInventory(); i++)
             {
                 ItemStack stack = inventory.getStackInSlotOnClosing(i);
