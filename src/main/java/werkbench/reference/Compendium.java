@@ -21,7 +21,7 @@ public class Compendium
         }),
         CHEST_SINGLE(new int[]
         {
-            64, 0
+            54, 0
         }, new int[]
         {
             0, 0
@@ -67,17 +67,18 @@ public class Compendium
         {
             if (side == RelativeBenchSide.LEFT)
             {
-                int offsets[] = type.left;
-                offsets[0] += AdjacentBlockType.OFFSET.left[0];
-                offsets[1] += AdjacentBlockType.OFFSET.left[1];
-                return offsets;
+                return new int[]
+                {
+                    type.left[0] + AdjacentBlockType.OFFSET.left[0],
+                    type.left[1] + AdjacentBlockType.OFFSET.left[1]
+                };
             } else
             {
-
-                int offsets[] = type.right;
-                offsets[0] += AdjacentBlockType.OFFSET.right[0];
-                offsets[1] += AdjacentBlockType.OFFSET.right[1];
-                return offsets;
+                return new int[]
+                {
+                    type.right[0] + AdjacentBlockType.OFFSET.right[0],
+                    type.right[1] + AdjacentBlockType.OFFSET.right[1]
+                };
             }
         }
     }
