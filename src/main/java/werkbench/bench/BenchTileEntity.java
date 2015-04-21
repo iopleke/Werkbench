@@ -21,12 +21,14 @@ import werkbench.network.MessageHandler;
 import werkbench.network.message.BenchUpdateMessage;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
+import werkbench.reference.Compendium.RelativeBenchSide;
 import werkbench.reference.Config;
 
 public class BenchTileEntity extends TileEntity implements IInventory
 {
     private final Map<ForgeDirection, AdjacentBlockType> blockMemory = new EnumMap<ForgeDirection, AdjacentBlockType>(ForgeDirection.class);
     private int processingTicks;
+    private final Map<RelativeBenchSide, int[]> furnaceGUIValues = new EnumMap<RelativeBenchSide, int[]>(Compendium.RelativeBenchSide.class);
 
     // The inventory is a 3x3 grid (for crafting)
     public ItemStack[] craftGrid = new ItemStack[9];
@@ -36,7 +38,20 @@ public class BenchTileEntity extends TileEntity implements IInventory
         super();
         resetBlockMemory();
         resetProcessingTicks();
+    }
 
+    public void setFurnaceValuesForSide(RelativeBenchSide side, int[] values)
+    {
+        furnaceGUIValues.put(side, values);
+    }
+
+    public int[] getFurnaceValuesForSide(RelativeBenchSide side)
+    {
+        if (furnaceGUIValues.containsKey(side))
+        {
+            return furnaceGUIValues.get(side);
+        }
+        return null;
     }
 
     private AdjacentBlockType getTypeFromTileEntity(TileEntity tileEntity)
