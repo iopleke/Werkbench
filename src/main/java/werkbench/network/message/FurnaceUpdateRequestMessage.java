@@ -62,7 +62,6 @@ public class FurnaceUpdateRequestMessage implements IMessage, IMessageHandler<Fu
     @Override
     public IMessage onMessage(FurnaceUpdateRequestMessage message, MessageContext ctx)
     {
-
         TileEntity tileEntity = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().getTileEntity(message.furnaceX, message.furnaceY, message.furnaceZ);
         if (tileEntity instanceof TileEntityFurnace)
         {
@@ -73,7 +72,6 @@ public class FurnaceUpdateRequestMessage implements IMessage, IMessageHandler<Fu
 
                 MessageHandler.INSTANCE.sendTo(new FurnaceUpdateResponseMessage(((TileEntityFurnace) tileEntity), ((BenchTileEntity) sourceTileEntity), message.furnaceSideOrdinal), player);
             }
-
         }
         return null;
     }
