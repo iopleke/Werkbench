@@ -2,15 +2,22 @@ package werkbench.bench;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
 import werkbench.helper.SpatialHelper;
+import werkbench.network.MessageHandler;
+import werkbench.network.message.FurnaceUpdateRequestMessage;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
 import werkbench.reference.Compendium.RelativeBenchSide;
+import werkbench.reference.Config;
 
 public class BenchGUI extends GuiContainer
 {
-    BenchTileEntity bench;
+    private BenchTileEntity bench;
+    private int tickCount;
+    private boolean doFurnaceUpdate;
 
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
@@ -21,6 +28,23 @@ public class BenchGUI extends GuiContainer
 
         this.ySize = 206;
 
+        resetTickCount();
+
+    }
+
+    private void resetTickCount()
+    {
+        tickCount = 0;
+        doFurnaceUpdate = true;
+    }
+
+    private void incrementTickCount()
+    {
+        tickCount++;
+        if (tickCount >= Config.maxGUIUpdatePacketTickCount)
+        {
+            resetTickCount();
+        }
     }
 
     public int getLeft()
@@ -36,6 +60,7 @@ public class BenchGUI extends GuiContainer
     @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int mousex, int mousey)
     {
+        incrementTickCount();
         this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.background);
         int x = (width - xSize) / 2 + 122;
         int y = (height - ySize) / 2 + 40;
@@ -73,6 +98,10 @@ public class BenchGUI extends GuiContainer
         {
             renderFurnaceRight();
         }
+        if (doFurnaceUpdate)
+        {
+            doFurnaceUpdate = false;
+        }
     }
 
     private void renderDoubleChestLeft()
@@ -109,6 +138,10 @@ public class BenchGUI extends GuiContainer
 
     private void renderFurnaceRight()
     {
+        if (doFurnaceUpdate)
+        {
+            sendFurnaceGUIUpdateRequest(RelativeBenchSide.RIGHT);
+        }
         this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
         /*
          * @TODO - get burn times from the tileEntity
@@ -143,8 +176,21 @@ public class BenchGUI extends GuiContainer
 
     }
 
+    private void sendFurnaceGUIUpdateRequest(RelativeBenchSide side)
+    {
+        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, side);
+        if (tileEntity instanceof TileEntityFurnace)
+        {
+            MessageHandler.INSTANCE.sendToServer(new FurnaceUpdateRequestMessage(((TileEntityFurnace) tileEntity), bench, side));
+        }
+    }
+
     private void renderFurnaceLeft()
     {
+        if (doFurnaceUpdate)
+        {
+            sendFurnaceGUIUpdateRequest(RelativeBenchSide.LEFT);
+        }
         this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
 
         // @TODO - make these number self explanitory
