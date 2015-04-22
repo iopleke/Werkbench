@@ -10,15 +10,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import werkbench.helper.SpatialHelper;
-import werkbench.network.MessageHandler;
-import werkbench.network.message.BenchUpdateMessage;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
 import werkbench.reference.Compendium.RelativeBenchSide;
@@ -142,15 +139,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
     public Map<ForgeDirection, AdjacentBlockType> getBlockMemory()
     {
         return blockMemory;
-    }
-
-    @Override
-    public Packet getDescriptionPacket()
-    {
-        // @TODO remove this if I don't end up needing custom packets
-        this.writeToNBT(new NBTTagCompound());
-        MessageHandler.INSTANCE.sendToServer(new BenchUpdateMessage(this));
-        return null;
     }
 
     /**
