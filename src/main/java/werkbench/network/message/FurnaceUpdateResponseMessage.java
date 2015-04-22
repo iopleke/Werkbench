@@ -17,7 +17,7 @@ import werkbench.reference.Compendium.RelativeBenchSide;
  */
 public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<FurnaceUpdateResponseMessage, IMessage>
 {
-    private int furnaceX, furnaceY, furnaceZ, cookProgress, burnTimeRemaining, furnaceSideOrdinal;
+    private int furnaceCookTime, furnaceBurnTime, furnaceSideOrdinal;
     private int benchX, benchY, benchZ;
 
     public FurnaceUpdateResponseMessage()
@@ -28,10 +28,8 @@ public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<F
     {
         this.furnaceSideOrdinal = furnaceSideOrdinal;
 
-        int guiArrowWidth = 22;
-        cookProgress = furnace.getCookProgressScaled(guiArrowWidth);
-        int guiFireHeight = 28;
-        burnTimeRemaining = furnace.getBurnTimeRemainingScaled(guiFireHeight);
+        furnaceCookTime = furnace.furnaceCookTime;
+        furnaceBurnTime = furnace.furnaceBurnTime;
 
         benchX = bench.xCoord;
         benchY = bench.yCoord;
@@ -42,6 +40,8 @@ public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<F
     public void fromBytes(ByteBuf buf)
     {
         furnaceSideOrdinal = buf.readInt();
+        furnaceCookTime = buf.readInt();
+        furnaceBurnTime = buf.readInt();
 
         benchX = buf.readInt();
         benchY = buf.readInt();
@@ -65,7 +65,7 @@ public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<F
             RelativeBenchSide furnaceSide = RelativeBenchSide.values()[furnaceSideOrdinal];
             int[] values = new int[]
             {
-                message.burnTimeRemaining, message.cookProgress
+                message.furnaceBurnTime, message.furnaceCookTime
             };
             ((BenchTileEntity) tileEntity).setFurnaceValuesForSide(furnaceSide, values);
         }
@@ -76,6 +76,8 @@ public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<F
     public void toBytes(ByteBuf buf)
     {
         buf.writeInt(furnaceSideOrdinal);
+        buf.writeInt(furnaceCookTime);
+        buf.writeInt(furnaceBurnTime);
 
         buf.writeInt(benchX);
         buf.writeInt(benchY);
