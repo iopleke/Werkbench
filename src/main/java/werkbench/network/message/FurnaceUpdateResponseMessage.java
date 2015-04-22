@@ -1,6 +1,6 @@
 package werkbench.network.message;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -59,9 +59,10 @@ public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<F
     public IMessage onMessage(FurnaceUpdateResponseMessage message, MessageContext ctx)
     {
 
-        TileEntity tileEntity = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().getTileEntity(message.benchX, message.benchY, message.benchZ);
+        TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.benchX, message.benchY, message.benchZ);
         if (tileEntity instanceof BenchTileEntity)
         {
+            // @TODO - fix this always returns left side for some reason
             RelativeBenchSide furnaceSide = RelativeBenchSide.values()[furnaceSideOrdinal];
             int[] values = new int[]
             {
