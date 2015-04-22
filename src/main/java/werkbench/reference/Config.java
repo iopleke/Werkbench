@@ -20,6 +20,8 @@ public class Config
 
     public static int maxUpdateTickCount = 100;
 
+    public static int maxGUIUpdatePacketTickCount = 10;
+
     public static void init()
     {
 
