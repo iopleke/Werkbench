@@ -164,16 +164,7 @@ public class BenchGUI extends GuiContainer
         int x = (width - xSize) / 2 + 298;
         int y = (height - ySize) / 2 + 40;
 
-        if (SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.RIGHT) == AdjacentBlockType.FURNACE_ACTIVE)
-        {
-            drawTexturedModalRect(x, y + 38, 0, 76, 76, 38);
-        } else
-        {
-            drawTexturedModalRect(x, y + 38, 0, 115, 76, 38);
-        }
-
-        drawTexturedModalRect(x, y, 0, 0, 76, 76);
-
+        renderProgressBars(RelativeBenchSide.RIGHT, x, y);
     }
 
     private void sendFurnaceGUIUpdateRequest(RelativeBenchSide side)
@@ -196,17 +187,39 @@ public class BenchGUI extends GuiContainer
         // @TODO - make these number self explanitory
         int x = (width - xSize) / 2 + 46;
         int y = (height - ySize) / 2 + 40;
+        renderProgressBars(RelativeBenchSide.LEFT, x, y);
+    }
 
-        if (SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.LEFT) == AdjacentBlockType.FURNACE_ACTIVE)
+    private void renderProgressBars(RelativeBenchSide side, int x, int y)
+    {
+        int[] furnaceSideValues = bench.getFurnaceValuesForSide(side);
+        int cookProgress = 0;
+        int burnLevel = 0;
+        if (furnaceSideValues != null)
         {
-            drawTexturedModalRect(x, y + 38, 0, 76, 76, 38);
-        } else
+            if (furnaceSideValues[0] > 0 && furnaceSideValues[2] > 0)
+            {
+                burnLevel = (furnaceSideValues[0] * 29 / furnaceSideValues[2]);
+            }
+            if (furnaceSideValues[1] > 0)
+            {
+                cookProgress = (furnaceSideValues[1] * 22 / 200);
+            }
+        }
+        drawTexturedModalRect(x, y, 0, 105, 76, 76);
+        if (SpatialHelper.getBlockForRelativeSide(bench, side) == AdjacentBlockType.FURNACE_ACTIVE)
         {
-            drawTexturedModalRect(x, y + 38, 0, 115, 76, 38);
+            if (burnLevel != 0)
+            {
+                drawTexturedModalRect(x, y + 76 - burnLevel, 0, 76 + 14 - burnLevel / 2, 76, burnLevel);
+            }
+            if (cookProgress != 0)
+            {
+                drawTexturedModalRect(x + 26, y + 12, 76, 0, cookProgress, 15);
+            }
         }
 
         drawTexturedModalRect(x, y, 0, 0, 76, 76);
-
     }
 
 }
