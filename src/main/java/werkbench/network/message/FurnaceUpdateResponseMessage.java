@@ -17,7 +17,7 @@ import werkbench.reference.Compendium.RelativeBenchSide;
  */
 public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<FurnaceUpdateResponseMessage, IMessage>
 {
-    private int furnaceCookTime, furnaceBurnTime, furnaceSideOrdinal;
+    private int furnaceCookTime, furnaceBurnTime, currentItemBurnTime, furnaceSideOrdinal;
     private int benchX, benchY, benchZ;
 
     public FurnaceUpdateResponseMessage()
@@ -30,6 +30,7 @@ public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<F
 
         furnaceCookTime = furnace.furnaceCookTime;
         furnaceBurnTime = furnace.furnaceBurnTime;
+        currentItemBurnTime = furnace.currentItemBurnTime;
 
         benchX = bench.xCoord;
         benchY = bench.yCoord;
@@ -42,6 +43,7 @@ public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<F
         furnaceSideOrdinal = buf.readInt();
         furnaceCookTime = buf.readInt();
         furnaceBurnTime = buf.readInt();
+        currentItemBurnTime = buf.readInt();
 
         benchX = buf.readInt();
         benchY = buf.readInt();
@@ -62,11 +64,10 @@ public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<F
         TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.benchX, message.benchY, message.benchZ);
         if (tileEntity instanceof BenchTileEntity)
         {
-            // @TODO - fix this always returns left side for some reason
-            RelativeBenchSide furnaceSide = RelativeBenchSide.values()[furnaceSideOrdinal];
+            RelativeBenchSide furnaceSide = RelativeBenchSide.values()[message.furnaceSideOrdinal];
             int[] values = new int[]
             {
-                message.furnaceBurnTime, message.furnaceCookTime
+                message.furnaceBurnTime, message.furnaceCookTime, message.currentItemBurnTime
             };
             ((BenchTileEntity) tileEntity).setFurnaceValuesForSide(furnaceSide, values);
         }
@@ -79,6 +80,7 @@ public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<F
         buf.writeInt(furnaceSideOrdinal);
         buf.writeInt(furnaceCookTime);
         buf.writeInt(furnaceBurnTime);
+        buf.writeInt(currentItemBurnTime);
 
         buf.writeInt(benchX);
         buf.writeInt(benchY);
