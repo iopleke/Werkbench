@@ -16,8 +16,8 @@ import werkbench.reference.Config;
 public class BenchGUI extends GuiContainer
 {
     private BenchTileEntity bench;
-    private int tickCount;
     private boolean doFurnaceUpdate;
+    private int tickCount;
 
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
@@ -32,12 +32,6 @@ public class BenchGUI extends GuiContainer
 
     }
 
-    private void resetTickCount()
-    {
-        tickCount = 0;
-        doFurnaceUpdate = true;
-    }
-
     private void incrementTickCount()
     {
         tickCount++;
@@ -47,14 +41,112 @@ public class BenchGUI extends GuiContainer
         }
     }
 
-    public int getLeft()
+    private void renderDoubleChestLeft()
     {
-        return this.guiLeft;
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.doubleChest);
+        int x = (width - xSize) / 2;
+        int y = (height - ySize) / 2 + 30;
+        drawTexturedModalRect(x, y, 0, 0, 122, 176);
     }
 
-    public int getTop()
+    private void renderDoubleChestRight()
     {
-        return this.guiTop;
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.doubleChest);
+        int x = (width - xSize) / 2 + 298;
+        int y = (height - ySize) / 2 + 30;
+        drawTexturedModalRect(x, y, 0, 0, 122, 176);
+    }
+
+    private void renderFurnaceLeft()
+    {
+        if (doFurnaceUpdate)
+        {
+            sendFurnaceGUIUpdateRequest(RelativeBenchSide.LEFT);
+        }
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
+
+        // @TODO - make these number self explanitory
+        int x = (width - xSize) / 2 + 46;
+        int y = (height - ySize) / 2 + 40;
+        renderProgressBars(RelativeBenchSide.LEFT, x, y);
+    }
+
+    private void renderFurnaceRight()
+    {
+        if (doFurnaceUpdate)
+        {
+            sendFurnaceGUIUpdateRequest(RelativeBenchSide.RIGHT);
+        }
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
+
+        // @TODO - make these number self explanitory
+        int x = (width - xSize) / 2 + 298;
+        int y = (height - ySize) / 2 + 40;
+
+        renderProgressBars(RelativeBenchSide.RIGHT, x, y);
+    }
+
+    private void renderProgressBars(RelativeBenchSide side, int x, int y)
+    {
+        int[] furnaceSideValues = bench.getFurnaceValuesForSide(side);
+        int cookProgress = 0;
+        int burnLevel = 0;
+        if (furnaceSideValues != null)
+        {
+            if (furnaceSideValues[0] > 0 && furnaceSideValues[2] > 0)
+            {
+                burnLevel = (furnaceSideValues[0] * 29 / furnaceSideValues[2]);
+            }
+            if (furnaceSideValues[1] > 0)
+            {
+                cookProgress = (furnaceSideValues[1] * 22 / 200);
+            }
+        }
+        drawTexturedModalRect(x, y, 0, 105, 76, 76);
+        if (SpatialHelper.getBlockForRelativeSide(bench, side) == AdjacentBlockType.FURNACE_ACTIVE)
+        {
+            if (burnLevel != 0)
+            {
+                drawTexturedModalRect(x, y + 76 - burnLevel, 0, 76 + 14 - burnLevel / 2, 76, burnLevel);
+            }
+            if (cookProgress != 0)
+            {
+                drawTexturedModalRect(x + 26, y + 12, 76, 0, cookProgress, 15);
+            }
+        }
+
+        drawTexturedModalRect(x, y, 0, 0, 76, 76);
+    }
+
+    private void renderSingleChestLeft()
+    {
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.singleChest);
+        int x = (width - xSize) / 2 + 54;
+        int y = (height - ySize) / 2 + 30;
+        drawTexturedModalRect(x, y, 0, 0, 68, 176);
+    }
+
+    private void renderSingleChestRight()
+    {
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.singleChest);
+        int x = (width - xSize) / 2 + 298;
+        int y = (height - ySize) / 2 + 30;
+        drawTexturedModalRect(x, y, 0, 0, 68, 176);
+    }
+
+    private void resetTickCount()
+    {
+        tickCount = 0;
+        doFurnaceUpdate = true;
+    }
+
+    private void sendFurnaceGUIUpdateRequest(RelativeBenchSide side)
+    {
+        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, side);
+        if (tileEntity instanceof TileEntityFurnace)
+        {
+            MessageHandler.INSTANCE.sendToServer(new FurnaceUpdateRequestMessage(((TileEntityFurnace) tileEntity), bench, side));
+        }
     }
 
     @Override
@@ -104,122 +196,14 @@ public class BenchGUI extends GuiContainer
         }
     }
 
-    private void renderDoubleChestLeft()
+    public int getLeft()
     {
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.doubleChest);
-        int x = (width - xSize) / 2;
-        int y = (height - ySize) / 2 + 30;
-        drawTexturedModalRect(x, y, 0, 0, 122, 176);
+        return this.guiLeft;
     }
 
-    private void renderSingleChestLeft()
+    public int getTop()
     {
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.singleChest);
-        int x = (width - xSize) / 2 + 54;
-        int y = (height - ySize) / 2 + 30;
-        drawTexturedModalRect(x, y, 0, 0, 68, 176);
-    }
-
-    private void renderDoubleChestRight()
-    {
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.doubleChest);
-        int x = (width - xSize) / 2 + 298;
-        int y = (height - ySize) / 2 + 30;
-        drawTexturedModalRect(x, y, 0, 0, 122, 176);
-    }
-
-    private void renderSingleChestRight()
-    {
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.singleChest);
-        int x = (width - xSize) / 2 + 298;
-        int y = (height - ySize) / 2 + 30;
-        drawTexturedModalRect(x, y, 0, 0, 68, 176);
-    }
-
-    private void renderFurnaceRight()
-    {
-        if (doFurnaceUpdate)
-        {
-            sendFurnaceGUIUpdateRequest(RelativeBenchSide.RIGHT);
-        }
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
-        /*
-         * @TODO - get burn times from the tileEntity
-         * TileEntityFurnace furnace = bench.getRightFurnaceTileEntity();
-         * if (furnace != null)
-         * {
-         * if (furnace.isBurning())
-         * {
-         * drawTexturedModalRect(x, y + 38, 0, 76, 76,
-         * furnace.getBurnTimeRemainingScaled(38));
-         * } else
-         * {
-         * drawTexturedModalRect(x, y + 38, 0, 115, 76, 38);
-         * }
-         *
-         * }
-         */
-
-        // @TODO - make these number self explanitory
-        int x = (width - xSize) / 2 + 298;
-        int y = (height - ySize) / 2 + 40;
-
-        renderProgressBars(RelativeBenchSide.RIGHT, x, y);
-    }
-
-    private void sendFurnaceGUIUpdateRequest(RelativeBenchSide side)
-    {
-        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, side);
-        if (tileEntity instanceof TileEntityFurnace)
-        {
-            MessageHandler.INSTANCE.sendToServer(new FurnaceUpdateRequestMessage(((TileEntityFurnace) tileEntity), bench, side));
-        }
-    }
-
-    private void renderFurnaceLeft()
-    {
-        if (doFurnaceUpdate)
-        {
-            sendFurnaceGUIUpdateRequest(RelativeBenchSide.LEFT);
-        }
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
-
-        // @TODO - make these number self explanitory
-        int x = (width - xSize) / 2 + 46;
-        int y = (height - ySize) / 2 + 40;
-        renderProgressBars(RelativeBenchSide.LEFT, x, y);
-    }
-
-    private void renderProgressBars(RelativeBenchSide side, int x, int y)
-    {
-        int[] furnaceSideValues = bench.getFurnaceValuesForSide(side);
-        int cookProgress = 0;
-        int burnLevel = 0;
-        if (furnaceSideValues != null)
-        {
-            if (furnaceSideValues[0] > 0 && furnaceSideValues[2] > 0)
-            {
-                burnLevel = (furnaceSideValues[0] * 29 / furnaceSideValues[2]);
-            }
-            if (furnaceSideValues[1] > 0)
-            {
-                cookProgress = (furnaceSideValues[1] * 22 / 200);
-            }
-        }
-        drawTexturedModalRect(x, y, 0, 105, 76, 76);
-        if (SpatialHelper.getBlockForRelativeSide(bench, side) == AdjacentBlockType.FURNACE_ACTIVE)
-        {
-            if (burnLevel != 0)
-            {
-                drawTexturedModalRect(x, y + 76 - burnLevel, 0, 76 + 14 - burnLevel / 2, 76, burnLevel);
-            }
-            if (cookProgress != 0)
-            {
-                drawTexturedModalRect(x + 26, y + 12, 76, 0, cookProgress, 15);
-            }
-        }
-
-        drawTexturedModalRect(x, y, 0, 0, 76, 76);
+        return this.guiTop;
     }
 
 }
