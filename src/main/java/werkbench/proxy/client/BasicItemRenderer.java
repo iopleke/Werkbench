@@ -8,8 +8,8 @@ import org.lwjgl.opengl.GL11;
 
 public class BasicItemRenderer implements IItemRenderer
 {
-    TileEntitySpecialRenderer tesr;
     private final TileEntity tileEntity;
+    TileEntitySpecialRenderer tesr;
 
     public BasicItemRenderer(TileEntitySpecialRenderer tesr, TileEntity tileEntity)
     {

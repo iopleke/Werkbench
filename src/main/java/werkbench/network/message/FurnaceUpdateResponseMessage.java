@@ -17,8 +17,11 @@ import werkbench.reference.Compendium.RelativeBenchSide;
  */
 public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<FurnaceUpdateResponseMessage, IMessage>
 {
-    private int furnaceCookTime, furnaceBurnTime, currentItemBurnTime, furnaceSideOrdinal;
     private int benchX, benchY, benchZ;
+    private int currentItemBurnTime;
+    private int furnaceBurnTime;
+    private int furnaceCookTime;
+    private int furnaceSideOrdinal;
 
     public FurnaceUpdateResponseMessage()
     {

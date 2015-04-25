@@ -20,8 +20,11 @@ import werkbench.reference.Compendium.RelativeBenchSide;
  */
 public class FurnaceUpdateRequestMessage implements IMessage, IMessageHandler<FurnaceUpdateRequestMessage, IMessage>
 {
-    private int furnaceX, furnaceY, furnaceZ, furnaceSideOrdinal;
     private int benchX, benchY, benchZ;
+    private int furnaceSideOrdinal;
+    private int furnaceX;
+    private int furnaceY;
+    private int furnaceZ;
 
     public FurnaceUpdateRequestMessage()
     {

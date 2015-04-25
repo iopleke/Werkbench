@@ -33,6 +33,37 @@ public class BenchGUI extends GuiContainer
 
     }
 
+    private void bindGUITexture()
+    {
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.background);
+    }
+
+    private void drawBackgroundForSide(RelativeBenchSide side)
+    {
+        AdjacentBlockType sideBlock = SpatialHelper.getBlockForRelativeSide(bench, side);
+        switch (sideBlock)
+        {
+            case CHEST_SINGLE:
+                renderSingleChestForSide(side);
+                break;
+            case CHEST_DOUBLE:
+                renderDoubleChestForSide(side);
+                break;
+            case FURNACE_ACTIVE:
+            case FURNACE_INACTIVE:
+                renderFurnaceForSide(side);
+                break;
+            default:
+                // do nothing
+                break;
+        }
+    }
+
+    private void drawBenchBackground()
+    {
+        drawTexturedModalRect(xOffset + 122, yOffset + 40, 0, 0, 176, 166);
+    }
+
     private void incrementTickCount()
     {
         tickCount++;
@@ -124,41 +155,10 @@ public class BenchGUI extends GuiContainer
         }
     }
 
-    private void drawBenchBackground()
-    {
-        drawTexturedModalRect(xOffset + 122, yOffset + 40, 0, 0, 176, 166);
-    }
-
-    private void bindGUITexture()
-    {
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.background);
-    }
-
     private void updateOffsetCoordinates()
     {
         xOffset = (width - xSize) / 2;
         yOffset = (height - ySize) / 2;
-    }
-
-    private void drawBackgroundForSide(RelativeBenchSide side)
-    {
-        AdjacentBlockType sideBlock = SpatialHelper.getBlockForRelativeSide(bench, side);
-        switch (sideBlock)
-        {
-            case CHEST_SINGLE:
-                renderSingleChestForSide(side);
-                break;
-            case CHEST_DOUBLE:
-                renderDoubleChestForSide(side);
-                break;
-            case FURNACE_ACTIVE:
-            case FURNACE_INACTIVE:
-                renderFurnaceForSide(side);
-                break;
-            default:
-                // do nothing
-                break;
-        }
     }
 
     @Override

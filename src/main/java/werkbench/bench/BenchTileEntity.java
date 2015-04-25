@@ -24,8 +24,8 @@ import werkbench.reference.Config;
 public class BenchTileEntity extends TileEntity implements IInventory
 {
     private final Map<ForgeDirection, AdjacentBlockType> blockMemory = new EnumMap<ForgeDirection, AdjacentBlockType>(ForgeDirection.class);
-    private int processingTicks;
     private final Map<RelativeBenchSide, int[]> furnaceGUIValues = new EnumMap<RelativeBenchSide, int[]>(Compendium.RelativeBenchSide.class);
+    private int processingTicks;
 
     // The inventory is a 3x3 grid (for crafting)
     public ItemStack[] craftGrid = new ItemStack[9];
@@ -35,20 +35,6 @@ public class BenchTileEntity extends TileEntity implements IInventory
         super();
         resetBlockMemory();
         resetProcessingTicks();
-    }
-
-    public void setFurnaceValuesForSide(RelativeBenchSide side, int[] values)
-    {
-        furnaceGUIValues.put(side, values);
-    }
-
-    public int[] getFurnaceValuesForSide(RelativeBenchSide side)
-    {
-        if (furnaceGUIValues.containsKey(side))
-        {
-            return furnaceGUIValues.get(side);
-        }
-        return null;
     }
 
     private AdjacentBlockType getTypeFromTileEntity(TileEntity tileEntity)
@@ -139,6 +125,15 @@ public class BenchTileEntity extends TileEntity implements IInventory
     public Map<ForgeDirection, AdjacentBlockType> getBlockMemory()
     {
         return blockMemory;
+    }
+
+    public int[] getFurnaceValuesForSide(RelativeBenchSide side)
+    {
+        if (furnaceGUIValues.containsKey(side))
+        {
+            return furnaceGUIValues.get(side);
+        }
+        return null;
     }
 
     /**
@@ -263,6 +258,11 @@ public class BenchTileEntity extends TileEntity implements IInventory
         {
             craftGrid[i] = ItemStack.loadItemStackFromNBT(nbtList.getCompoundTagAt(i));
         }
+    }
+
+    public void setFurnaceValuesForSide(RelativeBenchSide side, int[] values)
+    {
+        furnaceGUIValues.put(side, values);
     }
 
     /**

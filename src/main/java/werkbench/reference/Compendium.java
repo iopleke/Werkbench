@@ -38,18 +38,18 @@ public class Compendium
         {
             0, 0
         }),
-        FURNACE_INACTIVE(new int[]
+        EMPTY(new int[]
         {
-            47, 13
+            0, 0
         }, new int[]
         {
-            1, 13
+            0, 0
         }, new int[]
         {
-            46, 10
+            0, 0
         }, new int[]
         {
-            0, 10
+            0, 0
         }),
         FURNACE_ACTIVE(new int[]
         {
@@ -64,18 +64,18 @@ public class Compendium
         {
             0, 10
         }),
-        EMPTY(new int[]
+        FURNACE_INACTIVE(new int[]
         {
-            0, 0
+            47, 13
         }, new int[]
         {
-            0, 0
+            1, 13
         }, new int[]
         {
-            0, 0
+            46, 10
         }, new int[]
         {
-            0, 0
+            0, 10
         }),
         OFFSET(new int[]
         {
@@ -91,15 +91,23 @@ public class Compendium
             298, 30
         });
 
-        private final int[] slotLeft, slotRight;
-        private final int[] guiLeft, guiRight;
-
-        AdjacentBlockType(int[] slotLeft, int[] slotRight, int[] guiLeft, int[] guiRight)
+        public static int[] getGUIBackgroundCoordinates(RelativeBenchSide side, AdjacentBlockType type)
         {
-            this.slotLeft = slotLeft;
-            this.slotRight = slotRight;
-            this.guiLeft = guiLeft;
-            this.guiRight = guiRight;
+            if (side == RelativeBenchSide.LEFT)
+            {
+                return new int[]
+                {
+                    type.guiLeft[0] + AdjacentBlockType.OFFSET.guiLeft[0],
+                    type.guiLeft[1] + AdjacentBlockType.OFFSET.guiLeft[1]
+                };
+            } else
+            {
+                return new int[]
+                {
+                    type.guiRight[0] + AdjacentBlockType.OFFSET.guiRight[0],
+                    type.guiRight[1] + AdjacentBlockType.OFFSET.guiRight[1]
+                };
+            }
         }
 
         public static int[] getGUISlotCoordinates(RelativeBenchSide side, AdjacentBlockType type)
@@ -120,25 +128,18 @@ public class Compendium
                 };
             }
         }
+        private final int[] guiLeft, guiRight;
+        private final int[] slotLeft;
+        private final int[] slotRight;
 
-        public static int[] getGUIBackgroundCoordinates(RelativeBenchSide side, AdjacentBlockType type)
+        AdjacentBlockType(int[] slotLeft, int[] slotRight, int[] guiLeft, int[] guiRight)
         {
-            if (side == RelativeBenchSide.LEFT)
-            {
-                return new int[]
-                {
-                    type.guiLeft[0] + AdjacentBlockType.OFFSET.guiLeft[0],
-                    type.guiLeft[1] + AdjacentBlockType.OFFSET.guiLeft[1]
-                };
-            } else
-            {
-                return new int[]
-                {
-                    type.guiRight[0] + AdjacentBlockType.OFFSET.guiRight[0],
-                    type.guiRight[1] + AdjacentBlockType.OFFSET.guiRight[1]
-                };
-            }
+            this.slotLeft = slotLeft;
+            this.slotRight = slotRight;
+            this.guiLeft = guiLeft;
+            this.guiRight = guiRight;
         }
+
     }
 
     public static enum RelativeBenchSide

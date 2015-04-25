@@ -18,29 +18,8 @@ public class Config
     // turns on extra logging printouts
     public static boolean debugMode;
 
-    public static int maxUpdateTickCount = 100;
-
     public static int furnaceGUIUpdatePacketFrequency = 40;
-
-    public static void init()
-    {
-
-        if (config == null)
-        {
-            config = new Configuration(new File(Compendium.Config.configPrefix + "Werkbench.cfg"));
-            debugMode = true;
-            loadConfig();
-        }
-    }
-
-    @SubscribeEvent
-    public void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
-    {
-        if (event.modID.equalsIgnoreCase(Compendium.Naming.id))
-        {
-            loadConfig();
-        }
-    }
+    public static int maxUpdateTickCount = 100;
 
     private static void loadConfig()
     {
@@ -79,5 +58,25 @@ public class Config
         List<IConfigElement> list = new ArrayList<IConfigElement>();
         list.addAll(new ConfigElement(Config.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements());
         return list;
+    }
+
+    public static void init()
+    {
+
+        if (config == null)
+        {
+            config = new Configuration(new File(Compendium.Config.configPrefix + "Werkbench.cfg"));
+            debugMode = true;
+            loadConfig();
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
+    {
+        if (event.modID.equalsIgnoreCase(Compendium.Naming.id))
+        {
+            loadConfig();
+        }
     }
 }
