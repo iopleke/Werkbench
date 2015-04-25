@@ -63,7 +63,7 @@ public class Compendium
             this.right = right;
         }
 
-        public static int[] getGUICoordinate(RelativeBenchSide side, AdjacentBlockType type)
+        public static int[] getGUISlotCoordinates(RelativeBenchSide side, AdjacentBlockType type)
         {
             if (side == RelativeBenchSide.LEFT)
             {

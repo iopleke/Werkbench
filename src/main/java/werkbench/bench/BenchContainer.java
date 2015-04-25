@@ -126,7 +126,7 @@ public final class BenchContainer extends Container
                 xOffset = i * 18;
                 yOffset = j * 18;
                 slotArray[count++] = slot;
-                guiOffsets = AdjacentBlockType.getGUICoordinate(side, chestType);
+                guiOffsets = AdjacentBlockType.getGUISlotCoordinates(side, chestType);
                 addSlotToContainer(new Slot(chest, slot, guiOffsets[0] + xOffset, guiOffsets[1] + yOffset));
             }
         }
@@ -136,7 +136,7 @@ public final class BenchContainer extends Container
     private void bindSlotsForFurnace(TileEntityFurnace furnace, InventoryPlayer inventoryPlayer, RelativeBenchSide side)
     {
         int slot = 0;
-        int[] guiOffsets = AdjacentBlockType.getGUICoordinate(side, AdjacentBlockType.FURNACE_INACTIVE);
+        int[] guiOffsets = AdjacentBlockType.getGUISlotCoordinates(side, AdjacentBlockType.FURNACE_INACTIVE);
         addSlotToContainer(new Slot(furnace, slot++, guiOffsets[0], guiOffsets[1]));
         addSlotToContainer(new Slot(furnace, slot++, guiOffsets[0] + 21, guiOffsets[1] + 44));
         addSlotToContainer(new SlotFurnace(inventoryPlayer.player, furnace, slot++, guiOffsets[0] + 42, guiOffsets[1]));
