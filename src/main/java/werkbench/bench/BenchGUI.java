@@ -35,7 +35,7 @@ public class BenchGUI extends GuiContainer
     private void incrementTickCount()
     {
         tickCount++;
-        if (tickCount >= Config.maxGUIUpdatePacketTickCount)
+        if (tickCount >= Config.furnaceGUIUpdatePacketFrequency)
         {
             resetTickCount();
         }

@@ -4,11 +4,14 @@ language.code=en_US
 
 tile.werkbench.name=Werkbench
 
-config.general.description=General options, things that didn't fit anywhere else
+config.general.description=General options, or options which didn't fit anywhere else
 config.performance.description=Performance tweaks, generally already pretty nicely balanced, change at your own risk
 
 config.maxUpdateTickCount.description=Maximum number of ticks before a werkbench checks for blocks around it. Increase to improve performance.
 config.maxUpdateTickCount.tooltip=Maximum ticks between side check updates
+
+config.furnaceGUIUpdatePacketFrequency.description=Duration between packets sent from the client to get furnace progress bars. Increase to improve performance.
+config.furnaceGUIUpdatePacketFrequency.tooltip=Duration between furnace progress bar update packets
 
 config.debugMode.tooltip=Debug Mode
 config.debugMode.description=Enable extra debugging messages
