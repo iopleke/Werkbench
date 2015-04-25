@@ -18,8 +18,20 @@ public class Compendium
         }, new int[]
         {
             54, 0
+        }, new int[]
+        {
+            0, 0
+        }, new int[]
+        {
+            0, 0
         }),
         CHEST_SINGLE(new int[]
+        {
+            54, 0
+        }, new int[]
+        {
+            0, 0
+        }, new int[]
         {
             54, 0
         }, new int[]
@@ -32,6 +44,12 @@ public class Compendium
         }, new int[]
         {
             1, 13
+        }, new int[]
+        {
+            46, 10
+        }, new int[]
+        {
+            0, 10
         }),
         FURNACE_ACTIVE(new int[]
         {
@@ -39,8 +57,20 @@ public class Compendium
         }, new int[]
         {
             1, 13
+        }, new int[]
+        {
+            46, 10
+        }, new int[]
+        {
+            0, 10
         }),
         EMPTY(new int[]
+        {
+            0, 0
+        }, new int[]
+        {
+            0, 0
+        }, new int[]
         {
             0, 0
         }, new int[]
@@ -53,14 +83,23 @@ public class Compendium
         }, new int[]
         {
             306, 38
+        }, new int[]
+        {
+            0, 30
+        }, new int[]
+        {
+            298, 30
         });
 
-        private final int[] left, right;
+        private final int[] slotLeft, slotRight;
+        private final int[] guiLeft, guiRight;
 
-        AdjacentBlockType(int[] left, int[] right)
+        AdjacentBlockType(int[] slotLeft, int[] slotRight, int[] guiLeft, int[] guiRight)
         {
-            this.left = left;
-            this.right = right;
+            this.slotLeft = slotLeft;
+            this.slotRight = slotRight;
+            this.guiLeft = guiLeft;
+            this.guiRight = guiRight;
         }
 
         public static int[] getGUISlotCoordinates(RelativeBenchSide side, AdjacentBlockType type)
@@ -69,15 +108,34 @@ public class Compendium
             {
                 return new int[]
                 {
-                    type.left[0] + AdjacentBlockType.OFFSET.left[0],
-                    type.left[1] + AdjacentBlockType.OFFSET.left[1]
+                    type.slotLeft[0] + AdjacentBlockType.OFFSET.slotLeft[0],
+                    type.slotLeft[1] + AdjacentBlockType.OFFSET.slotLeft[1]
                 };
             } else
             {
                 return new int[]
                 {
-                    type.right[0] + AdjacentBlockType.OFFSET.right[0],
-                    type.right[1] + AdjacentBlockType.OFFSET.right[1]
+                    type.slotRight[0] + AdjacentBlockType.OFFSET.slotRight[0],
+                    type.slotRight[1] + AdjacentBlockType.OFFSET.slotRight[1]
+                };
+            }
+        }
+
+        public static int[] getGUIBackgroundCoordinates(RelativeBenchSide side, AdjacentBlockType type)
+        {
+            if (side == RelativeBenchSide.LEFT)
+            {
+                return new int[]
+                {
+                    type.guiLeft[0] + AdjacentBlockType.OFFSET.guiLeft[0],
+                    type.guiLeft[1] + AdjacentBlockType.OFFSET.guiLeft[1]
+                };
+            } else
+            {
+                return new int[]
+                {
+                    type.guiRight[0] + AdjacentBlockType.OFFSET.guiRight[0],
+                    type.guiRight[1] + AdjacentBlockType.OFFSET.guiRight[1]
                 };
             }
         }
