@@ -17,7 +17,7 @@ public class BenchGUI extends GuiContainer
 {
     private BenchTileEntity bench;
     private boolean doFurnaceUpdate;
-    private int tickCount;
+    private int tickCount, xOffset, yOffset;
 
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
@@ -28,6 +28,7 @@ public class BenchGUI extends GuiContainer
 
         this.ySize = 206;
 
+        updateOffsetCoordinates();
         resetTickCount();
 
     }
@@ -41,52 +42,34 @@ public class BenchGUI extends GuiContainer
         }
     }
 
-    private void renderDoubleChestLeft()
+    private void renderDoubleChestForSide(RelativeBenchSide side)
     {
         this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.doubleChest);
-        int x = (width - xSize) / 2;
-        int y = (height - ySize) / 2 + 30;
-        drawTexturedModalRect(x, y, 0, 0, 122, 176);
+        int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_DOUBLE);
+        drawTexturedModalRect(xOffset + guiOffsets[0], yOffset + guiOffsets[1], 0, 0, 122, 176);
+
     }
 
-    private void renderDoubleChestRight()
-    {
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.doubleChest);
-        int x = (width - xSize) / 2 + 298;
-        int y = (height - ySize) / 2 + 30;
-        drawTexturedModalRect(x, y, 0, 0, 122, 176);
-    }
-
-    private void renderFurnaceLeft()
+    private void renderFurnaceForSide(RelativeBenchSide side)
     {
         if (doFurnaceUpdate)
         {
-            sendFurnaceGUIUpdateRequest(RelativeBenchSide.LEFT);
+            sendFurnaceGUIUpdateRequest(side);
         }
         this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
+        int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.FURNACE_ACTIVE);
 
-        // @TODO - make these number self explanitory
-        int x = (width - xSize) / 2 + 46;
-        int y = (height - ySize) / 2 + 40;
-        renderProgressBars(RelativeBenchSide.LEFT, x, y);
+        renderFurnaceProgressBars(side, xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
+        renderFurnaceForeground(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
+
     }
 
-    private void renderFurnaceRight()
+    private void renderFurnaceForeground(int x, int y)
     {
-        if (doFurnaceUpdate)
-        {
-            sendFurnaceGUIUpdateRequest(RelativeBenchSide.RIGHT);
-        }
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.furnace);
-
-        // @TODO - make these number self explanitory
-        int x = (width - xSize) / 2 + 298;
-        int y = (height - ySize) / 2 + 40;
-
-        renderProgressBars(RelativeBenchSide.RIGHT, x, y);
+        drawTexturedModalRect(x, y, 0, 0, 76, 76);
     }
 
-    private void renderProgressBars(RelativeBenchSide side, int x, int y)
+    private void renderFurnaceProgressBars(RelativeBenchSide side, int x, int y)
     {
         int[] furnaceSideValues = bench.getFurnaceValuesForSide(side);
         int cookProgress = 0;
@@ -118,20 +101,12 @@ public class BenchGUI extends GuiContainer
         drawTexturedModalRect(x, y, 0, 0, 76, 76);
     }
 
-    private void renderSingleChestLeft()
+    private void renderSingleChestForSide(RelativeBenchSide side)
     {
         this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.singleChest);
-        int x = (width - xSize) / 2 + 54;
-        int y = (height - ySize) / 2 + 30;
-        drawTexturedModalRect(x, y, 0, 0, 68, 176);
-    }
+        int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
+        drawTexturedModalRect(xOffset + guiOffsets[0], yOffset + guiOffsets[1], 0, 0, 68, 176);
 
-    private void renderSingleChestRight()
-    {
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.singleChest);
-        int x = (width - xSize) / 2 + 298;
-        int y = (height - ySize) / 2 + 30;
-        drawTexturedModalRect(x, y, 0, 0, 68, 176);
     }
 
     private void resetTickCount()
@@ -149,61 +124,57 @@ public class BenchGUI extends GuiContainer
         }
     }
 
+    private void drawBenchBackground()
+    {
+        drawTexturedModalRect(xOffset + 122, yOffset + 40, 0, 0, 176, 166);
+    }
+
+    private void bindGUITexture()
+    {
+        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.background);
+    }
+
+    private void updateOffsetCoordinates()
+    {
+        xOffset = (width - xSize) / 2;
+        yOffset = (height - ySize) / 2;
+    }
+
+    private void drawBackgroundForSide(RelativeBenchSide side)
+    {
+        AdjacentBlockType sideBlock = SpatialHelper.getBlockForRelativeSide(bench, side);
+        switch (sideBlock)
+        {
+            case CHEST_SINGLE:
+                renderSingleChestForSide(side);
+                break;
+            case CHEST_DOUBLE:
+                renderDoubleChestForSide(side);
+                break;
+            case FURNACE_ACTIVE:
+            case FURNACE_INACTIVE:
+                renderFurnaceForSide(side);
+                break;
+            default:
+                // do nothing
+                break;
+        }
+    }
+
     @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int mousex, int mousey)
     {
         incrementTickCount();
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.background);
-        int x = (width - xSize) / 2 + 122;
-        int y = (height - ySize) / 2 + 40;
-        drawTexturedModalRect(x, y, 0, 0, 176, 166);
+        updateOffsetCoordinates();
+        bindGUITexture();
+        drawBenchBackground();
 
-        AdjacentBlockType leftBlock = SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.LEFT);
-        AdjacentBlockType rightBlock = SpatialHelper.getBlockForRelativeSide(bench, RelativeBenchSide.RIGHT);
+        drawBackgroundForSide(RelativeBenchSide.LEFT);
+        drawBackgroundForSide(RelativeBenchSide.RIGHT);
 
-        if (leftBlock == AdjacentBlockType.CHEST_SINGLE || leftBlock == AdjacentBlockType.CHEST_DOUBLE)
-        {
-            if (bench.isChestDouble(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.LEFT)))
-            {
-                renderDoubleChestLeft();
-            } else
-            {
-                renderSingleChestLeft();
-            }
-        }
-
-        if (leftBlock == AdjacentBlockType.FURNACE_INACTIVE || leftBlock == AdjacentBlockType.FURNACE_ACTIVE)
-        {
-            renderFurnaceLeft();
-        }
-        if (rightBlock == AdjacentBlockType.CHEST_SINGLE || rightBlock == AdjacentBlockType.CHEST_DOUBLE)
-        {
-            if (bench.isChestDouble(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.RIGHT)))
-            {
-                renderDoubleChestRight();
-            } else
-            {
-                renderSingleChestRight();
-            }
-        }
-        if (rightBlock == AdjacentBlockType.FURNACE_INACTIVE || rightBlock == AdjacentBlockType.FURNACE_ACTIVE)
-        {
-            renderFurnaceRight();
-        }
         if (doFurnaceUpdate)
         {
             doFurnaceUpdate = false;
         }
     }
-
-    public int getLeft()
-    {
-        return this.guiLeft;
-    }
-
-    public int getTop()
-    {
-        return this.guiTop;
-    }
-
 }
