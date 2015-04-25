@@ -301,7 +301,15 @@ public class BenchTileEntity extends TileEntity implements IInventory
             ForgeDirection direction = ForgeDirection.getOrientation(i);
 
             TileEntity tileEntity = SpatialHelper.getTileEntityForDirection(this, direction);
-            blockMemory.put(direction, getTypeFromTileEntity(tileEntity));
+            AdjacentBlockType tileEntityType = getTypeFromTileEntity(tileEntity);
+            if (tileEntityType == AdjacentBlockType.CHEST_SINGLE)
+            {
+                if (isChestDouble(direction))
+                {
+                    tileEntityType = AdjacentBlockType.CHEST_DOUBLE;
+                }
+            }
+            blockMemory.put(direction, tileEntityType);
         }
     }
 
