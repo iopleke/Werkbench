@@ -202,9 +202,10 @@ public class Compendium
         public static final class GUI
         {
             public static final String background = "textures/gui/werkBenchGUIBackground.png";
-            public static final String singleChest = "textures/gui/werkBenchGUIBackgroundChestSingle.png";
+            public static final String singleChestTabBackground = "textures/gui/singleChestTabBackground.png";
             public static final String doubleChest = "textures/gui/werkBenchGUIBackgroundChestDouble.png";
             public static final String furnace = "textures/gui/werkBenchGUIBackgroundFurnace.png";
+            public static final String singleChest = "textures/gui/werkBenchGUIBackgroundChestSingle.png";
         }
 
         public static final class Model
@@ -233,11 +234,6 @@ public class Compendium
         public static final class Model
         {
             public static final ResourceLocation bench = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.Model.bench);
-        }
-
-        public static final class Tab
-        {
-
         }
     }
 

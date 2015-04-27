@@ -5,6 +5,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
+import werkbench.gui.Tab;
+import werkbench.gui.Tab.TabSide;
 import werkbench.helper.SpatialHelper;
 import werkbench.network.MessageHandler;
 import werkbench.network.message.FurnaceUpdateRequestMessage;
@@ -18,6 +20,8 @@ public class BenchGUI extends GuiContainer
     private BenchTileEntity bench;
     private boolean doFurnaceUpdate;
     private int tickCount, xOffset, yOffset;
+    private Tab[] leftTabs;
+    private Tab[] rightTabs;
 
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
@@ -30,6 +34,8 @@ public class BenchGUI extends GuiContainer
 
         updateOffsetCoordinates();
         resetTickCount();
+        leftTabs = new Tab[4];
+        rightTabs = new Tab[4];
 
     }
 
@@ -134,9 +140,16 @@ public class BenchGUI extends GuiContainer
 
     private void renderSingleChestForSide(RelativeBenchSide side)
     {
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.singleChest);
         int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
-        drawTexturedModalRect(xOffset + guiOffsets[0], yOffset + guiOffsets[1], 0, 0, 68, 176);
+        if (side == RelativeBenchSide.LEFT)
+        {
+            leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, TabSide.getTabSideFromRelativeSide(side));
+            leftTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
+        } else
+        {
+            rightTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, TabSide.getTabSideFromRelativeSide(side));
+            rightTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
+        }
     }
 
     private void resetTickCount()
@@ -170,10 +183,31 @@ public class BenchGUI extends GuiContainer
 
         drawBackgroundForSide(RelativeBenchSide.LEFT);
         drawBackgroundForSide(RelativeBenchSide.RIGHT);
+        renderSideBackgrounds();
 
         if (doFurnaceUpdate)
         {
             doFurnaceUpdate = false;
+        }
+    }
+
+    private void renderSideBackgrounds()
+    {
+
+        for (Tab tab : leftTabs)
+        {
+            if (tab != null)
+            {
+                tab.renderTab();
+            }
+        }
+
+        for (Tab tab : rightTabs)
+        {
+            if (tab != null)
+            {
+                tab.renderTab();
+            }
         }
     }
 }
