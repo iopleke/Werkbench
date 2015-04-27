@@ -2,6 +2,7 @@ package werkbench.gui;
 
 import net.minecraft.util.ResourceLocation;
 import werkbench.bench.BenchGUI;
+import werkbench.helper.LogHelper;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
 import werkbench.reference.Compendium.RelativeBenchSide;
@@ -153,7 +154,14 @@ public class Tab
 
     public void setTabGUIOffsets(int xOffset, int yOffset)
     {
-        this.xOffset = xOffset;
+
+        if (closedTab && tabSide == TabSide.LEFT)
+        {
+            this.xOffset = xOffset + xMax - xMin;
+        } else
+        {
+            this.xOffset = xOffset;
+        }
         this.yOffset = yOffset;
     }
 
@@ -172,10 +180,12 @@ public class Tab
 
     public boolean intersectsWithTab(int xCoordinate, int yCoordinate)
     {
+        LogHelper.debug("Clicked at x:" + xCoordinate + " y:" + yCoordinate);
         if (xCoordinate >= xOffset && xCoordinate <= xOffset + xSize)
         {
             if (yCoordinate >= yOffset && yCoordinate <= yOffset + ySize)
             {
+                LogHelper.debug("Tab on " + tabSide.toString() + " was clicked!");
                 return true;
             }
         }
@@ -189,12 +199,7 @@ public class Tab
         {
             animateTab();
         }
-        int xCoord = xOffset;
-        if (closedTab && tabSide == TabSide.LEFT)
-        {
-            xCoord = xOffset + xMax - xMin;
-        }
-        gui.drawTexturedModalRect(xCoord, yOffset, textureX, textureY, xSize, ySize);
+        gui.drawTexturedModalRect(xOffset, yOffset, textureX, textureY, xSize, ySize);
     }
 
     public static enum TabSide

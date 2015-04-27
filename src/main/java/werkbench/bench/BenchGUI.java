@@ -210,4 +210,30 @@ public class BenchGUI extends GuiContainer
             }
         }
     }
+
+    private void doTabClicks(int clickX, int clickY)
+    {
+        for (Tab tab : leftTabs)
+        {
+            if (tab != null)
+            {
+                tab.intersectsWithTab(clickX, clickY);
+            }
+        }
+
+        for (Tab tab : rightTabs)
+        {
+            if (tab != null)
+            {
+                tab.intersectsWithTab(clickX, clickY);
+            }
+        }
+    }
+
+    @Override
+    protected void mouseClicked(int clickX, int clickY, int button)
+    {
+        super.mouseClicked(clickX, clickY, button);
+        doTabClicks(clickX, clickY);
+    }
 }
