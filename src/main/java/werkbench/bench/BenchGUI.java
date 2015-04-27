@@ -61,7 +61,7 @@ public class BenchGUI extends GuiContainer
 
     private void drawBenchBackground()
     {
-        drawTexturedModalRect(xOffset + 122, yOffset + 40, 0, 0, 176, 166);
+        drawTexturedModalRect(xOffset + 98, yOffset - 50, 0, 0, 222, 256);
     }
 
     private void incrementTickCount()
@@ -137,7 +137,6 @@ public class BenchGUI extends GuiContainer
         this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.singleChest);
         int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
         drawTexturedModalRect(xOffset + guiOffsets[0], yOffset + guiOffsets[1], 0, 0, 68, 176);
-
     }
 
     private void resetTickCount()
