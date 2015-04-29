@@ -13,7 +13,6 @@ import werkbench.reference.Compendium.RelativeBenchSide;
 public class Tab
 {
     public static ResourceLocation tabBackground;
-    public AdjacentBlockType blockType;
     private boolean closedTab;
     private final int closedTabTextureXOffset = 3;
     private final int closedTabXSize = 15;
@@ -25,7 +24,6 @@ public class Tab
     private int openTabXSize;
     private int openTabYSize;
     private boolean openingTab;
-    public RelativeBenchSide benchSide;
     private int textureX, textureY;
     private int xMax;
     private int xMin;
@@ -35,6 +33,8 @@ public class Tab
     private int yMin;
     private int yOffset;
     private int ySize;
+    public RelativeBenchSide benchSide;
+    public AdjacentBlockType blockType;
 
     public Tab(BenchGUI gui, AdjacentBlockType blockType, RelativeBenchSide side)
     {
@@ -63,6 +63,7 @@ public class Tab
         }
         if (ySize > yMin)
         {
+            ySize--;
             ySize--;
         }
         if (xSize <= xMin && ySize <= yMin)
@@ -108,30 +109,21 @@ public class Tab
         if (xSize < xMax)
         {
             xSize++;
+            xSize++;
+            setTabTextureOffset(textureX - 2, textureY);
+            setTabGUIOffsets(xOffset - 2, yOffset);
+
         }
         if (ySize < yMax)
         {
-            ySize++;
+            ySize = ySize + 10;
         }
+
         if (xSize >= xMax && ySize >= yMax)
         {
             xSize = xMax;
             ySize = yMax;
         }
-    }
-
-    private void initializeTabAnimation()
-    {
-        if (closedTab)
-        {
-            incrementTabValues();
-            setTabState(false, false, true, false);
-        } else
-        {
-            decrementTabValues();
-            setTabState(false, false, false, true);
-        }
-
     }
 
     private void resetTab()
@@ -151,12 +143,33 @@ public class Tab
         openTabYSize = 176;
     }
 
+    private void setTabDimensions(int xSize, int ySize)
+    {
+        this.xSize = xSize;
+        this.ySize = ySize;
+    }
+
     private void setTabState(boolean closed, boolean open, boolean opening, boolean closing)
     {
         closedTab = closed;
         openTab = open;
         openingTab = opening;
         closingTab = closing;
+    }
+
+    private void setTabTextureOffset(int textureX, int textureY)
+    {
+        this.textureX = textureX;
+        this.textureY = textureY;
+    }
+
+    public void drawTooltipForTab(int mouseX, int mouseY)
+    {
+        int xPos = 6;
+        int yPos = 8;
+        int lineHeight = 11;
+        gui.mc.fontRenderer.drawStringWithShadow("type: " + this.blockType.toString(), mouseX + xPos, mouseY + yPos, 0xFFFFFF);
+        gui.mc.fontRenderer.drawStringWithShadow("side: " + this.benchSide.toString(), mouseX + xPos, mouseY + yPos + lineHeight, 0xFFFFFF);
     }
 
     public int getTabHeight()
@@ -167,6 +180,22 @@ public class Tab
     public Object getTabSide()
     {
         return TabSide.getTabSideFromRelativeSide(benchSide);
+    }
+
+    public void initializeTabAnimation()
+    {
+        if (closedTab)
+        {
+            setTabDimensions(25, 25);
+            setTabState(false, false, true, false);
+            setTabTextureOffset(43, 18);
+            setTabGUIOffsets(xOffset - 10, yOffset);
+        } else
+        {
+            decrementTabValues();
+            setTabState(false, false, false, true);
+        }
+
     }
 
     public boolean intersectsWithTab(int clickX, int clickY)
@@ -203,15 +232,6 @@ public class Tab
             this.xOffset = xOffset;
         }
         this.yOffset = yOffset;
-    }
-
-    public void drawTooltipForTab(int mouseX, int mouseY)
-    {
-        int xPos = 6;
-        int yPos = 8;
-        int lineHeight = 11;
-        gui.mc.fontRenderer.drawStringWithShadow("type: " + this.blockType.toString(), mouseX + xPos, mouseY + yPos, 0xFFFFFF);
-        gui.mc.fontRenderer.drawStringWithShadow("side: " + this.benchSide.toString(), mouseX + xPos, mouseY + yPos + lineHeight, 0xFFFFFF);
     }
 
     public static enum TabSide

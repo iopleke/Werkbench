@@ -31,19 +31,43 @@ public class BenchGUI extends GuiContainer
         this.bench = bench;
 
         this.xSize = 420;
-
         this.ySize = 206;
 
         updateOffsetCoordinates();
         resetTickCount();
+        resetTabs();
+    }
+
+    private void resetTabs()
+    {
         leftTabs = new Tab[4];
         rightTabs = new Tab[4];
-
     }
 
     private void bindGUITexture()
     {
         this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.background);
+    }
+
+    private void updateTabsForSide(RelativeBenchSide side)
+    {
+        AdjacentBlockType sideBlock = SpatialHelper.getBlockForRelativeSide(bench, side);
+        switch (sideBlock)
+        {
+            case CHEST_SINGLE:
+                if (side == RelativeBenchSide.LEFT)
+                {
+                    if (leftTabs[0] == null)
+                    {
+                        int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
+                        leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
+                        leftTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
+                    }
+                }
+            default:
+                // do nothing
+                break;
+        }
     }
 
     private void drawBackgroundForSide(RelativeBenchSide side)
@@ -142,16 +166,16 @@ public class BenchGUI extends GuiContainer
 
     private void renderSingleChestForSide(RelativeBenchSide side)
     {
-        int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
-        if (side == RelativeBenchSide.LEFT)
-        {
-            leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
-            leftTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
-        } else
-        {
-            rightTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
-            rightTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
-        }
+//        int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
+//        if (side == RelativeBenchSide.LEFT)
+//        {
+//            leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
+//            leftTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
+//        } else
+//        {
+//            rightTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
+//            rightTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
+//        }
     }
 
     private void resetTickCount()
@@ -183,6 +207,8 @@ public class BenchGUI extends GuiContainer
         bindGUITexture();
         drawBenchBackground();
 
+        updateTabsForSide(RelativeBenchSide.LEFT);
+        updateTabsForSide(RelativeBenchSide.RIGHT);
         drawBackgroundForSide(RelativeBenchSide.LEFT);
         drawBackgroundForSide(RelativeBenchSide.RIGHT);
         renderSideBackgrounds();
@@ -226,6 +252,7 @@ public class BenchGUI extends GuiContainer
                 if (tab.intersectsWithTab(clickX, clickY))
                 {
                     LogHelper.debug("Tab on " + tab.getTabSide().toString() + " was clicked!");
+                    tab.initializeTabAnimation();
                 }
             }
         }
@@ -237,6 +264,7 @@ public class BenchGUI extends GuiContainer
                 if (tab.intersectsWithTab(clickX, clickY))
                 {
                     LogHelper.debug("Tab on " + tab.getTabSide().toString() + " was clicked!");
+                    tab.initializeTabAnimation();
                 }
             }
         }
@@ -250,7 +278,7 @@ public class BenchGUI extends GuiContainer
             {
                 if (tab.intersectsWithTab(mouseX, mouseY))
                 {
-                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
+                    //LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
                     tab.drawTooltipForTab(mouseX, mouseY);
                 }
             }
