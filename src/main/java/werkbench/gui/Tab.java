@@ -76,7 +76,7 @@ public class Tab
         switch (type)
         {
             case CHEST_SINGLE:
-                return new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.singleChestTabBackground);
+                return new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.chestTabBackground);
         }
         return null;
     }

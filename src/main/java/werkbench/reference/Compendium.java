@@ -202,7 +202,7 @@ public class Compendium
         public static final class GUI
         {
             public static final String background = "textures/gui/werkBenchGUIBackground.png";
-            public static final String singleChestTabBackground = "textures/gui/singleChestTabBackground.png";
+            public static final String chestTabBackground = "textures/gui/chestTabBackground.png";
             public static final String doubleChest = "textures/gui/werkBenchGUIBackgroundChestDouble.png";
             public static final String furnace = "textures/gui/werkBenchGUIBackgroundFurnace.png";
             public static final String singleChest = "textures/gui/werkBenchGUIBackgroundChestSingle.png";
