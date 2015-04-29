@@ -1,12 +1,14 @@
 package werkbench.bench;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
 import werkbench.gui.Tab;
-import werkbench.gui.Tab.TabSide;
+import werkbench.helper.LogHelper;
 import werkbench.helper.SpatialHelper;
 import werkbench.network.MessageHandler;
 import werkbench.network.message.FurnaceUpdateRequestMessage;
@@ -143,11 +145,11 @@ public class BenchGUI extends GuiContainer
         int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
         if (side == RelativeBenchSide.LEFT)
         {
-            leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, TabSide.getTabSideFromRelativeSide(side));
+            leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
             leftTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
         } else
         {
-            rightTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, TabSide.getTabSideFromRelativeSide(side));
+            rightTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
             rightTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
         }
     }
@@ -174,7 +176,7 @@ public class BenchGUI extends GuiContainer
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float opacity, int mousex, int mousey)
+    protected void drawGuiContainerBackgroundLayer(float opacity, int mouseX, int mouseY)
     {
         incrementTickCount();
         updateOffsetCoordinates();
@@ -184,6 +186,8 @@ public class BenchGUI extends GuiContainer
         drawBackgroundForSide(RelativeBenchSide.LEFT);
         drawBackgroundForSide(RelativeBenchSide.RIGHT);
         renderSideBackgrounds();
+
+        doTabToolTips(mouseX, mouseY);
 
         if (doFurnaceUpdate)
         {
@@ -213,11 +217,16 @@ public class BenchGUI extends GuiContainer
 
     private void doTabClicks(int clickX, int clickY)
     {
+        LogHelper.debug("Clicked at x:" + clickX + " y:" + clickY);
+
         for (Tab tab : leftTabs)
         {
             if (tab != null)
             {
-                tab.intersectsWithTab(clickX, clickY);
+                if (tab.intersectsWithTab(clickX, clickY))
+                {
+                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " was clicked!");
+                }
             }
         }
 
@@ -225,7 +234,41 @@ public class BenchGUI extends GuiContainer
         {
             if (tab != null)
             {
-                tab.intersectsWithTab(clickX, clickY);
+                if (tab.intersectsWithTab(clickX, clickY))
+                {
+                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " was clicked!");
+                }
+            }
+        }
+    }
+
+    private void doTabToolTips(int mouseX, int mouseY)
+    {
+        for (Tab tab : leftTabs)
+        {
+            if (tab != null)
+            {
+                if (tab.intersectsWithTab(mouseX, mouseY))
+                {
+                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
+                    tab.drawTooltipForTab(mouseX, mouseY);
+                }
+            }
+        }
+
+        for (Tab tab : rightTabs)
+        {
+            if (tab != null)
+            {
+                if (tab.intersectsWithTab(mouseX, mouseY))
+                {
+                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
+                    List<String> toolTipText = new ArrayList<String>();
+                    toolTipText.add("type: " + tab.blockType.toString());
+                    toolTipText.add("side: " + tab.benchSide.toString());
+                    drawHoveringText(toolTipText, mouseX, mouseY, mc.fontRenderer);
+                    //tab.drawTooltipForTab(mouseX, mouseY);
+                }
             }
         }
     }

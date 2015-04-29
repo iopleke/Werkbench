@@ -2,7 +2,6 @@ package werkbench.gui;
 
 import net.minecraft.util.ResourceLocation;
 import werkbench.bench.BenchGUI;
-import werkbench.helper.LogHelper;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
 import werkbench.reference.Compendium.RelativeBenchSide;
@@ -14,7 +13,7 @@ import werkbench.reference.Compendium.RelativeBenchSide;
 public class Tab
 {
     public static ResourceLocation tabBackground;
-    private AdjacentBlockType blockType;
+    public AdjacentBlockType blockType;
     private boolean closedTab;
     private final int closedTabTextureXOffset = 3;
     private final int closedTabXSize = 15;
@@ -26,7 +25,7 @@ public class Tab
     private int openTabXSize;
     private int openTabYSize;
     private boolean openingTab;
-    private TabSide tabSide;
+    public RelativeBenchSide benchSide;
     private int textureX, textureY;
     private int xMax;
     private int xMin;
@@ -37,11 +36,11 @@ public class Tab
     private int yOffset;
     private int ySize;
 
-    public Tab(BenchGUI gui, AdjacentBlockType blockType, TabSide tabSide)
+    public Tab(BenchGUI gui, AdjacentBlockType blockType, RelativeBenchSide side)
     {
         this.gui = gui;
         this.blockType = blockType;
-        this.tabSide = tabSide;
+        this.benchSide = side;
         resetTab();
     }
 
@@ -140,8 +139,8 @@ public class Tab
         setTabState(true, false, false, false);
 
         tabBackground = getResourceForType(blockType);
-        textureX = getTextureOffsetXForSide(tabSide);
-        textureY = getTextureOffsetYForSide(tabSide);
+        textureX = getTextureOffsetXForSide(TabSide.getTabSideFromRelativeSide(benchSide));
+        textureY = getTextureOffsetYForSide(TabSide.getTabSideFromRelativeSide(benchSide));
         xMin = closedTabXSize;
         yMin = closedTabYSize;
         xMax = 68;
@@ -150,19 +149,6 @@ public class Tab
         ySize = yMin;
         openTabXSize = 68;
         openTabYSize = 176;
-    }
-
-    public void setTabGUIOffsets(int xOffset, int yOffset)
-    {
-
-        if (closedTab && tabSide == TabSide.LEFT)
-        {
-            this.xOffset = xOffset + xMax - xMin;
-        } else
-        {
-            this.xOffset = xOffset;
-        }
-        this.yOffset = yOffset;
     }
 
     private void setTabState(boolean closed, boolean open, boolean opening, boolean closing)
@@ -178,14 +164,18 @@ public class Tab
         return this.closedTabYSize;
     }
 
-    public boolean intersectsWithTab(int xCoordinate, int yCoordinate)
+    public Object getTabSide()
     {
-        LogHelper.debug("Clicked at x:" + xCoordinate + " y:" + yCoordinate);
-        if (xCoordinate >= xOffset && xCoordinate <= xOffset + xSize)
+        return TabSide.getTabSideFromRelativeSide(benchSide);
+    }
+
+    public boolean intersectsWithTab(int clickX, int clickY)
+    {
+
+        if (clickX >= xOffset && clickX <= xOffset + xSize)
         {
-            if (yCoordinate >= yOffset && yCoordinate <= yOffset + ySize)
+            if (clickY >= yOffset && clickY <= yOffset + ySize)
             {
-                LogHelper.debug("Tab on " + tabSide.toString() + " was clicked!");
                 return true;
             }
         }
@@ -200,6 +190,28 @@ public class Tab
             animateTab();
         }
         gui.drawTexturedModalRect(xOffset, yOffset, textureX, textureY, xSize, ySize);
+    }
+
+    public void setTabGUIOffsets(int xOffset, int yOffset)
+    {
+
+        if (closedTab && TabSide.getTabSideFromRelativeSide(benchSide) == TabSide.LEFT)
+        {
+            this.xOffset = xOffset + xMax - xMin;
+        } else
+        {
+            this.xOffset = xOffset;
+        }
+        this.yOffset = yOffset;
+    }
+
+    public void drawTooltipForTab(int mouseX, int mouseY)
+    {
+        int xPos = 6;
+        int yPos = 8;
+        int lineHeight = 11;
+        gui.mc.fontRenderer.drawStringWithShadow("type: " + this.blockType.toString(), mouseX + xPos, mouseY + yPos, 0xFFFFFF);
+        gui.mc.fontRenderer.drawStringWithShadow("side: " + this.benchSide.toString(), mouseX + xPos, mouseY + yPos + lineHeight, 0xFFFFFF);
     }
 
     public static enum TabSide
@@ -217,4 +229,5 @@ public class Tab
             }
         }
     }
+
 }
