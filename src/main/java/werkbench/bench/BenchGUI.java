@@ -60,8 +60,7 @@ public class BenchGUI extends GuiContainer
                     if (leftTabs[0] == null)
                     {
                         int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
-                        leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
-                        leftTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
+                        leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side, guiOffsets);
                     }
                 }
             default:
@@ -170,11 +169,11 @@ public class BenchGUI extends GuiContainer
 //        if (side == RelativeBenchSide.LEFT)
 //        {
 //            leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
-//            leftTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
+//            leftTabs[0].setTabGUIOffsetDefaults(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
 //        } else
 //        {
 //            rightTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
-//            rightTabs[0].setTabGUIOffsets(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
+//            rightTabs[0].setTabGUIOffsetDefaults(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
 //        }
     }
 
@@ -293,7 +292,7 @@ public class BenchGUI extends GuiContainer
                     LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
                     List<String> toolTipText = new ArrayList<String>();
                     toolTipText.add("type: " + tab.blockType.toString());
-                    toolTipText.add("side: " + tab.benchSide.toString());
+                    toolTipText.add("side: " + tab.side.toString());
                     drawHoveringText(toolTipText, mouseX, mouseY, mc.fontRenderer);
                     //tab.drawTooltipForTab(mouseX, mouseY);
                 }

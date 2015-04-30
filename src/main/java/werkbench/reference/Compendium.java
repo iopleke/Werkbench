@@ -142,6 +142,12 @@ public class Compendium
 
     }
 
+    public static enum TabState
+    {
+        CLOSED, CLOSING,
+        OPEN, OPENING
+    }
+
     public static enum RelativeBenchSide
     {
         LEFT, RIGHT, BACK, FRONT, TOP, BOTTOM

@@ -5,6 +5,7 @@ import werkbench.bench.BenchGUI;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
 import werkbench.reference.Compendium.RelativeBenchSide;
+import werkbench.reference.Compendium.TabState;
 
 /**
  *
@@ -13,154 +14,180 @@ import werkbench.reference.Compendium.RelativeBenchSide;
 public class Tab
 {
     public static ResourceLocation tabBackground;
-    private boolean closedTab;
-    private final int closedTabTextureXOffset = 3;
-    private final int closedTabXSize = 15;
-    private final int closedTabYSize = 18;
-    private boolean closingTab;
+
+    private TabState state;
+    private int[] defaultGUICoordinates;
+    private int[] defaultTextureCoordinates;
+    private int[] tabSizeMin;
+    private int[] tabSizeMax;
+    private int[] textureCoordinates;
+    private int[] guiCoordinates;
+    private int[] tabSize;
+
     private BenchGUI gui;
-    private boolean openTab;
-    private final int openTabTextureYOffset = 3;
-    private int openTabXSize;
-    private int openTabYSize;
-    private boolean openingTab;
-    private int textureX, textureY;
-    private int xMax;
-    private int xMin;
-    private int xOffset;
-    private int xSize;
-    private int yMax;
-    private int yMin;
-    private int yOffset;
-    private int ySize;
-    public RelativeBenchSide benchSide;
+    public RelativeBenchSide side;
     public AdjacentBlockType blockType;
 
-    public Tab(BenchGUI gui, AdjacentBlockType blockType, RelativeBenchSide side)
+    public Tab(BenchGUI gui, AdjacentBlockType blockType, RelativeBenchSide side, int[] guiCoordinates)
     {
         this.gui = gui;
+        setBlockType(blockType);
+        setResourceForType(blockType);
+        setRelativeBenchSide(side);
+        setTabState(TabState.CLOSED);
+        setMaxTabSize(new int[]
+        {
+            68, 176
+        });
+        setMinTabSize(new int[]
+        {
+            15, 18
+        });
+        resetTabSize();
+        setDefaultTabTextureCoordinates(new int[]
+        {
+            0, 0
+        });
+        setTabTextureCoordinates(this.defaultTextureCoordinates);
+        setDefaultTabGUICoordinates(guiCoordinates);
+        setTabGUICoordinates(defaultGUICoordinates);
+
+    }
+
+    private void resetTabSize()
+    {
+        tabSize = tabSizeMin;
+    }
+
+    private void setMaxTabSize(int[] newMaxTabSize)
+    {
+        this.tabSizeMax = newMaxTabSize;
+    }
+
+    private void setMinTabSize(int[] newMinTabSize)
+    {
+        this.tabSizeMin = newMinTabSize;
+    }
+
+    private void setBlockType(AdjacentBlockType blockType)
+    {
         this.blockType = blockType;
-        this.benchSide = side;
-        resetTab();
+    }
+
+    private void setRelativeBenchSide(RelativeBenchSide side)
+    {
+        this.side = side;
+    }
+
+    private void setTabState(TabState state)
+    {
+        this.state = state;
+    }
+
+    private void setTabTextureCoordinates(int[] newTextureCoordinates)
+    {
+        this.textureCoordinates = newTextureCoordinates;
+    }
+
+    private void setDefaultTabTextureCoordinates(int[] newDefaultTextureCoordinates)
+    {
+        this.defaultTextureCoordinates = newDefaultTextureCoordinates;
+    }
+
+    private void setDefaultTabGUICoordinates(int[] newDefaultGUICoordinates)
+    {
+        defaultGUICoordinates = newDefaultGUICoordinates;
+        if (state == TabState.CLOSED && TabSide.getTabSideFromRelativeSide(side) == TabSide.LEFT)
+        {
+            defaultGUICoordinates[0] = defaultGUICoordinates[0] + this.tabSizeMax[0] - this.tabSizeMin[0];
+        }
+    }
+
+    private void setTabGUICoordinates(int[] newGUICoordinates)
+    {
+        guiCoordinates = newGUICoordinates;
+    }
+
+    private void setTabDimensions(int[] newTabSize)
+    {
+        tabSize = newTabSize;
     }
 
     private void animateTab()
     {
-        if (openingTab)
+        if (state == TabState.OPENING)
         {
-            incrementTabValues();
-        } else if (closingTab)
+            incrementTabValues(2);
+        } else if (state == TabState.CLOSING)
         {
-            decrementTabValues();
+            decrementTabValues(2);
         }
     }
 
-    private void decrementTabValues()
+    private void decrementTabValues(int speed)
     {
-        if (xSize > xMin)
+        if (tabSize[0] > tabSizeMin[0])
         {
-            xSize--;
+            tabSize[0] = tabSize[0] - speed * 2;
+            setTabTextureCoordinates(new int[]
+            {
+                textureCoordinates[0] + speed * 2, textureCoordinates[1]
+            });
+            setTabGUICoordinates(new int[]
+            {
+                guiCoordinates[0] + speed * 2, guiCoordinates[1]
+            });
         }
-        if (ySize > yMin)
+        if (tabSize[1] > tabSizeMin[1])
         {
-            ySize--;
-            ySize--;
+            tabSize[1] = tabSize[1] - speed * 5;
         }
-        if (xSize <= xMin && ySize <= yMin)
+        if (tabSize[0] <= tabSizeMin[0] && tabSize[1] <= tabSizeMin[1])
         {
-            resetTab();
+            tabSize = tabSizeMin;
+            setTabTextureCoordinates(defaultTextureCoordinates);
+            setTabGUICoordinates(defaultGUICoordinates);
+            setTabState(TabState.CLOSED);
         }
     }
 
-    private ResourceLocation getResourceForType(AdjacentBlockType type)
+    private void incrementTabValues(int speed)
+    {
+        if (tabSize[0] < tabSizeMax[0])
+        {
+
+            tabSize[0] = tabSize[0] + speed * 2;
+            setTabTextureCoordinates(new int[]
+            {
+                textureCoordinates[0] - speed * 2, textureCoordinates[1]
+            });
+            setTabGUICoordinates(new int[]
+            {
+                guiCoordinates[0] - speed * 2, guiCoordinates[1]
+            });
+
+        }
+        if (tabSize[1] < tabSizeMax[1])
+        {
+            tabSize[1] = tabSize[1] + speed * 5;
+        }
+
+        if (tabSize[0] >= tabSizeMax[0] && tabSize[1] >= tabSizeMax[1])
+        {
+            tabSize = tabSizeMax;
+            setTabGUICoordinates(defaultGUICoordinates);
+            setTabState(TabState.OPEN);
+        }
+    }
+
+    private void setResourceForType(AdjacentBlockType type)
     {
         switch (type)
         {
             case CHEST_SINGLE:
-                return new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.chestTabBackground);
+                tabBackground = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.chestTabBackground);
+                break;
         }
-        return null;
-    }
-
-    private int getTextureOffsetXForSide(TabSide side)
-    {
-        if (closedTab)
-        {
-            if (side == TabSide.RIGHT)
-            {
-                return closedTabTextureXOffset;
-            }
-        }
-        return 0;
-    }
-
-    private int getTextureOffsetYForSide(TabSide side)
-    {
-        if (!closedTab)
-        {
-            return openTabTextureYOffset;
-        }
-        return 0;
-
-    }
-
-    private void incrementTabValues()
-    {
-        if (xSize < xMax)
-        {
-            xSize++;
-            xSize++;
-            setTabTextureOffset(textureX - 2, textureY);
-            setTabGUIOffsets(xOffset - 2, yOffset);
-
-        }
-        if (ySize < yMax)
-        {
-            ySize = ySize + 10;
-        }
-
-        if (xSize >= xMax && ySize >= yMax)
-        {
-            xSize = xMax;
-            ySize = yMax;
-        }
-    }
-
-    private void resetTab()
-    {
-        setTabState(true, false, false, false);
-
-        tabBackground = getResourceForType(blockType);
-        textureX = getTextureOffsetXForSide(TabSide.getTabSideFromRelativeSide(benchSide));
-        textureY = getTextureOffsetYForSide(TabSide.getTabSideFromRelativeSide(benchSide));
-        xMin = closedTabXSize;
-        yMin = closedTabYSize;
-        xMax = 68;
-        yMax = 176;
-        xSize = xMin;
-        ySize = yMin;
-        openTabXSize = 68;
-        openTabYSize = 176;
-    }
-
-    private void setTabDimensions(int xSize, int ySize)
-    {
-        this.xSize = xSize;
-        this.ySize = ySize;
-    }
-
-    private void setTabState(boolean closed, boolean open, boolean opening, boolean closing)
-    {
-        closedTab = closed;
-        openTab = open;
-        openingTab = opening;
-        closingTab = closing;
-    }
-
-    private void setTabTextureOffset(int textureX, int textureY)
-    {
-        this.textureX = textureX;
-        this.textureY = textureY;
     }
 
     public void drawTooltipForTab(int mouseX, int mouseY)
@@ -169,31 +196,37 @@ public class Tab
         int yPos = 8;
         int lineHeight = 11;
         gui.mc.fontRenderer.drawStringWithShadow("type: " + this.blockType.toString(), mouseX + xPos, mouseY + yPos, 0xFFFFFF);
-        gui.mc.fontRenderer.drawStringWithShadow("side: " + this.benchSide.toString(), mouseX + xPos, mouseY + yPos + lineHeight, 0xFFFFFF);
+        gui.mc.fontRenderer.drawStringWithShadow("side: " + this.side.toString(), mouseX + xPos, mouseY + yPos + lineHeight, 0xFFFFFF);
     }
 
-    public int getTabHeight()
+    public int[] getTabDimensions()
     {
-        return this.closedTabYSize;
+        return tabSize;
     }
 
     public Object getTabSide()
     {
-        return TabSide.getTabSideFromRelativeSide(benchSide);
+        return TabSide.getTabSideFromRelativeSide(side);
     }
 
     public void initializeTabAnimation()
     {
-        if (closedTab)
+        if (state == TabState.CLOSED)
         {
-            setTabDimensions(25, 25);
-            setTabState(false, false, true, false);
-            setTabTextureOffset(43, 18);
-            setTabGUIOffsets(xOffset - 10, yOffset);
+            setTabDimensions(new int[]
+            {
+                25, 25
+            });
+            setTabState(TabState.OPENING);
+            setTabTextureCoordinates(new int[]
+            {
+                43, 18
+            });
+
         } else
         {
-            decrementTabValues();
-            setTabState(false, false, false, true);
+            decrementTabValues(2);
+            setTabState(TabState.CLOSING);
         }
 
     }
@@ -201,9 +234,9 @@ public class Tab
     public boolean intersectsWithTab(int clickX, int clickY)
     {
 
-        if (clickX >= xOffset && clickX <= xOffset + xSize)
+        if (clickX >= guiCoordinates[0] && clickX <= guiCoordinates[0] + tabSize[0])
         {
-            if (clickY >= yOffset && clickY <= yOffset + ySize)
+            if (clickY >= guiCoordinates[1] && clickY <= guiCoordinates[1] + tabSize[1])
             {
                 return true;
             }
@@ -214,24 +247,11 @@ public class Tab
     public void renderTab()
     {
         gui.mc.renderEngine.bindTexture(tabBackground);
-        if (closingTab || openingTab)
+        if (state == TabState.OPENING || state == TabState.OPENING)
         {
             animateTab();
         }
-        gui.drawTexturedModalRect(xOffset, yOffset, textureX, textureY, xSize, ySize);
-    }
-
-    public void setTabGUIOffsets(int xOffset, int yOffset)
-    {
-
-        if (closedTab && TabSide.getTabSideFromRelativeSide(benchSide) == TabSide.LEFT)
-        {
-            this.xOffset = xOffset + xMax - xMin;
-        } else
-        {
-            this.xOffset = xOffset;
-        }
-        this.yOffset = yOffset;
+        gui.drawTexturedModalRect(guiCoordinates[0], guiCoordinates[1], textureCoordinates[0], textureCoordinates[1], tabSize[0], tabSize[1]);
     }
 
     public static enum TabSide
