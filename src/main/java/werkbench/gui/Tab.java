@@ -69,7 +69,7 @@ public class Tab
 
     private void decrementTabValues(int speed)
     {
-        if (tabSize[0] > tabSizeMin[0])
+        if (tabSize[0] > getMinTabSize()[0])
         {
             tabSize[0] = tabSize[0] - speed * 2;
             setTabTextureCoordinates(new int[]
@@ -81,23 +81,23 @@ public class Tab
                 guiCoordinates[0] + speed * 2, guiCoordinates[1]
             });
         }
-        if (tabSize[1] > tabSizeMin[1])
+        if (tabSize[1] > getMinTabSize()[1])
         {
             tabSize[1] = tabSize[1] - speed * 5;
         }
-        if (tabSize[0] <= tabSizeMin[0] && tabSize[1] <= tabSizeMin[1])
+        if (tabSize[0] <= getMinTabSize()[0] && tabSize[1] <= getMinTabSize()[1])
         {
-            tabSize = tabSizeMin;
+            tabSize = getMinTabSize();
             setTabTextureCoordinates(defaultTextureCoordinates);
             setTabGUICoordinates(defaultGUICoordinates);
-            setTabDimensions(tabSizeMin);
+            setTabDimensions(getMinTabSize());
             setTabState(TabState.CLOSED);
         }
     }
 
     private void incrementTabValues(int speed)
     {
-        if (tabSize[0] < tabSizeMax[0])
+        if (tabSize[0] < getMaxTabSize()[0])
         {
 
             tabSize[0] = tabSize[0] + speed * 2;
@@ -111,35 +111,26 @@ public class Tab
             });
 
         }
-        if (tabSize[1] < tabSizeMax[1])
+        if (tabSize[1] < getMaxTabSize()[1])
         {
             tabSize[1] = tabSize[1] + speed * 5;
         }
 
-        if (tabSize[0] >= tabSizeMax[0] && tabSize[1] >= tabSizeMax[1])
+        if (tabSize[0] >= getMaxTabSize()[0] && tabSize[1] >= getMaxTabSize()[1])
         {
-            tabSize = tabSizeMax;
+            tabSize = getMaxTabSize();
             setTabState(TabState.OPEN);
         }
     }
 
     private void resetTabSize()
     {
-        tabSize = tabSizeMin;
+        tabSize = getMinTabSize();
     }
 
     private void setBlockType(AdjacentBlockType blockType)
     {
         this.blockType = blockType;
-    }
-
-    private void setDefaultTabGUICoordinates(int[] newDefaultGUICoordinates)
-    {
-        defaultGUICoordinates = newDefaultGUICoordinates;
-        if (state == TabState.CLOSED && TabSide.getTabSideFromRelativeSide(side) == TabSide.LEFT)
-        {
-            defaultGUICoordinates[0] = defaultGUICoordinates[0] + this.tabSizeMax[0] - this.tabSizeMin[0];
-        }
     }
 
     private void setDefaultTabTextureCoordinates(int[] newDefaultTextureCoordinates)
@@ -154,7 +145,7 @@ public class Tab
 
     private void setMinTabSize(int[] newMinTabSize)
     {
-        this.tabSizeMin = newMinTabSize;
+        tabSizeMin = newMinTabSize;
     }
 
     private void setRelativeBenchSide(RelativeBenchSide side)
@@ -199,6 +190,16 @@ public class Tab
         int lineHeight = 11;
         gui.mc.fontRenderer.drawStringWithShadow("type: " + this.blockType.toString(), mouseX + xPos, mouseY + yPos, 0xFFFFFF);
         gui.mc.fontRenderer.drawStringWithShadow("side: " + this.side.toString(), mouseX + xPos, mouseY + yPos + lineHeight, 0xFFFFFF);
+    }
+
+    public int[] getMaxTabSize()
+    {
+        return tabSizeMax;
+    }
+
+    public int[] getMinTabSize()
+    {
+        return tabSizeMin;
     }
 
     public int[] getTabDimensions()
@@ -251,6 +252,15 @@ public class Tab
         gui.mc.renderEngine.bindTexture(tabBackground);
         animateTab();
         gui.drawTexturedModalRect(guiCoordinates[0], guiCoordinates[1], textureCoordinates[0], textureCoordinates[1], tabSize[0], tabSize[1]);
+    }
+
+    public void setDefaultTabGUICoordinates(int[] newDefaultGUICoordinates)
+    {
+        defaultGUICoordinates = newDefaultGUICoordinates;
+        if (state == TabState.CLOSED && TabSide.getTabSideFromRelativeSide(side) == TabSide.LEFT)
+        {
+            defaultGUICoordinates[0] = defaultGUICoordinates[0] + getMaxTabSize()[0] - getMinTabSize()[0];
+        }
     }
 
     public static enum TabSide
