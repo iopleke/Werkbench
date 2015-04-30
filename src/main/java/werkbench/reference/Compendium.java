@@ -85,7 +85,7 @@ public class Compendium
             306, 38
         }, new int[]
         {
-            0, 30
+            3, 36
         }, new int[]
         {
             298, 30
