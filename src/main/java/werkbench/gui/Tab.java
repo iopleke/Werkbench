@@ -1,6 +1,7 @@
 package werkbench.gui;
 
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Mouse;
 import werkbench.bench.BenchGUI;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
@@ -15,21 +16,22 @@ public class Tab
 {
     public static ResourceLocation tabBackground;
 
-    private TabState state;
     private int[] defaultGUICoordinates;
     private int[] defaultTextureCoordinates;
-    private int[] tabSizeMin;
-    private int[] tabSizeMax;
-    private int[] textureCoordinates;
+    private BenchGUI gui;
     private int[] guiCoordinates;
+    private TabState state;
     private int[] tabSize;
 
-    private BenchGUI gui;
-    public RelativeBenchSide side;
+    private int[] tabSizeMax;
+    private int[] tabSizeMin;
+    private int[] textureCoordinates;
     public AdjacentBlockType blockType;
+    public RelativeBenchSide side;
 
     public Tab(BenchGUI gui, AdjacentBlockType blockType, RelativeBenchSide side, int[] guiCoordinates)
     {
+        Mouse.setGrabbed(false);
         this.gui = gui;
         setBlockType(blockType);
         setResourceForType(blockType);
@@ -48,69 +50,10 @@ public class Tab
         {
             0, 0
         });
-        setTabTextureCoordinates(this.defaultTextureCoordinates);
+        setTabTextureCoordinates(defaultTextureCoordinates);
         setDefaultTabGUICoordinates(guiCoordinates);
         setTabGUICoordinates(defaultGUICoordinates);
 
-    }
-
-    private void resetTabSize()
-    {
-        tabSize = tabSizeMin;
-    }
-
-    private void setMaxTabSize(int[] newMaxTabSize)
-    {
-        this.tabSizeMax = newMaxTabSize;
-    }
-
-    private void setMinTabSize(int[] newMinTabSize)
-    {
-        this.tabSizeMin = newMinTabSize;
-    }
-
-    private void setBlockType(AdjacentBlockType blockType)
-    {
-        this.blockType = blockType;
-    }
-
-    private void setRelativeBenchSide(RelativeBenchSide side)
-    {
-        this.side = side;
-    }
-
-    private void setTabState(TabState state)
-    {
-        this.state = state;
-    }
-
-    private void setTabTextureCoordinates(int[] newTextureCoordinates)
-    {
-        this.textureCoordinates = newTextureCoordinates;
-    }
-
-    private void setDefaultTabTextureCoordinates(int[] newDefaultTextureCoordinates)
-    {
-        this.defaultTextureCoordinates = newDefaultTextureCoordinates;
-    }
-
-    private void setDefaultTabGUICoordinates(int[] newDefaultGUICoordinates)
-    {
-        defaultGUICoordinates = newDefaultGUICoordinates;
-        if (state == TabState.CLOSED && TabSide.getTabSideFromRelativeSide(side) == TabSide.LEFT)
-        {
-            defaultGUICoordinates[0] = defaultGUICoordinates[0] + this.tabSizeMax[0] - this.tabSizeMin[0];
-        }
-    }
-
-    private void setTabGUICoordinates(int[] newGUICoordinates)
-    {
-        guiCoordinates = newGUICoordinates;
-    }
-
-    private void setTabDimensions(int[] newTabSize)
-    {
-        tabSize = newTabSize;
     }
 
     private void animateTab()
@@ -180,6 +123,45 @@ public class Tab
         }
     }
 
+    private void resetTabSize()
+    {
+        tabSize = tabSizeMin;
+    }
+
+    private void setBlockType(AdjacentBlockType blockType)
+    {
+        this.blockType = blockType;
+    }
+
+    private void setDefaultTabGUICoordinates(int[] newDefaultGUICoordinates)
+    {
+        defaultGUICoordinates = newDefaultGUICoordinates;
+        if (state == TabState.CLOSED && TabSide.getTabSideFromRelativeSide(side) == TabSide.LEFT)
+        {
+            defaultGUICoordinates[0] = defaultGUICoordinates[0] + this.tabSizeMax[0] - this.tabSizeMin[0];
+        }
+    }
+
+    private void setDefaultTabTextureCoordinates(int[] newDefaultTextureCoordinates)
+    {
+        this.defaultTextureCoordinates = newDefaultTextureCoordinates;
+    }
+
+    private void setMaxTabSize(int[] newMaxTabSize)
+    {
+        this.tabSizeMax = newMaxTabSize;
+    }
+
+    private void setMinTabSize(int[] newMinTabSize)
+    {
+        this.tabSizeMin = newMinTabSize;
+    }
+
+    private void setRelativeBenchSide(RelativeBenchSide side)
+    {
+        this.side = side;
+    }
+
     private void setResourceForType(AdjacentBlockType type)
     {
         switch (type)
@@ -188,6 +170,26 @@ public class Tab
                 tabBackground = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.chestTabBackground);
                 break;
         }
+    }
+
+    private void setTabDimensions(int[] newTabSize)
+    {
+        tabSize = newTabSize;
+    }
+
+    private void setTabGUICoordinates(int[] newGUICoordinates)
+    {
+        guiCoordinates = newGUICoordinates;
+    }
+
+    private void setTabState(TabState state)
+    {
+        this.state = state;
+    }
+
+    private void setTabTextureCoordinates(int[] newTextureCoordinates)
+    {
+        this.textureCoordinates = newTextureCoordinates;
     }
 
     public void drawTooltipForTab(int mouseX, int mouseY)

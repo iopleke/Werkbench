@@ -21,9 +21,11 @@ public class BenchGUI extends GuiContainer
 {
     private BenchTileEntity bench;
     private boolean doFurnaceUpdate;
-    private int tickCount, xOffset, yOffset;
     private Tab[] leftTabs;
     private Tab[] rightTabs;
+    private int tickCount;
+    private int xOffset;
+    private int yOffset;
 
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
@@ -38,34 +40,68 @@ public class BenchGUI extends GuiContainer
         resetTabs();
     }
 
-    private void resetTabs()
-    {
-        leftTabs = new Tab[4];
-        rightTabs = new Tab[4];
-    }
-
     private void bindGUITexture()
     {
         this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.background);
     }
 
-    private void updateTabsForSide(RelativeBenchSide side)
+    private void doTabClicks(int clickX, int clickY)
     {
-        AdjacentBlockType sideBlock = SpatialHelper.getBlockForRelativeSide(bench, side);
-        switch (sideBlock)
+        LogHelper.debug("Clicked at x:" + clickX + " y:" + clickY);
+
+        for (Tab tab : leftTabs)
         {
-            case CHEST_SINGLE:
-                if (side == RelativeBenchSide.LEFT)
+            if (tab != null)
+            {
+                if (tab.intersectsWithTab(clickX, clickY))
                 {
-                    if (leftTabs[0] == null)
-                    {
-                        int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
-                        leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side, guiOffsets);
-                    }
+                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " was clicked!");
+                    tab.initializeTabAnimation();
                 }
-            default:
-                // do nothing
-                break;
+            }
+        }
+
+        for (Tab tab : rightTabs)
+        {
+            if (tab != null)
+            {
+                if (tab.intersectsWithTab(clickX, clickY))
+                {
+                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " was clicked!");
+                    tab.initializeTabAnimation();
+                }
+            }
+        }
+    }
+
+    private void doTabToolTips(int mouseX, int mouseY)
+    {
+        for (Tab tab : leftTabs)
+        {
+            if (tab != null)
+            {
+                if (tab.intersectsWithTab(mouseX, mouseY))
+                {
+                    //LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
+                    tab.drawTooltipForTab(mouseX, mouseY);
+                }
+            }
+        }
+
+        for (Tab tab : rightTabs)
+        {
+            if (tab != null)
+            {
+                if (tab.intersectsWithTab(mouseX, mouseY))
+                {
+                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
+                    List<String> toolTipText = new ArrayList<String>();
+                    toolTipText.add("type: " + tab.blockType.toString());
+                    toolTipText.add("side: " + tab.side.toString());
+                    drawHoveringText(toolTipText, mouseX, mouseY, mc.fontRenderer);
+                    //tab.drawTooltipForTab(mouseX, mouseY);
+                }
+            }
         }
     }
 
@@ -163,6 +199,26 @@ public class BenchGUI extends GuiContainer
         drawTexturedModalRect(x, y, 0, 0, 76, 76);
     }
 
+    private void renderSideBackgrounds()
+    {
+
+        for (Tab tab : leftTabs)
+        {
+            if (tab != null)
+            {
+                tab.renderTab();
+            }
+        }
+
+        for (Tab tab : rightTabs)
+        {
+            if (tab != null)
+            {
+                tab.renderTab();
+            }
+        }
+    }
+
     private void renderSingleChestForSide(RelativeBenchSide side)
     {
 //        int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
@@ -175,6 +231,12 @@ public class BenchGUI extends GuiContainer
 //            rightTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
 //            rightTabs[0].setTabGUIOffsetDefaults(xOffset + guiOffsets[0], yOffset + guiOffsets[1]);
 //        }
+    }
+
+    private void resetTabs()
+    {
+        leftTabs = new Tab[4];
+        rightTabs = new Tab[4];
     }
 
     private void resetTickCount()
@@ -198,6 +260,26 @@ public class BenchGUI extends GuiContainer
         yOffset = (height - ySize) / 2;
     }
 
+    private void updateTabsForSide(RelativeBenchSide side)
+    {
+        AdjacentBlockType sideBlock = SpatialHelper.getBlockForRelativeSide(bench, side);
+        switch (sideBlock)
+        {
+            case CHEST_SINGLE:
+                if (side == RelativeBenchSide.LEFT)
+                {
+                    if (leftTabs[0] == null)
+                    {
+                        int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
+                        leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side, guiOffsets);
+                    }
+                }
+            default:
+                // do nothing
+                break;
+        }
+    }
+
     @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int mouseX, int mouseY)
     {
@@ -217,86 +299,6 @@ public class BenchGUI extends GuiContainer
         if (doFurnaceUpdate)
         {
             doFurnaceUpdate = false;
-        }
-    }
-
-    private void renderSideBackgrounds()
-    {
-
-        for (Tab tab : leftTabs)
-        {
-            if (tab != null)
-            {
-                tab.renderTab();
-            }
-        }
-
-        for (Tab tab : rightTabs)
-        {
-            if (tab != null)
-            {
-                tab.renderTab();
-            }
-        }
-    }
-
-    private void doTabClicks(int clickX, int clickY)
-    {
-        LogHelper.debug("Clicked at x:" + clickX + " y:" + clickY);
-
-        for (Tab tab : leftTabs)
-        {
-            if (tab != null)
-            {
-                if (tab.intersectsWithTab(clickX, clickY))
-                {
-                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " was clicked!");
-                    tab.initializeTabAnimation();
-                }
-            }
-        }
-
-        for (Tab tab : rightTabs)
-        {
-            if (tab != null)
-            {
-                if (tab.intersectsWithTab(clickX, clickY))
-                {
-                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " was clicked!");
-                    tab.initializeTabAnimation();
-                }
-            }
-        }
-    }
-
-    private void doTabToolTips(int mouseX, int mouseY)
-    {
-        for (Tab tab : leftTabs)
-        {
-            if (tab != null)
-            {
-                if (tab.intersectsWithTab(mouseX, mouseY))
-                {
-                    //LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
-                    tab.drawTooltipForTab(mouseX, mouseY);
-                }
-            }
-        }
-
-        for (Tab tab : rightTabs)
-        {
-            if (tab != null)
-            {
-                if (tab.intersectsWithTab(mouseX, mouseY))
-                {
-                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
-                    List<String> toolTipText = new ArrayList<String>();
-                    toolTipText.add("type: " + tab.blockType.toString());
-                    toolTipText.add("side: " + tab.side.toString());
-                    drawHoveringText(toolTipText, mouseX, mouseY, mc.fontRenderer);
-                    //tab.drawTooltipForTab(mouseX, mouseY);
-                }
-            }
         }
     }
 
