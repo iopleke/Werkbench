@@ -90,6 +90,7 @@ public class Tab
             tabSize = tabSizeMin;
             setTabTextureCoordinates(defaultTextureCoordinates);
             setTabGUICoordinates(defaultGUICoordinates);
+            setTabDimensions(tabSizeMin);
             setTabState(TabState.CLOSED);
         }
     }
@@ -118,7 +119,6 @@ public class Tab
         if (tabSize[0] >= tabSizeMax[0] && tabSize[1] >= tabSizeMax[1])
         {
             tabSize = tabSizeMax;
-            setTabGUICoordinates(defaultGUICoordinates);
             setTabState(TabState.OPEN);
         }
     }
@@ -225,7 +225,7 @@ public class Tab
                 43, 18
             });
 
-        } else
+        } else if (state == TabState.OPEN)
         {
             decrementTabValues(2);
             setTabState(TabState.CLOSING);
@@ -249,10 +249,7 @@ public class Tab
     public void renderTab()
     {
         gui.mc.renderEngine.bindTexture(tabBackground);
-        if (state == TabState.OPENING || state == TabState.OPENING)
-        {
-            animateTab();
-        }
+        animateTab();
         gui.drawTexturedModalRect(guiCoordinates[0], guiCoordinates[1], textureCoordinates[0], textureCoordinates[1], tabSize[0], tabSize[1]);
     }
 
