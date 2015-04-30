@@ -268,10 +268,14 @@ public class BenchGUI extends GuiContainer
             case CHEST_SINGLE:
                 if (side == RelativeBenchSide.LEFT)
                 {
+                    int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
                     if (leftTabs[0] == null)
                     {
-                        int[] guiOffsets = AdjacentBlockType.getGUIBackgroundCoordinates(side, AdjacentBlockType.CHEST_SINGLE);
+
                         leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side, guiOffsets);
+                    } else
+                    {
+                        leftTabs[0].setDefaultTabGUICoordinates(guiOffsets);
                     }
                 }
             default:
