@@ -33,7 +33,7 @@ public class Compendium
             0, 0
         }, new int[]
         {
-            54, 0
+            57, 17
         }, new int[]
         {
             0, 0
