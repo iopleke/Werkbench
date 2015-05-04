@@ -119,6 +119,7 @@ public class Tab
         if (tabSize[0] >= getMaxTabSize()[0] && tabSize[1] >= getMaxTabSize()[1])
         {
             tabSize = getMaxTabSize();
+            //setTabGUICoordinates(defaultGUICoordinates);
             setTabState(TabState.OPEN);
         }
     }
@@ -220,6 +221,10 @@ public class Tab
             {
                 25, 25
             });
+            setTabGUICoordinates(new int[]
+            {
+                defaultGUICoordinates[0] - 25 + this.getMinTabSize()[0], defaultGUICoordinates[1]
+            });
             setTabState(TabState.OPENING);
             setTabTextureCoordinates(new int[]
             {
@@ -254,7 +259,7 @@ public class Tab
         gui.drawTexturedModalRect(guiCoordinates[0], guiCoordinates[1], textureCoordinates[0], textureCoordinates[1], tabSize[0], tabSize[1]);
     }
 
-    public void setDefaultTabGUICoordinates(int[] newDefaultGUICoordinates)
+    public final void setDefaultTabGUICoordinates(int[] newDefaultGUICoordinates)
     {
         defaultGUICoordinates = newDefaultGUICoordinates;
         if (state == TabState.CLOSED && TabSide.getTabSideFromRelativeSide(side) == TabSide.LEFT)
