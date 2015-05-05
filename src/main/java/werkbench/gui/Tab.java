@@ -137,6 +137,15 @@ public class Tab
         } else
         {
             tabSize[0] = getMaxTabSize()[0];
+            setTabTextureCoordinates(new int[]
+            {
+                defaultTextureCoordinatesOpen[0], textureCoordinates[1]
+            });
+            resetTabGUICoordinates();
+            setTabGUICoordinates(new int[]
+            {
+                defaultGUICoordinates[0], guiCoordinates[1]
+            });
         }
         if (tabSize[1] + speed * 5 < getMaxTabSize()[1])
         {
