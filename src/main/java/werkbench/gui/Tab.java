@@ -17,7 +17,8 @@ public class Tab
     public static ResourceLocation tabBackground;
 
     private int[] defaultGUICoordinates;
-    private int[] defaultTextureCoordinates;
+    private int[] defaultTextureCoordinatesClosed;
+    private int[] defaultTextureCoordinatesOpen;
     private BenchGUI gui;
     private int[] guiCoordinates;
     private TabState state;
@@ -29,7 +30,7 @@ public class Tab
     public AdjacentBlockType blockType;
     public RelativeBenchSide side;
 
-    public Tab(BenchGUI gui, AdjacentBlockType blockType, RelativeBenchSide side, int[] guiCoordinates)
+    public Tab(BenchGUI gui, AdjacentBlockType blockType, RelativeBenchSide side)
     {
         Mouse.setGrabbed(false);
         this.gui = gui;
@@ -37,6 +38,19 @@ public class Tab
         setResourceForType(blockType);
         setRelativeBenchSide(side);
         setTabState(TabState.CLOSED);
+
+        absolutePosition();
+
+        resetTabTextureCoordinates();
+        resetTabGUICoordinates();
+
+    }
+
+    /**
+     * The values in this function need to be set dynamically once I get the animations fixed
+     */
+    private void absolutePosition()
+    {
         setMaxTabSize(new int[]
         {
             68, 176
@@ -46,14 +60,15 @@ public class Tab
             15, 18
         });
         resetTabSize();
-        setDefaultTabTextureCoordinates(new int[]
+        setDefaultTabTextureCoordinatesClosed(new int[]
         {
             0, 0
         });
-        setTabTextureCoordinates(defaultTextureCoordinates);
-        setDefaultTabGUICoordinates(guiCoordinates);
-        setTabGUICoordinates(defaultGUICoordinates);
 
+        setDefaultTabTextureCoordinatesOpen(new int[]
+        {
+            0, 18
+        });
     }
 
     private void animateTab()
@@ -87,17 +102,26 @@ public class Tab
         }
         if (tabSize[0] <= getMinTabSize()[0] && tabSize[1] <= getMinTabSize()[1])
         {
-            tabSize = getMinTabSize();
-            setTabTextureCoordinates(defaultTextureCoordinates);
-            setTabGUICoordinates(defaultGUICoordinates);
-            setTabDimensions(getMinTabSize());
             setTabState(TabState.CLOSED);
+            resetTabSize();
+            setTabTextureCoordinates(defaultTextureCoordinatesClosed);
+            setTabGUICoordinates(getDefaultTabGUICoordinates());
         }
+    }
+
+    private int[] getDefaultTabGUICoordinates()
+    {
+        int[] coordinates = defaultGUICoordinates;
+        if (state == TabState.CLOSED && TabSide.getTabSideFromRelativeSide(side) == TabSide.LEFT)
+        {
+            coordinates[0] = defaultGUICoordinates[0] + getMaxTabSize()[0] - getMinTabSize()[0];
+        }
+        return coordinates;
     }
 
     private void incrementTabValues(int speed)
     {
-        if (tabSize[0] < getMaxTabSize()[0])
+        if (tabSize[0] + speed * 2 < getMaxTabSize()[0])
         {
 
             tabSize[0] = tabSize[0] + speed * 2;
@@ -110,23 +134,53 @@ public class Tab
                 guiCoordinates[0] - speed * 2, guiCoordinates[1]
             });
 
+        } else
+        {
+            tabSize[0] = getMaxTabSize()[0];
         }
-        if (tabSize[1] < getMaxTabSize()[1])
+        if (tabSize[1] + speed * 5 < getMaxTabSize()[1])
         {
             tabSize[1] = tabSize[1] + speed * 5;
+        } else
+        {
+            tabSize[1] = getMaxTabSize()[1];
         }
 
         if (tabSize[0] >= getMaxTabSize()[0] && tabSize[1] >= getMaxTabSize()[1])
         {
-            tabSize = getMaxTabSize();
-            //setTabGUICoordinates(defaultGUICoordinates);
             setTabState(TabState.OPEN);
+            resetTabSize();
+            resetTabTextureCoordinates();
+            resetTabGUICoordinates();
         }
+    }
+
+    private void resetTabGUICoordinates()
+    {
+        setDefaultTabGUICoordinates(AdjacentBlockType.getGUIBackgroundCoordinates(side, blockType));
+        setTabGUICoordinates(getDefaultTabGUICoordinates());
     }
 
     private void resetTabSize()
     {
-        tabSize = getMinTabSize();
+        if (state == TabState.CLOSED)
+        {
+            tabSize = getMinTabSize();
+        } else
+        {
+            tabSize = getMaxTabSize();
+        }
+    }
+
+    private void resetTabTextureCoordinates()
+    {
+        if (state == TabState.OPEN)
+        {
+            textureCoordinates = defaultTextureCoordinatesOpen;
+        } else
+        {
+            textureCoordinates = defaultTextureCoordinatesClosed;
+        }
     }
 
     private void setBlockType(AdjacentBlockType blockType)
@@ -134,9 +188,14 @@ public class Tab
         this.blockType = blockType;
     }
 
-    private void setDefaultTabTextureCoordinates(int[] newDefaultTextureCoordinates)
+    private void setDefaultTabTextureCoordinatesClosed(int[] newDefaultTextureCoordinates)
     {
-        this.defaultTextureCoordinates = newDefaultTextureCoordinates;
+        this.defaultTextureCoordinatesClosed = newDefaultTextureCoordinates;
+    }
+
+    private void setDefaultTabTextureCoordinatesOpen(int[] newDefaultTextureCoordinates)
+    {
+        this.defaultTextureCoordinatesOpen = newDefaultTextureCoordinates;
     }
 
     private void setMaxTabSize(int[] newMaxTabSize)
@@ -217,23 +276,15 @@ public class Tab
     {
         if (state == TabState.CLOSED)
         {
-            setTabDimensions(new int[]
-            {
-                25, 25
-            });
-            setTabGUICoordinates(new int[]
-            {
-                defaultGUICoordinates[0] - 25 + this.getMinTabSize()[0], defaultGUICoordinates[1]
-            });
             setTabState(TabState.OPENING);
+
             setTabTextureCoordinates(new int[]
             {
-                43, 18
+                53, 18
             });
 
         } else if (state == TabState.OPEN)
         {
-            decrementTabValues(2);
             setTabState(TabState.CLOSING);
         }
 
@@ -262,10 +313,6 @@ public class Tab
     public final void setDefaultTabGUICoordinates(int[] newDefaultGUICoordinates)
     {
         defaultGUICoordinates = newDefaultGUICoordinates;
-        if (state == TabState.CLOSED && TabSide.getTabSideFromRelativeSide(side) == TabSide.LEFT)
-        {
-            defaultGUICoordinates[0] = defaultGUICoordinates[0] + getMaxTabSize()[0] - getMinTabSize()[0];
-        }
     }
 
     public static enum TabSide
