@@ -25,7 +25,7 @@ public class Tab
     private int[] tabSize;
 
     private int[] tabSizeMax;
-    private int[] tabSizeMin;
+    //private int[] minimumTabSize;
     private int[] textureCoordinates;
     public AdjacentBlockType blockType;
     public RelativeBenchSide side;
@@ -84,7 +84,7 @@ public class Tab
 
     private void decrementTabValues(int speed)
     {
-        if (tabSize[0] > getMinTabSize()[0])
+        if (tabSize[0] - speed * 2 > getMinTabSize()[0])
         {
             tabSize[0] = tabSize[0] - speed * 2;
             setTabTextureCoordinates(new int[]
@@ -95,17 +95,23 @@ public class Tab
             {
                 guiCoordinates[0] + speed * 2, guiCoordinates[1]
             });
+        } else
+        {
+            tabSize[0] = getMinTabSize()[0];
         }
-        if (tabSize[1] > getMinTabSize()[1])
+        if (tabSize[1] - speed * 5 > getMinTabSize()[1])
         {
             tabSize[1] = tabSize[1] - speed * 5;
+        } else
+        {
+            tabSize[1] = getMinTabSize()[1];
         }
         if (tabSize[0] <= getMinTabSize()[0] && tabSize[1] <= getMinTabSize()[1])
         {
             setTabState(TabState.CLOSED);
             resetTabSize();
-            setTabTextureCoordinates(defaultTextureCoordinatesClosed);
-            setTabGUICoordinates(getDefaultTabGUICoordinates());
+            resetTabTextureCoordinates();
+            resetTabGUICoordinates();
         }
     }
 
@@ -123,7 +129,6 @@ public class Tab
     {
         if (tabSize[0] + speed * 2 < getMaxTabSize()[0])
         {
-
             tabSize[0] = tabSize[0] + speed * 2;
             setTabTextureCoordinates(new int[]
             {
@@ -214,7 +219,7 @@ public class Tab
 
     private void setMinTabSize(int[] newMinTabSize)
     {
-        tabSizeMin = newMinTabSize;
+        //minimumTabSize = newMinTabSize;
     }
 
     private void setRelativeBenchSide(RelativeBenchSide side)
@@ -268,7 +273,10 @@ public class Tab
 
     public int[] getMinTabSize()
     {
-        return tabSizeMin;
+        return new int[]
+        {
+            15, 18
+        };
     }
 
     public int[] getTabDimensions()
