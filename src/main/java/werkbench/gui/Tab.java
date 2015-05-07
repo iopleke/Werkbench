@@ -24,7 +24,7 @@ public class Tab
     private TabState state;
     private int[] tabSize;
 
-    private int[] tabSizeMax;
+    //private int[] tabSizeMax;
     //private int[] minimumTabSize;
     private int[] textureCoordinates;
     public AdjacentBlockType blockType;
@@ -214,7 +214,7 @@ public class Tab
 
     private void setMaxTabSize(int[] newMaxTabSize)
     {
-        this.tabSizeMax = newMaxTabSize;
+        //this.tabSizeMax = newMaxTabSize;
     }
 
     private void setMinTabSize(int[] newMinTabSize)
@@ -268,7 +268,10 @@ public class Tab
 
     public int[] getMaxTabSize()
     {
-        return tabSizeMax;
+        return new int[]
+        {
+            68, 176
+        };
     }
 
     public int[] getMinTabSize()
