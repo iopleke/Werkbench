@@ -24,14 +24,22 @@ public class Tab
     private TabState state;
     private int[] tabSize;
 
-    //private int[] tabSizeMax;
-    //private int[] minimumTabSize;
+    private final int[] tabSizeMax;
+    private final int[] tabSizeMin;
     private int[] textureCoordinates;
     public AdjacentBlockType blockType;
     public RelativeBenchSide side;
 
     public Tab(BenchGUI gui, AdjacentBlockType blockType, RelativeBenchSide side)
     {
+        tabSizeMin = new int[]
+        {
+            15, 18
+        };
+        tabSizeMax = new int[]
+        {
+            68, 176
+        };
         Mouse.setGrabbed(false);
         this.gui = gui;
         setBlockType(blockType);
@@ -51,14 +59,6 @@ public class Tab
      */
     private void absolutePosition()
     {
-        setMaxTabSize(new int[]
-        {
-            68, 176
-        });
-        setMinTabSize(new int[]
-        {
-            15, 18
-        });
         resetTabSize();
         setDefaultTabTextureCoordinatesClosed(new int[]
         {
@@ -212,16 +212,6 @@ public class Tab
         this.defaultTextureCoordinatesOpen = newDefaultTextureCoordinates;
     }
 
-    private void setMaxTabSize(int[] newMaxTabSize)
-    {
-        //this.tabSizeMax = newMaxTabSize;
-    }
-
-    private void setMinTabSize(int[] newMinTabSize)
-    {
-        //minimumTabSize = newMinTabSize;
-    }
-
     private void setRelativeBenchSide(RelativeBenchSide side)
     {
         this.side = side;
@@ -235,11 +225,6 @@ public class Tab
                 tabBackground = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.chestTabBackground);
                 break;
         }
-    }
-
-    private void setTabDimensions(int[] newTabSize)
-    {
-        tabSize = newTabSize;
     }
 
     private void setTabGUICoordinates(int[] newGUICoordinates)
@@ -268,18 +253,12 @@ public class Tab
 
     public int[] getMaxTabSize()
     {
-        return new int[]
-        {
-            68, 176
-        };
+        return tabSizeMax;
     }
 
     public int[] getMinTabSize()
     {
-        return new int[]
-        {
-            15, 18
-        };
+        return tabSizeMin;
     }
 
     public int[] getTabDimensions()
