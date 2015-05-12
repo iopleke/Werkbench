@@ -1,8 +1,10 @@
 package werkbench.gui;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Mouse;
 import werkbench.bench.BenchGUI;
+import werkbench.helper.LogHelper;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
 import werkbench.reference.Compendium.RelativeBenchSide;
@@ -39,7 +41,6 @@ public class Tab
         tabSizeMaxX = 68;
         tabSizeMaxY = 176;
 
-        Mouse.setGrabbed(false);
         this.gui = gui;
         setBlockType(blockType);
         setResourceForType(blockType);
@@ -229,6 +230,12 @@ public class Tab
             case CHEST_SINGLE:
                 tabBackground = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.chestTabBackground);
                 break;
+            case FURNACE_ACTIVE:
+            case FURNACE_INACTIVE:
+                tabBackground = new ResourceLocation(Compendium.Naming.id, Compendium.Texture.GUI.furnace);
+                break;
+            default:
+                break;
         }
     }
 
@@ -247,13 +254,9 @@ public class Tab
         this.textureCoordinates = newTextureCoordinates;
     }
 
-    public void drawTooltipForTab(int mouseX, int mouseY)
+    public AdjacentBlockType getBlockType()
     {
-        int xPos = 6;
-        int yPos = 8;
-        int lineHeight = 11;
-        gui.mc.fontRenderer.drawStringWithShadow("type: " + this.blockType.toString(), mouseX + xPos, mouseY + yPos, 0xFFFFFF);
-        gui.mc.fontRenderer.drawStringWithShadow("side: " + this.side.toString(), mouseX + xPos, mouseY + yPos + lineHeight, 0xFFFFFF);
+        return blockType;
     }
 
     public int getMaxTabSizeX()
@@ -327,6 +330,16 @@ public class Tab
     public final void setDefaultTabGUICoordinates(int[] newDefaultGUICoordinates)
     {
         defaultGUICoordinates = newDefaultGUICoordinates;
+    }
+
+    public List<String> tooltipForTab(int mouseX, int mouseY)
+    {
+        LogHelper.debug("Tab on " + getTabSide().toString() + " is hovered!");
+        List<String> toolTipText = new ArrayList<String>();
+        toolTipText.add("type: " + blockType.toString());
+        toolTipText.add("side: " + side.toString());
+        return toolTipText;
+
     }
 
     public static enum TabSide
