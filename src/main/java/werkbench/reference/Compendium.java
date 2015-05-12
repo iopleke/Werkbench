@@ -150,7 +150,19 @@ public class Compendium
 
     public static enum RelativeBenchSide
     {
-        LEFT, RIGHT, BACK, FRONT, TOP, BOTTOM
+        LEFTBACK(0), BACK(1), BACKRIGHT(2), RIGHT(3), RIGHTFRONT(4), FRONT(5), FRONTLEFT(6), LEFT(7), TOP(8), BOTTOM(9);
+
+        private final int arraySlot;
+
+        RelativeBenchSide(int arraySlot)
+        {
+            this.arraySlot = arraySlot;
+        }
+
+        public static int getArraySlot(RelativeBenchSide side)
+        {
+            return side.arraySlot;
+        }
     }
 
     public static final class Naming
