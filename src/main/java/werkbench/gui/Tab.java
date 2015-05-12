@@ -24,22 +24,21 @@ public class Tab
     private TabState state;
     private int[] tabSize;
 
-    private final int[] tabSizeMax;
-    private final int[] tabSizeMin;
+    private final int tabSizeMaxX;
+    private final int tabSizeMaxY;
+    private final int tabSizeMinX;
+    private final int tabSizeMinY;
     private int[] textureCoordinates;
     public AdjacentBlockType blockType;
     public RelativeBenchSide side;
 
     public Tab(BenchGUI gui, AdjacentBlockType blockType, RelativeBenchSide side)
     {
-        tabSizeMin = new int[]
-        {
-            15, 18
-        };
-        tabSizeMax = new int[]
-        {
-            68, 176
-        };
+        tabSizeMinX = 15;
+        tabSizeMinY = 18;
+        tabSizeMaxX = 68;
+        tabSizeMaxY = 176;
+
         Mouse.setGrabbed(false);
         this.gui = gui;
         setBlockType(blockType);
@@ -84,7 +83,7 @@ public class Tab
 
     private void decrementTabValues(int speed)
     {
-        if (tabSize[0] - speed * 2 > getMinTabSize()[0])
+        if (tabSize[0] - speed * 2 > getMinTabSizeX())
         {
             tabSize[0] = tabSize[0] - speed * 2;
             setTabTextureCoordinates(new int[]
@@ -97,16 +96,16 @@ public class Tab
             });
         } else
         {
-            tabSize[0] = getMinTabSize()[0];
+            tabSize[0] = getMinTabSizeX();
         }
-        if (tabSize[1] - speed * 5 > getMinTabSize()[1])
+        if (tabSize[1] - speed * 5 > getMinTabSizeY())
         {
             tabSize[1] = tabSize[1] - speed * 5;
         } else
         {
-            tabSize[1] = getMinTabSize()[1];
+            tabSize[1] = getMinTabSizeY();
         }
-        if (tabSize[0] <= getMinTabSize()[0] && tabSize[1] <= getMinTabSize()[1])
+        if (tabSize[0] <= getMinTabSizeX() && tabSize[1] <= getMinTabSizeY())
         {
             setTabState(TabState.CLOSED);
             resetTabSize();
@@ -120,14 +119,14 @@ public class Tab
         int[] coordinates = defaultGUICoordinates;
         if (state == TabState.CLOSED && TabSide.getTabSideFromRelativeSide(side) == TabSide.LEFT)
         {
-            coordinates[0] = defaultGUICoordinates[0] + getMaxTabSize()[0] - getMinTabSize()[0];
+            coordinates[0] = defaultGUICoordinates[0] + getMaxTabSizeX() - getMinTabSizeX();
         }
         return coordinates;
     }
 
     private void incrementTabValues(int speed)
     {
-        if (tabSize[0] + speed * 2 < getMaxTabSize()[0])
+        if (tabSize[0] + speed * 2 < getMaxTabSizeX())
         {
             tabSize[0] = tabSize[0] + speed * 2;
             setTabTextureCoordinates(new int[]
@@ -141,7 +140,7 @@ public class Tab
 
         } else
         {
-            tabSize[0] = getMaxTabSize()[0];
+            tabSize[0] = getMaxTabSizeX();
             setTabTextureCoordinates(new int[]
             {
                 defaultTextureCoordinatesOpen[0], textureCoordinates[1]
@@ -152,15 +151,15 @@ public class Tab
                 defaultGUICoordinates[0], guiCoordinates[1]
             });
         }
-        if (tabSize[1] + speed * 5 < getMaxTabSize()[1])
+        if (tabSize[1] + speed * 5 < getMaxTabSizeY())
         {
             tabSize[1] = tabSize[1] + speed * 5;
         } else
         {
-            tabSize[1] = getMaxTabSize()[1];
+            tabSize[1] = getMaxTabSizeY();
         }
 
-        if (tabSize[0] >= getMaxTabSize()[0] && tabSize[1] >= getMaxTabSize()[1])
+        if (tabSize[0] >= getMaxTabSizeX() && tabSize[1] >= getMaxTabSizeY())
         {
             setTabState(TabState.OPEN);
             resetTabSize();
@@ -177,12 +176,18 @@ public class Tab
 
     private void resetTabSize()
     {
+        if (tabSize == null)
+        {
+            tabSize = new int[2];
+        }
         if (state == TabState.CLOSED)
         {
-            tabSize = getMinTabSize();
+            tabSize[0] = getMinTabSizeX();
+            tabSize[1] = getMinTabSizeY();
         } else
         {
-            tabSize = getMaxTabSize();
+            tabSize[0] = getMaxTabSizeX();
+            tabSize[1] = getMaxTabSizeY();
         }
     }
 
@@ -251,14 +256,24 @@ public class Tab
         gui.mc.fontRenderer.drawStringWithShadow("side: " + this.side.toString(), mouseX + xPos, mouseY + yPos + lineHeight, 0xFFFFFF);
     }
 
-    public int[] getMaxTabSize()
+    public int getMaxTabSizeX()
     {
-        return tabSizeMax;
+        return tabSizeMaxX;
     }
 
-    public int[] getMinTabSize()
+    public int getMaxTabSizeY()
     {
-        return tabSizeMin;
+        return tabSizeMaxY;
+    }
+
+    public int getMinTabSizeX()
+    {
+        return tabSizeMinX;
+    }
+
+    public int getMinTabSizeY()
+    {
+        return tabSizeMinY;
     }
 
     public int[] getTabDimensions()
