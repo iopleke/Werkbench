@@ -262,8 +262,7 @@ public class BenchGUI extends GuiContainer
 
     private void updateTabsForSide(RelativeBenchSide side)
     {
-        AdjacentBlockType sideBlock = SpatialHelper.getBlockForRelativeSide(bench, side);
-        switch (sideBlock)
+        switch (SpatialHelper.getBlockForRelativeSide(bench, side))
         {
             case CHEST_SINGLE:
                 if (side == RelativeBenchSide.LEFT)
