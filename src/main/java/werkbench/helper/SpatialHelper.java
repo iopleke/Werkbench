@@ -92,6 +92,27 @@ public class SpatialHelper
             {
                 orientation = orientation.getOpposite();
             }
+        } else if (side == RelativeBenchSide.BACK || side == RelativeBenchSide.FRONT)
+        {
+            switch (bench.getBlockMetadata())
+            {
+                case 0:
+                    orientation = ForgeDirection.SOUTH;
+                    break;
+                case 1:
+                    orientation = ForgeDirection.WEST;
+                    break;
+                case 2:
+                    orientation = ForgeDirection.NORTH;
+                    break;
+                case 3:
+                    orientation = ForgeDirection.EAST;
+                    break;
+            }
+            if (side == RelativeBenchSide.FRONT)
+            {
+                orientation = orientation.getOpposite();
+            }
         }
 
         return orientation;
