@@ -1,7 +1,5 @@
 package werkbench.bench;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -21,8 +19,7 @@ public class BenchGUI extends GuiContainer
 {
     private BenchTileEntity bench;
     private boolean doFurnaceUpdate;
-    private Tab[] leftTabs;
-    private Tab[] rightTabs;
+    private Tab[] tabs;
     private int tickCount;
     private int xOffset;
     private int yOffset;
@@ -49,19 +46,7 @@ public class BenchGUI extends GuiContainer
     {
         LogHelper.debug("Clicked at x:" + clickX + " y:" + clickY);
 
-        for (Tab tab : leftTabs)
-        {
-            if (tab != null)
-            {
-                if (tab.intersectsWithTab(clickX, clickY))
-                {
-                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " was clicked!");
-                    tab.initializeTabAnimation();
-                }
-            }
-        }
-
-        for (Tab tab : rightTabs)
+        for (Tab tab : tabs)
         {
             if (tab != null)
             {
@@ -76,30 +61,14 @@ public class BenchGUI extends GuiContainer
 
     private void doTabToolTips(int mouseX, int mouseY)
     {
-        for (Tab tab : leftTabs)
+        for (Tab tab : tabs)
         {
             if (tab != null)
             {
                 if (tab.intersectsWithTab(mouseX, mouseY))
                 {
                     //LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
-                    tab.drawTooltipForTab(mouseX, mouseY);
-                }
-            }
-        }
-
-        for (Tab tab : rightTabs)
-        {
-            if (tab != null)
-            {
-                if (tab.intersectsWithTab(mouseX, mouseY))
-                {
-                    LogHelper.debug("Tab on " + tab.getTabSide().toString() + " is hovered!");
-                    List<String> toolTipText = new ArrayList<String>();
-                    toolTipText.add("type: " + tab.blockType.toString());
-                    toolTipText.add("side: " + tab.side.toString());
-                    drawHoveringText(toolTipText, mouseX, mouseY, mc.fontRenderer);
-                    //tab.drawTooltipForTab(mouseX, mouseY);
+                    drawHoveringText(tab.tooltipForTab(mouseX, mouseY), mouseX, mouseY, mc.fontRenderer);
                 }
             }
         }
@@ -201,16 +170,7 @@ public class BenchGUI extends GuiContainer
 
     private void renderSideBackgrounds()
     {
-
-        for (Tab tab : leftTabs)
-        {
-            if (tab != null)
-            {
-                tab.renderTab();
-            }
-        }
-
-        for (Tab tab : rightTabs)
+        for (Tab tab : tabs)
         {
             if (tab != null)
             {
@@ -235,8 +195,7 @@ public class BenchGUI extends GuiContainer
 
     private void resetTabs()
     {
-        leftTabs = new Tab[4];
-        rightTabs = new Tab[4];
+        tabs = new Tab[10];
     }
 
     private void resetTickCount()
@@ -262,21 +221,22 @@ public class BenchGUI extends GuiContainer
 
     private void updateTabsForSide(RelativeBenchSide side)
     {
-        switch (SpatialHelper.getBlockForRelativeSide(bench, side))
+        if (SpatialHelper.getBlockForRelativeSide(bench, side) != null)
         {
-            case CHEST_SINGLE:
-                if (side == RelativeBenchSide.LEFT)
-                {
-                    if (leftTabs[0] == null)
-                    {
+            if (tabs[RelativeBenchSide.getArraySlot(side)] == null)
+            {
+                resetTabForSide(side);
+            } else if (tabs[RelativeBenchSide.getArraySlot(side)].getBlockType() != SpatialHelper.getBlockForRelativeSide(bench, side))
+            {
+                resetTabForSide(side);
+            }
 
-                        leftTabs[0] = new Tab(this, AdjacentBlockType.CHEST_SINGLE, side);
-                    }
-                }
-            default:
-                // do nothing
-                break;
         }
+    }
+
+    private void resetTabForSide(RelativeBenchSide side)
+    {
+        tabs[RelativeBenchSide.getArraySlot(side)] = new Tab(this, SpatialHelper.getBlockForRelativeSide(bench, side), side);
     }
 
     @Override
@@ -289,6 +249,7 @@ public class BenchGUI extends GuiContainer
 
         updateTabsForSide(RelativeBenchSide.LEFT);
         updateTabsForSide(RelativeBenchSide.RIGHT);
+        updateTabsForSide(RelativeBenchSide.BACK);
         drawBackgroundForSide(RelativeBenchSide.LEFT);
         drawBackgroundForSide(RelativeBenchSide.RIGHT);
         renderSideBackgrounds();
