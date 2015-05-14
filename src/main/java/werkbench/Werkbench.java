@@ -10,18 +10,18 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import jakimbox.helper.LogHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import werkbench.bench.BenchBlock;
 import werkbench.bench.BenchTileEntity;
 import werkbench.handler.GUIHandler;
-import werkbench.helper.LogHelper;
 import werkbench.network.MessageHandler;
 import werkbench.proxy.CommonProxy;
 import werkbench.reference.Compendium;
 import werkbench.reference.Config;
 
-@Mod(modid = Compendium.Naming.id, name = Compendium.Naming.name, version = Compendium.Version.full, useMetadata = false, acceptedMinecraftVersions = "[1.7.10,)", dependencies = "required-after:Forge@[10.13.2.1291,)")
+@Mod(modid = Compendium.Naming.id, name = Compendium.Naming.name, version = Compendium.Version.full, useMetadata = false, acceptedMinecraftVersions = "[1.7.10,)", dependencies = "required-after:Forge@[10.13.2.1291,);required-after:jakimbox")
 public class Werkbench
 {
 
