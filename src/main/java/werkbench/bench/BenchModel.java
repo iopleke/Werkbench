@@ -1,9 +1,9 @@
 package werkbench.bench;
 
-import net.minecraft.client.model.ModelBase;
+import jakimbox.prefab.model.BasicModel;
 import net.minecraft.client.model.ModelRenderer;
 
-public class BenchModel extends ModelBase
+public class BenchModel extends BasicModel
 {
     ModelRenderer Top1;
     ModelRenderer Leg1;
@@ -620,617 +620,618 @@ public class BenchModel extends ModelBase
         upper11.setRotationPoint(12F, -18.5F, 11.01F);
     }
 
-    public void render(float rotation)
+    @Override
+    public void render(float scale)
     {
         Top1.rotateAngleX = 0F;
         Top1.rotateAngleY = 0F;
         Top1.rotateAngleZ = 0F;
-        Top1.renderWithRotation(rotation);
+        Top1.renderWithRotation(scale);
 
         Leg1.rotateAngleX = 0F;
         Leg1.rotateAngleY = 0F;
         Leg1.rotateAngleZ = 0F;
-        Leg1.renderWithRotation(rotation);
+        Leg1.renderWithRotation(scale);
 
         Leg2.rotateAngleX = 0F;
         Leg2.rotateAngleY = 0F;
         Leg2.rotateAngleZ = 0F;
-        Leg2.renderWithRotation(rotation);
+        Leg2.renderWithRotation(scale);
 
         bar1.rotateAngleX = 0F;
         bar1.rotateAngleY = 0F;
         bar1.rotateAngleZ = 0F;
-        bar1.renderWithRotation(rotation);
+        bar1.renderWithRotation(scale);
 
         bar2.rotateAngleX = 0F;
         bar2.rotateAngleY = 0F;
         bar2.rotateAngleZ = 0F;
-        bar2.renderWithRotation(rotation);
+        bar2.renderWithRotation(scale);
 
         bar3.rotateAngleX = 0F;
         bar3.rotateAngleY = 0F;
         bar3.rotateAngleZ = 0F;
-        bar3.renderWithRotation(rotation);
+        bar3.renderWithRotation(scale);
 
         Leg3.rotateAngleX = 0F;
         Leg3.rotateAngleY = 0F;
         Leg3.rotateAngleZ = 0F;
-        Leg3.renderWithRotation(rotation);
+        Leg3.renderWithRotation(scale);
 
         Leg4.rotateAngleX = 0F;
         Leg4.rotateAngleY = 0F;
         Leg4.rotateAngleZ = 0F;
-        Leg4.renderWithRotation(rotation);
+        Leg4.renderWithRotation(scale);
 
         bottom1.rotateAngleX = 0F;
         bottom1.rotateAngleY = 0F;
         bottom1.rotateAngleZ = 0F;
-        bottom1.renderWithRotation(rotation);
+        bottom1.renderWithRotation(scale);
 
         bottom2.rotateAngleX = 0F;
         bottom2.rotateAngleY = 0F;
         bottom2.rotateAngleZ = 0F;
-        bottom2.renderWithRotation(rotation);
+        bottom2.renderWithRotation(scale);
 
         bottom3.rotateAngleX = 0F;
         bottom3.rotateAngleY = 0F;
         bottom3.rotateAngleZ = 0F;
-        bottom3.renderWithRotation(rotation);
+        bottom3.renderWithRotation(scale);
 
         bottom4.rotateAngleX = 0F;
         bottom4.rotateAngleY = 0F;
         bottom4.rotateAngleZ = 0F;
-        bottom4.renderWithRotation(rotation);
+        bottom4.renderWithRotation(scale);
 
         bottom5.rotateAngleX = 0F;
         bottom5.rotateAngleY = 0F;
         bottom5.rotateAngleZ = 0F;
-        bottom5.renderWithRotation(rotation);
+        bottom5.renderWithRotation(scale);
 
         structure1.rotateAngleX = 0F;
         structure1.rotateAngleY = 0F;
         structure1.rotateAngleZ = 0F;
-        structure1.renderWithRotation(rotation);
+        structure1.renderWithRotation(scale);
 
         structure2.rotateAngleX = 0F;
         structure2.rotateAngleY = 0F;
         structure2.rotateAngleZ = 0F;
-        structure2.renderWithRotation(rotation);
+        structure2.renderWithRotation(scale);
 
         structure3.rotateAngleX = 0F;
         structure3.rotateAngleY = 0F;
         structure3.rotateAngleZ = 0F;
-        structure3.renderWithRotation(rotation);
+        structure3.renderWithRotation(scale);
 
         cajon1.rotateAngleX = 0F;
         cajon1.rotateAngleY = 0F;
         cajon1.rotateAngleZ = 0F;
-        cajon1.renderWithRotation(rotation);
+        cajon1.renderWithRotation(scale);
 
         cajon1m1.rotateAngleX = 0F;
         cajon1m1.rotateAngleY = 0F;
         cajon1m1.rotateAngleZ = 0F;
-        cajon1m1.renderWithRotation(rotation);
+        cajon1m1.renderWithRotation(scale);
 
         cajon1m2.rotateAngleX = 0F;
         cajon1m2.rotateAngleY = 0F;
         cajon1m2.rotateAngleZ = 0F;
-        cajon1m2.renderWithRotation(rotation);
+        cajon1m2.renderWithRotation(scale);
 
         cajon1front1.rotateAngleX = 0F;
         cajon1front1.rotateAngleY = 0F;
         cajon1front1.rotateAngleZ = 0F;
-        cajon1front1.renderWithRotation(rotation);
+        cajon1front1.renderWithRotation(scale);
 
         cajon1front2.rotateAngleX = 0F;
         cajon1front2.rotateAngleY = 0F;
         cajon1front2.rotateAngleZ = 0F;
-        cajon1front2.renderWithRotation(rotation);
+        cajon1front2.renderWithRotation(scale);
 
         cajon1front3.rotateAngleX = 0F;
         cajon1front3.rotateAngleY = 0F;
         cajon1front3.rotateAngleZ = 0F;
-        cajon1front3.renderWithRotation(rotation);
+        cajon1front3.renderWithRotation(scale);
 
         cajon2.rotateAngleX = 0F;
         cajon2.rotateAngleY = 0F;
         cajon2.rotateAngleZ = 0F;
-        cajon2.renderWithRotation(rotation);
+        cajon2.renderWithRotation(scale);
 
         cajon2m1.rotateAngleX = 0F;
         cajon2m1.rotateAngleY = 0F;
         cajon2m1.rotateAngleZ = 0F;
-        cajon2m1.renderWithRotation(rotation);
+        cajon2m1.renderWithRotation(scale);
 
         cajon2m2.rotateAngleX = 0F;
         cajon2m2.rotateAngleY = 0F;
         cajon2m2.rotateAngleZ = 0F;
-        cajon2m2.renderWithRotation(rotation);
+        cajon2m2.renderWithRotation(scale);
 
         cajon2front1.rotateAngleX = 0F;
         cajon2front1.rotateAngleY = 0F;
         cajon2front1.rotateAngleZ = 0F;
-        cajon2front1.renderWithRotation(rotation);
+        cajon2front1.renderWithRotation(scale);
 
         cajon2front2.rotateAngleX = 0F;
         cajon2front2.rotateAngleY = 0F;
         cajon2front2.rotateAngleZ = 0F;
-        cajon2front2.renderWithRotation(rotation);
+        cajon2front2.renderWithRotation(scale);
 
         cajon2front3.rotateAngleX = 0F;
         cajon2front3.rotateAngleY = 0F;
         cajon2front3.rotateAngleZ = 0F;
-        cajon2front3.renderWithRotation(rotation);
+        cajon2front3.renderWithRotation(scale);
 
         cajon3.rotateAngleX = 0F;
         cajon3.rotateAngleY = 0F;
         cajon3.rotateAngleZ = 0F;
-        cajon3.renderWithRotation(rotation);
+        cajon3.renderWithRotation(scale);
 
         cajon3m1.rotateAngleX = 0F;
         cajon3m1.rotateAngleY = 0F;
         cajon3m1.rotateAngleZ = 0F;
-        cajon3m1.renderWithRotation(rotation);
+        cajon3m1.renderWithRotation(scale);
 
         cajon3m2.rotateAngleX = 0F;
         cajon3m2.rotateAngleY = 0F;
         cajon3m2.rotateAngleZ = 0F;
-        cajon3m2.renderWithRotation(rotation);
+        cajon3m2.renderWithRotation(scale);
 
         cajon3front1.rotateAngleX = 0F;
         cajon3front1.rotateAngleY = 0F;
         cajon3front1.rotateAngleZ = 0F;
-        cajon3front1.renderWithRotation(rotation);
+        cajon3front1.renderWithRotation(scale);
 
         cajon3front2.rotateAngleX = 0F;
         cajon3front2.rotateAngleY = 0F;
         cajon3front2.rotateAngleZ = 0F;
-        cajon3front2.renderWithRotation(rotation);
+        cajon3front2.renderWithRotation(scale);
 
         cajon3front3.rotateAngleX = 0F;
         cajon3front3.rotateAngleY = 0F;
         cajon3front3.rotateAngleZ = 0F;
-        cajon3front3.renderWithRotation(rotation);
+        cajon3front3.renderWithRotation(scale);
 
         cajon4.rotateAngleX = 0F;
         cajon4.rotateAngleY = 0F;
         cajon4.rotateAngleZ = 0F;
-        cajon4.renderWithRotation(rotation);
+        cajon4.renderWithRotation(scale);
 
         cajon4m1.rotateAngleX = 0F;
         cajon4m1.rotateAngleY = 0F;
         cajon4m1.rotateAngleZ = 0F;
-        cajon4m1.renderWithRotation(rotation);
+        cajon4m1.renderWithRotation(scale);
 
         cajon4m2.rotateAngleX = 0F;
         cajon4m2.rotateAngleY = 0F;
         cajon4m2.rotateAngleZ = 0F;
-        cajon4m2.renderWithRotation(rotation);
+        cajon4m2.renderWithRotation(scale);
 
         cajon4front1.rotateAngleX = 0F;
         cajon4front1.rotateAngleY = 0F;
         cajon4front1.rotateAngleZ = 0F;
-        cajon4front1.renderWithRotation(rotation);
+        cajon4front1.renderWithRotation(scale);
 
         cajon4front2.rotateAngleX = 0F;
         cajon4front2.rotateAngleY = 0F;
         cajon4front2.rotateAngleZ = 0F;
-        cajon4front2.renderWithRotation(rotation);
+        cajon4front2.renderWithRotation(scale);
 
         cajon4front3.rotateAngleX = 0F;
         cajon4front3.rotateAngleY = 0F;
         cajon4front3.rotateAngleZ = 0F;
-        cajon4front3.renderWithRotation(rotation);
+        cajon4front3.renderWithRotation(scale);
 
         door1.rotateAngleX = 0F;
         door1.rotateAngleY = 0.08726647F;
         door1.rotateAngleZ = 0F;
-        door1.renderWithRotation(rotation);
+        door1.renderWithRotation(scale);
 
         knob1.rotateAngleX = 0F;
         knob1.rotateAngleY = 0.08726647F;
         knob1.rotateAngleZ = 0F;
-        knob1.renderWithRotation(rotation);
+        knob1.renderWithRotation(scale);
 
         door2.rotateAngleX = 0F;
         door2.rotateAngleY = -0.08726647F;
         door2.rotateAngleZ = 0F;
-        door2.renderWithRotation(rotation);
+        door2.renderWithRotation(scale);
 
         knob2.rotateAngleX = 0F;
         knob2.rotateAngleY = -0.08726647F;
         knob2.rotateAngleZ = 0F;
-        knob2.renderWithRotation(rotation);
+        knob2.renderWithRotation(scale);
 
         hook.rotateAngleX = 0F;
         hook.rotateAngleY = 0F;
         hook.rotateAngleZ = 0F;
-        hook.renderWithRotation(rotation);
+        hook.renderWithRotation(scale);
 
         saw2.rotateAngleX = 0F;
         saw2.rotateAngleY = 0F;
         saw2.rotateAngleZ = 0F;
-        saw2.renderWithRotation(rotation);
+        saw2.renderWithRotation(scale);
 
         saw3.rotateAngleX = 0F;
         saw3.rotateAngleY = 0F;
         saw3.rotateAngleZ = 0F;
-        saw3.renderWithRotation(rotation);
+        saw3.renderWithRotation(scale);
 
         saw4.rotateAngleX = 0F;
         saw4.rotateAngleY = 0F;
         saw4.rotateAngleZ = 0F;
-        saw4.renderWithRotation(rotation);
+        saw4.renderWithRotation(scale);
 
         saw5.rotateAngleX = 0F;
         saw5.rotateAngleY = 0F;
         saw5.rotateAngleZ = 0F;
-        saw5.renderWithRotation(rotation);
+        saw5.renderWithRotation(scale);
 
         saw6.rotateAngleX = 0F;
         saw6.rotateAngleY = 0F;
         saw6.rotateAngleZ = 0F;
-        saw6.renderWithRotation(rotation);
+        saw6.renderWithRotation(scale);
 
         saw7.rotateAngleX = 0F;
         saw7.rotateAngleY = 0F;
         saw7.rotateAngleZ = 0F;
-        saw7.renderWithRotation(rotation);
+        saw7.renderWithRotation(scale);
 
         saw8.rotateAngleX = 0F;
         saw8.rotateAngleY = 0F;
         saw8.rotateAngleZ = 0F;
-        saw8.renderWithRotation(rotation);
+        saw8.renderWithRotation(scale);
 
         saw.rotateAngleX = 0F;
         saw.rotateAngleY = 0F;
         saw.rotateAngleZ = 0F;
-        saw.renderWithRotation(rotation);
+        saw.renderWithRotation(scale);
 
         hammer1.rotateAngleX = 0F;
         hammer1.rotateAngleY = 0F;
         hammer1.rotateAngleZ = 0F;
-        hammer1.renderWithRotation(rotation);
+        hammer1.renderWithRotation(scale);
 
         hammer2.rotateAngleX = 0F;
         hammer2.rotateAngleY = 0F;
         hammer2.rotateAngleZ = 0F;
-        hammer2.renderWithRotation(rotation);
+        hammer2.renderWithRotation(scale);
 
         hammer3.rotateAngleX = 0F;
         hammer3.rotateAngleY = 0F;
         hammer3.rotateAngleZ = 0F;
-        hammer3.renderWithRotation(rotation);
+        hammer3.renderWithRotation(scale);
 
         hammer4.rotateAngleX = 0F;
         hammer4.rotateAngleY = 0F;
         hammer4.rotateAngleZ = 0F;
-        hammer4.renderWithRotation(rotation);
+        hammer4.renderWithRotation(scale);
 
         hammer5.rotateAngleX = 0F;
         hammer5.rotateAngleY = 0F;
         hammer5.rotateAngleZ = 0F;
-        hammer5.renderWithRotation(rotation);
+        hammer5.renderWithRotation(scale);
 
         hammer6.rotateAngleX = 0F;
         hammer6.rotateAngleY = 0F;
         hammer6.rotateAngleZ = 0F;
-        hammer6.renderWithRotation(rotation);
+        hammer6.renderWithRotation(scale);
 
         hammer7.rotateAngleX = 0F;
         hammer7.rotateAngleY = 0F;
         hammer7.rotateAngleZ = 0F;
-        hammer7.renderWithRotation(rotation);
+        hammer7.renderWithRotation(scale);
 
         hook2.rotateAngleX = 0F;
         hook2.rotateAngleY = 0F;
         hook2.rotateAngleZ = 0F;
-        hook2.renderWithRotation(rotation);
+        hook2.renderWithRotation(scale);
 
         hook3.rotateAngleX = 0F;
         hook3.rotateAngleY = 0F;
         hook3.rotateAngleZ = 0F;
-        hook3.renderWithRotation(rotation);
+        hook3.renderWithRotation(scale);
 
         escuadra.rotateAngleX = 0F;
         escuadra.rotateAngleY = 0F;
         escuadra.rotateAngleZ = 0F;
-        escuadra.renderWithRotation(rotation);
+        escuadra.renderWithRotation(scale);
 
         escuadra2.rotateAngleX = 0F;
         escuadra2.rotateAngleY = 0F;
         escuadra2.rotateAngleZ = 0F;
-        escuadra2.renderWithRotation(rotation);
+        escuadra2.renderWithRotation(scale);
 
         hook4.rotateAngleX = 0F;
         hook4.rotateAngleY = 0F;
         hook4.rotateAngleZ = 0F;
-        hook4.renderWithRotation(rotation);
+        hook4.renderWithRotation(scale);
 
         press.rotateAngleX = 0F;
         press.rotateAngleY = 0F;
         press.rotateAngleZ = 0F;
-        press.renderWithRotation(rotation);
+        press.renderWithRotation(scale);
 
         wheel1.rotateAngleX = 0F;
         wheel1.rotateAngleY = 0F;
         wheel1.rotateAngleZ = 0F;
-        wheel1.renderWithRotation(rotation);
+        wheel1.renderWithRotation(scale);
 
         wheel1m1.rotateAngleX = 0F;
         wheel1m1.rotateAngleY = 0F;
         wheel1m1.rotateAngleZ = 1.047197F;
-        wheel1m1.renderWithRotation(rotation);
+        wheel1m1.renderWithRotation(scale);
 
         wheel1m2.rotateAngleX = -6.283185F;
         wheel1m2.rotateAngleY = 0F;
         wheel1m2.rotateAngleZ = 2.094395F;
-        wheel1m2.renderWithRotation(rotation);
+        wheel1m2.renderWithRotation(scale);
 
         wheel1m3.rotateAngleX = 0F;
         wheel1m3.rotateAngleY = 0F;
         wheel1m3.rotateAngleZ = -1.047197F;
-        wheel1m3.renderWithRotation(rotation);
+        wheel1m3.renderWithRotation(scale);
 
         wheel1m4.rotateAngleX = 0F;
         wheel1m4.rotateAngleY = 0F;
         wheel1m4.rotateAngleZ = -2.094395F;
-        wheel1m4.renderWithRotation(rotation);
+        wheel1m4.renderWithRotation(scale);
 
         wheel1m5.rotateAngleX = 0F;
         wheel1m5.rotateAngleY = 0F;
         wheel1m5.rotateAngleZ = -3.141593F;
-        wheel1m5.renderWithRotation(rotation);
+        wheel1m5.renderWithRotation(scale);
 
         wheel1screw2.rotateAngleX = 0.1718548F;
         wheel1screw2.rotateAngleY = 0.3053495F;
         wheel1screw2.rotateAngleZ = 2.644501F;
-        wheel1screw2.renderWithRotation(rotation);
+        wheel1screw2.renderWithRotation(scale);
 
         wheel1screw1.rotateAngleX = 0.1718547F;
         wheel1screw1.rotateAngleY = -0.3053496F;
         wheel1screw1.rotateAngleZ = 0.4970914F;
-        wheel1screw1.renderWithRotation(rotation);
+        wheel1screw1.renderWithRotation(scale);
 
         wheel1screw3.rotateAngleX = -0.3490658F;
         wheel1screw3.rotateAngleY = -1.557684E-08F;
         wheel1screw3.rotateAngleZ = -1.570796F;
-        wheel1screw3.renderWithRotation(rotation);
+        wheel1screw3.renderWithRotation(scale);
 
         wheel1screw.rotateAngleX = 0F;
         wheel1screw.rotateAngleY = 0F;
         wheel1screw.rotateAngleZ = 0F;
-        wheel1screw.renderWithRotation(rotation);
+        wheel1screw.renderWithRotation(scale);
 
         wheel2.rotateAngleX = 0F;
         wheel2.rotateAngleY = 0F;
         wheel2.rotateAngleZ = 0F;
-        wheel2.renderWithRotation(rotation);
+        wheel2.renderWithRotation(scale);
 
         wheel2m1.rotateAngleX = 0F;
         wheel2m1.rotateAngleY = 0F;
         wheel2m1.rotateAngleZ = 1.047197F;
-        wheel2m1.renderWithRotation(rotation);
+        wheel2m1.renderWithRotation(scale);
 
         wheel2m2.rotateAngleX = -6.283185F;
         wheel2m2.rotateAngleY = 0F;
         wheel2m2.rotateAngleZ = 2.094395F;
-        wheel2m2.renderWithRotation(rotation);
+        wheel2m2.renderWithRotation(scale);
 
         wheel2m3.rotateAngleX = 0F;
         wheel2m3.rotateAngleY = 0F;
         wheel2m3.rotateAngleZ = -1.047197F;
-        wheel2m3.renderWithRotation(rotation);
+        wheel2m3.renderWithRotation(scale);
 
         wheel2m4.rotateAngleX = 0F;
         wheel2m4.rotateAngleY = 0F;
         wheel2m4.rotateAngleZ = -2.094395F;
-        wheel2m4.renderWithRotation(rotation);
+        wheel2m4.renderWithRotation(scale);
 
         wheel2m5.rotateAngleX = 0F;
         wheel2m5.rotateAngleY = 0F;
         wheel2m5.rotateAngleZ = -3.141593F;
-        wheel2m5.renderWithRotation(rotation);
+        wheel2m5.renderWithRotation(scale);
 
         wheel2screw2.rotateAngleX = 0.1718548F;
         wheel2screw2.rotateAngleY = 0.3053495F;
         wheel2screw2.rotateAngleZ = 2.644501F;
-        wheel2screw2.renderWithRotation(rotation);
+        wheel2screw2.renderWithRotation(scale);
 
         wheel2screw1.rotateAngleX = 0.1718547F;
         wheel2screw1.rotateAngleY = -0.3053496F;
         wheel2screw1.rotateAngleZ = 0.4970914F;
-        wheel2screw1.renderWithRotation(rotation);
+        wheel2screw1.renderWithRotation(scale);
 
         wheel2screw3.rotateAngleX = -0.3490658F;
         wheel2screw3.rotateAngleY = -1.557684E-08F;
         wheel2screw3.rotateAngleZ = -1.570796F;
-        wheel2screw3.renderWithRotation(rotation);
+        wheel2screw3.renderWithRotation(scale);
 
         wheel2screw.rotateAngleX = 0F;
         wheel2screw.rotateAngleY = 0F;
         wheel2screw.rotateAngleZ = 0F;
-        wheel2screw.renderWithRotation(rotation);
+        wheel2screw.renderWithRotation(scale);
 
         upper.rotateAngleX = 0F;
         upper.rotateAngleY = 0F;
         upper.rotateAngleZ = 0F;
-        upper.renderWithRotation(rotation);
+        upper.renderWithRotation(scale);
 
         upper1.rotateAngleX = 0F;
         upper1.rotateAngleY = 0F;
         upper1.rotateAngleZ = 0F;
-        upper1.renderWithRotation(rotation);
+        upper1.renderWithRotation(scale);
 
         upper2.rotateAngleX = 0F;
         upper2.rotateAngleY = 0F;
         upper2.rotateAngleZ = 0F;
-        upper2.renderWithRotation(rotation);
+        upper2.renderWithRotation(scale);
 
         upper2m1.rotateAngleX = 0F;
         upper2m1.rotateAngleY = 0F;
         upper2m1.rotateAngleZ = 0F;
-        upper2m1.renderWithRotation(rotation);
+        upper2m1.renderWithRotation(scale);
 
         upper2m2.rotateAngleX = 0.7853982F;
         upper2m2.rotateAngleY = 0F;
         upper2m2.rotateAngleZ = 0F;
-        upper2m2.renderWithRotation(rotation);
+        upper2m2.renderWithRotation(scale);
 
         upper3.rotateAngleX = 0F;
         upper3.rotateAngleY = 0F;
         upper3.rotateAngleZ = 0F;
-        upper3.renderWithRotation(rotation);
+        upper3.renderWithRotation(scale);
 
         upper4.rotateAngleX = 0F;
         upper4.rotateAngleY = 0F;
         upper4.rotateAngleZ = 0F;
-        upper4.renderWithRotation(rotation);
+        upper4.renderWithRotation(scale);
 
         upper5.rotateAngleX = 0F;
         upper5.rotateAngleY = 0F;
         upper5.rotateAngleZ = 0F;
-        upper5.renderWithRotation(rotation);
+        upper5.renderWithRotation(scale);
 
         upper9.rotateAngleX = 0F;
         upper9.rotateAngleY = 0F;
         upper9.rotateAngleZ = 0F;
-        upper9.renderWithRotation(rotation);
+        upper9.renderWithRotation(scale);
 
         upperC1.rotateAngleX = 0F;
         upperC1.rotateAngleY = 0F;
         upperC1.rotateAngleZ = 0F;
-        upperC1.renderWithRotation(rotation);
+        upperC1.renderWithRotation(scale);
 
         knob3.rotateAngleX = 0F;
         knob3.rotateAngleY = 0F;
         knob3.rotateAngleZ = 0F;
-        knob3.renderWithRotation(rotation);
+        knob3.renderWithRotation(scale);
 
         upper6.rotateAngleX = 0F;
         upper6.rotateAngleY = 0F;
         upper6.rotateAngleZ = 0F;
-        upper6.renderWithRotation(rotation);
+        upper6.renderWithRotation(scale);
 
         upper6m1.rotateAngleX = 0F;
         upper6m1.rotateAngleY = 0F;
         upper6m1.rotateAngleZ = 0F;
-        upper6m1.renderWithRotation(rotation);
+        upper6m1.renderWithRotation(scale);
 
         upper6m2.rotateAngleX = 0.7853982F;
         upper6m2.rotateAngleY = 0F;
         upper6m2.rotateAngleZ = 0F;
-        upper6m2.renderWithRotation(rotation);
+        upper6m2.renderWithRotation(scale);
 
         upper7.rotateAngleX = 0F;
         upper7.rotateAngleY = 0F;
         upper7.rotateAngleZ = 0F;
-        upper7.renderWithRotation(rotation);
+        upper7.renderWithRotation(scale);
 
         upper7m1.rotateAngleX = 0F;
         upper7m1.rotateAngleY = 0F;
         upper7m1.rotateAngleZ = 0F;
-        upper7m1.renderWithRotation(rotation);
+        upper7m1.renderWithRotation(scale);
 
         upper7m2.rotateAngleX = 0.7853982F;
         upper7m2.rotateAngleY = 0F;
         upper7m2.rotateAngleZ = 0F;
-        upper7m2.renderWithRotation(rotation);
+        upper7m2.renderWithRotation(scale);
 
         upper8.rotateAngleX = 0F;
         upper8.rotateAngleY = 0F;
         upper8.rotateAngleZ = 0F;
-        upper8.renderWithRotation(rotation);
+        upper8.renderWithRotation(scale);
 
         upper8m1.rotateAngleX = 0F;
         upper8m1.rotateAngleY = 0F;
         upper8m1.rotateAngleZ = 0F;
-        upper8m1.renderWithRotation(rotation);
+        upper8m1.renderWithRotation(scale);
 
         upper8m2.rotateAngleX = 0.7853982F;
         upper8m2.rotateAngleY = 0F;
         upper8m2.rotateAngleZ = 0F;
-        upper8m2.renderWithRotation(rotation);
+        upper8m2.renderWithRotation(scale);
 
         cajon5.rotateAngleX = 0F;
         cajon5.rotateAngleY = 0F;
         cajon5.rotateAngleZ = 0F;
-        cajon5.renderWithRotation(rotation);
+        cajon5.renderWithRotation(scale);
 
         knob4.rotateAngleX = 0F;
         knob4.rotateAngleY = 0F;
         knob4.rotateAngleZ = 0F;
-        knob4.renderWithRotation(rotation);
+        knob4.renderWithRotation(scale);
 
         C5m1.rotateAngleX = 0F;
         C5m1.rotateAngleY = 0F;
         C5m1.rotateAngleZ = 0F;
-        C5m1.renderWithRotation(rotation);
+        C5m1.renderWithRotation(scale);
 
         C5m2.rotateAngleX = 0F;
         C5m2.rotateAngleY = 0F;
         C5m2.rotateAngleZ = 0F;
-        C5m2.renderWithRotation(rotation);
+        C5m2.renderWithRotation(scale);
 
         C5m3.rotateAngleX = 0F;
         C5m3.rotateAngleY = 0F;
         C5m3.rotateAngleZ = 0F;
-        C5m3.renderWithRotation(rotation);
+        C5m3.renderWithRotation(scale);
 
         C5m5.rotateAngleX = 0F;
         C5m5.rotateAngleY = 0F;
         C5m5.rotateAngleZ = 0F;
-        C5m5.renderWithRotation(rotation);
+        C5m5.renderWithRotation(scale);
 
         C5m4.rotateAngleX = 0F;
         C5m4.rotateAngleY = 0F;
         C5m4.rotateAngleZ = 0F;
-        C5m4.renderWithRotation(rotation);
+        C5m4.renderWithRotation(scale);
 
         C5m6.rotateAngleX = 0F;
         C5m6.rotateAngleY = 0F;
         C5m6.rotateAngleZ = 0F;
-        C5m6.renderWithRotation(rotation);
+        C5m6.renderWithRotation(scale);
 
         cajon5a1.rotateAngleX = 0F;
         cajon5a1.rotateAngleY = 0F;
         cajon5a1.rotateAngleZ = 0F;
-        cajon5a1.renderWithRotation(rotation);
+        cajon5a1.renderWithRotation(scale);
 
         cajon6.rotateAngleX = 0F;
         cajon6.rotateAngleY = 0F;
         cajon6.rotateAngleZ = 0F;
-        cajon6.renderWithRotation(rotation);
+        cajon6.renderWithRotation(scale);
 
         knob5.rotateAngleX = 0F;
         knob5.rotateAngleY = 0F;
         knob5.rotateAngleZ = 0F;
-        knob5.renderWithRotation(rotation);
+        knob5.renderWithRotation(scale);
 
         cajon7.rotateAngleX = 0F;
         cajon7.rotateAngleY = 0F;
         cajon7.rotateAngleZ = 0F;
-        cajon7.renderWithRotation(rotation);
+        cajon7.renderWithRotation(scale);
 
         knob6.rotateAngleX = 0F;
         knob6.rotateAngleY = 0F;
         knob6.rotateAngleZ = 0F;
-        knob6.renderWithRotation(rotation);
+        knob6.renderWithRotation(scale);
 
         upper91.rotateAngleX = 0F;
         upper91.rotateAngleY = 0F;
         upper91.rotateAngleZ = 0F;
-        upper91.renderWithRotation(rotation);
+        upper91.renderWithRotation(scale);
 
         upper10.rotateAngleX = 0F;
         upper10.rotateAngleY = 0F;
         upper10.rotateAngleZ = 0F;
-        upper10.renderWithRotation(rotation);
+        upper10.renderWithRotation(scale);
 
         upper11.rotateAngleX = 0F;
         upper11.rotateAngleY = 0F;
         upper11.rotateAngleZ = 0F;
-        upper11.renderWithRotation(rotation);
+        upper11.renderWithRotation(scale);
 
     }
 
