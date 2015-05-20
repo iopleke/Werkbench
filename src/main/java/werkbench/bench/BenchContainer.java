@@ -1,5 +1,7 @@
 package werkbench.bench;
 
+import jakimbox.helper.SpatialHelper;
+import jakimbox.reference.RelativeDirection;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,23 +13,20 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
-import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.util.ForgeDirection;
-import werkbench.helper.SpatialHelper;
-import werkbench.reference.Compendium.AdjacentBlockType;
-import werkbench.reference.Compendium.RelativeBenchSide;
+import werkbench.reference.GUIOffset;
 
 public final class BenchContainer extends Container
 {
 
     private final BenchTileEntity bench;
 
-    private Map<ForgeDirection, int[]> directionalSlots = new EnumMap<ForgeDirection, int[]>(ForgeDirection.class);
+    private Map<RelativeDirection, Slot[]> slotCache = new EnumMap<RelativeDirection, Slot[]>(RelativeDirection.class);
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
     boolean loading = false;
@@ -47,9 +46,6 @@ public final class BenchContainer extends Container
 
         bindPlayerInventory(inventoryPlayer);
         bindCraftGrid(inventoryPlayer);
-
-        bindTileEntitySlotsForSide(inventoryPlayer, RelativeBenchSide.LEFT);
-        bindTileEntitySlotsForSide(inventoryPlayer, RelativeBenchSide.RIGHT);
     }
 
     /**
@@ -111,52 +107,59 @@ public final class BenchContainer extends Container
         }
     }
 
-    private void bindSlotsForChest(TileEntityChest chest, RelativeBenchSide side, AdjacentBlockType chestType)
+    /**
+     * Slot binding iterator for a RelativeDirection
+     *
+     * @param direction
+     */
+    private void bindSlotsForDirection(RelativeDirection direction)
+    {
+        for (Slot slot : slotCache.get(direction))
+        {
+            addSlotToContainer(slot);
+        }
+    }
+
+    private void cacheTileEntitySlotsForDirection(InventoryPlayer inventoryPlayer, RelativeDirection direction)
+    {
+        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, side);
+        if (tileEntity instanceof TileEntityChest)
+        {
+            cacheSlotsForChest(direction, ((TileEntityChest) tileEntity));
+
+        } else if (tileEntity instanceof TileEntityFurnace)
+        {
+            bindSlotsForFurnace(((TileEntityFurnace) tileEntity), inventoryPlayer, side);
+        }
+    }
+
+    /**
+     * Update the cached slots for a chest TileEntity
+     *
+     * @param direction
+     * @param chest
+     */
+    private void cacheSlotsForChest(RelativeDirection direction, TileEntityChest chest)
     {
         int slot, xOffset, yOffset, count = 0;
-        int[] guiOffsets;
 
-        int[] slotArray = new int[27];
+        Slot[] slotArray = new Slot[27];
+        if (slotCache.containsKey(direction))
+        {
+            slotCache.remove(direction);
+        }
 
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)
             {
                 slot = j + i * 9;
-                xOffset = i * 18;
-                yOffset = j * 18;
-                slotArray[count++] = slot;
-                guiOffsets = AdjacentBlockType.getGUISlotCoordinates(side, chestType);
-                addSlotToContainer(new Slot(chest, slot, guiOffsets[0] + xOffset, guiOffsets[1] + yOffset));
+                xOffset = i * 18 + GUIOffset.CHEST_SINGLE.getOffsetForSide(RelativeDirection.getRelativeDirectionTabSide(direction))[0];
+                yOffset = j * 18 + GUIOffset.CHEST_SINGLE.getOffsetForSide(RelativeDirection.getRelativeDirectionTabSide(direction))[1];
+                slotArray[count++] = new Slot(chest, slot, xOffset, yOffset);
             }
         }
-        directionalSlots.put(SpatialHelper.getDirectionFromRelativeSide(bench, RelativeBenchSide.LEFT), slotArray);
-    }
-
-    private void bindSlotsForFurnace(TileEntityFurnace furnace, InventoryPlayer inventoryPlayer, RelativeBenchSide side)
-    {
-        int slot = 0;
-        int[] guiOffsets = AdjacentBlockType.getGUISlotCoordinates(side, AdjacentBlockType.FURNACE_INACTIVE);
-        addSlotToContainer(new Slot(furnace, slot++, guiOffsets[0], guiOffsets[1]));
-        addSlotToContainer(new Slot(furnace, slot++, guiOffsets[0] + 21, guiOffsets[1] + 44));
-        addSlotToContainer(new SlotFurnace(inventoryPlayer.player, furnace, slot++, guiOffsets[0] + 42, guiOffsets[1]));
-    }
-
-    private void bindTileEntitySlotsForSide(InventoryPlayer inventoryPlayer, RelativeBenchSide side)
-    {
-        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, side);
-        if (tileEntity instanceof TileEntityChest)
-        {
-            bindSlotsForChest(((TileEntityChest) tileEntity), side, AdjacentBlockType.CHEST_SINGLE);
-            TileEntity offsetTileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, side, 2);
-            if (offsetTileEntity instanceof TileEntityChest)
-            {
-                bindSlotsForChest(((TileEntityChest) offsetTileEntity), side, AdjacentBlockType.CHEST_DOUBLE);
-            }
-        } else if (tileEntity instanceof TileEntityFurnace)
-        {
-            bindSlotsForFurnace(((TileEntityFurnace) tileEntity), inventoryPlayer, side);
-        }
+        slotCache.put(direction, slotArray);
     }
 
     protected void resetSlotsForDirection(ForgeDirection direction)
