@@ -2,6 +2,11 @@ package werkbench.reference;
 
 import cpw.mods.fml.common.ModMetadata;
 import java.util.Arrays;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityEnchantmentTable;
+import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -22,6 +27,24 @@ public class Compendium
         {
             CHEST_DOUBLE, CHEST_SINGLE, EMPTY, FURNACE_ACTIVE, FURNACE_INACTIVE, OFFSET
         };
+
+        /**
+         * Check if the TileEntity type is supported
+         *
+         * @param tileEntity
+         * @return boolean
+         */
+        public static boolean isTileEntitySupported(TileEntity tileEntity)
+        {
+            if (tileEntity instanceof TileEntityBrewingStand
+                || tileEntity instanceof TileEntityChest
+                || tileEntity instanceof TileEntityEnchantmentTable
+                || tileEntity instanceof TileEntityEnderChest)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 
     public static final class Naming
