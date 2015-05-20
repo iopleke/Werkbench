@@ -65,7 +65,7 @@ public class Config
 
         if (config == null)
         {
-            config = new Configuration(new File(Compendium.Config.configPrefix + "Werkbench.cfg"));
+            config = new Configuration(new File("config/Werkbench.cfg"));
             debugMode = true;
             loadConfig();
         }
