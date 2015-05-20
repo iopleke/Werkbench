@@ -14,6 +14,14 @@ public class Compendium
     public static enum AdjacentBlockType
     {
         CHEST_DOUBLE, CHEST_SINGLE, EMPTY, FURNACE_ACTIVE, FURNACE_INACTIVE, OFFSET;
+
+        /**
+         * Array of all valid block types
+         */
+        public static final AdjacentBlockType[] VALID_TYPES =
+        {
+            CHEST_DOUBLE, CHEST_SINGLE, EMPTY, FURNACE_ACTIVE, FURNACE_INACTIVE, OFFSET
+        };
     }
 
     public static final class Naming
