@@ -30,7 +30,7 @@ public class BenchGUI extends GuiContainer
 
     private void bindGUITexture()
     {
-        this.mc.renderEngine.bindTexture(Compendium.Resource.GUI.background);
+        this.mc.renderEngine.bindTexture(Compendium.TextureResource.GUI.background);
     }
 
     private void drawBenchBackground()
