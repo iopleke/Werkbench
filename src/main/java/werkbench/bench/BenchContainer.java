@@ -18,7 +18,6 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraftforge.common.util.ForgeDirection;
 import werkbench.reference.GUIOffset;
 
 public final class BenchContainer extends Container
@@ -122,14 +121,14 @@ public final class BenchContainer extends Container
 
     private void cacheTileEntitySlotsForDirection(InventoryPlayer inventoryPlayer, RelativeDirection direction)
     {
-        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeSide(bench, side);
+        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeDirection(bench, direction);
         if (tileEntity instanceof TileEntityChest)
         {
             cacheSlotsForChest(direction, ((TileEntityChest) tileEntity));
 
         } else if (tileEntity instanceof TileEntityFurnace)
         {
-            bindSlotsForFurnace(((TileEntityFurnace) tileEntity), inventoryPlayer, side);
+            //bindSlotsForFurnace(((TileEntityFurnace) tileEntity), inventoryPlayer, side);
         }
     }
 
@@ -160,15 +159,6 @@ public final class BenchContainer extends Container
             }
         }
         slotCache.put(direction, slotArray);
-    }
-
-    protected void resetSlotsForDirection(ForgeDirection direction)
-    {
-        int[] slotArray = this.directionalSlots.get(direction);
-        for (int i = 0; i < slotArray.length; i++)
-        {
-            this.inventorySlots.remove(slotArray[i]);
-        }
     }
 
     /**
