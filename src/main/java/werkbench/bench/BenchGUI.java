@@ -3,9 +3,11 @@ package werkbench.bench;
 import jakimbox.prefab.gui.Tabs;
 import jakimbox.prefab.gui.Tabs.TabSide;
 import jakimbox.prefab.gui.tabTypes.ChestTab;
+import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.world.World;
+import org.lwjgl.input.Mouse;
 import werkbench.reference.Compendium;
 
 public class BenchGUI extends GuiContainer
@@ -18,6 +20,7 @@ public class BenchGUI extends GuiContainer
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
         super(new BenchContainer(inventoryPlayer, bench));
+        Mouse.setGrabbed(false);
         tabs = new Tabs(2);
         tabs.addTab(new ChestTab(TabSide.LEFT), 0);
         this.bench = bench;
@@ -64,14 +67,20 @@ public class BenchGUI extends GuiContainer
     @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int mouseX, int mouseY)
     {
+        // Main GUI texture rendering
         updateOffsetCoordinates();
         bindGUITexture();
         drawBenchBackground();
+
+        // Tab operations
         updateTabs();
         tabs.renderTabs(this);
 
-        drawHoveringText(tabs.getTabToolTip(mouseX, mouseY), mouseX, mouseY, mc.fontRenderer);
-
+        List<String> hoverText = tabs.getTabToolTip(mouseX, mouseY);
+        if (hoverText != null)
+        {
+            drawHoveringText(hoverText, mouseX, mouseY, mc.fontRenderer);
+        }
     }
 
     @Override
