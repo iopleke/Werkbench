@@ -22,7 +22,7 @@ public class BenchGUI extends GuiContainer
         super(new BenchContainer(inventoryPlayer, bench));
         Mouse.setGrabbed(false);
         tabs = new Tabs(2);
-        tabs.addTab(new ChestTab(TabSide.LEFT), 0);
+        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT), 0);
         this.bench = bench;
 
         this.xSize = 420;
@@ -50,6 +50,7 @@ public class BenchGUI extends GuiContainer
 
     private void updateTabs()
     {
+        tabs.setDefaultGUICoordinates(xOffset, yOffset);
 //        if (block on side != null)
 //        {
 //            if (tab for block == null)
