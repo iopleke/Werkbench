@@ -70,6 +70,9 @@ public class BenchTileEntity extends BasicInventoryTileEntity
         }
     }
 
+    /**
+     * Check all sides on the Y plane, and update any changes to the block cache
+     */
     public void updateSideChecks()
     {
         for (RelativeDirection direction : RelativeDirection.VALID_DIRECTIONS)
@@ -80,7 +83,11 @@ public class BenchTileEntity extends BasicInventoryTileEntity
             {
                 if (AdjacentBlockType.isTileEntitySupported(tileEntity))
                 {
-                    blockCache.put(direction, tileEntity.getBlockType());
+                    Block cachedBlock = (Block) blockCache.get(direction);
+                    if (cachedBlock != tileEntity.getBlockType())
+                    {
+                        blockCache.put(direction, tileEntity.getBlockType());
+                    }
                 }
             }
         }
