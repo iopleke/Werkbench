@@ -3,32 +3,29 @@ package werkbench.bench;
 import jakimbox.prefab.gui.Tabs;
 import jakimbox.prefab.gui.Tabs.TabSide;
 import jakimbox.prefab.gui.tabTypes.ChestTab;
-import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.world.World;
-import org.lwjgl.input.Mouse;
 import werkbench.reference.Compendium;
 
 public class BenchGUI extends GuiContainer
 {
-    private BenchTileEntity bench;
     private Tabs tabs;
-    private int xOffset;
-    private int yOffset;
 
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
         super(new BenchContainer(inventoryPlayer, bench));
-        Mouse.setGrabbed(false);
-        tabs = new Tabs(2);
+
+        tabs = new Tabs(1);
         tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT), 0);
-        this.bench = bench;
 
-        this.xSize = 420;
-        this.ySize = 206;
+        // Because I'm allergic to using Magic Numbers
+        int textureWidth = 222;
+        int textureHeight = 256;
+        int tabWidthMax = 0;
 
-        updateOffsetCoordinates();
+        xSize = textureWidth + tabWidthMax;
+        ySize = textureHeight;
     }
 
     private void bindGUITexture()
@@ -38,56 +35,37 @@ public class BenchGUI extends GuiContainer
 
     private void drawBenchBackground()
     {
-        drawTexturedModalRect(xOffset + 98, yOffset - 50, 0, 0, 222, 256);
+        // The background texture has no offset
+        int textureOffsetX = 0;
+        int textureOffsetY = 0;
+
+        // A full height texture (256 in height) is too tall for the default GUI size by 8px
+        int positionOffsetY = -8;
+
+        drawTexturedModalRect(getOffsetX(), getOffsetY() + positionOffsetY, textureOffsetX, textureOffsetY, xSize, ySize);
     }
 
-    private void updateOffsetCoordinates()
+    private int getOffsetX()
     {
-        xOffset = (width - xSize) / 2;
-        yOffset = (height - ySize) / 2;
-        tabs.setDefaultGUICoordinates(xOffset, yOffset);
+        return (int) (width - xSize) / 2;
     }
 
-    private void updateTabs()
+    private int getOffsetY()
     {
-        tabs.setDefaultGUICoordinates(xOffset, yOffset);
-//        if (block on side != null)
-//        {
-//            if (tab for block == null)
-//            {
-//                tabs.addTab(new tab for block on side, id);
-//            } else if (tab in memory type != block on side tab type)
-//            {
-//                tabs.remove(id);
-//                tabs.addTab(null, width);
-//            }
-//
-//        }
+        return (int) (height - ySize) / 2;
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int mouseX, int mouseY)
     {
         // Main GUI texture rendering
-        updateOffsetCoordinates();
         bindGUITexture();
         drawBenchBackground();
-
-        // Tab operations
-        updateTabs();
-        tabs.renderTabs(this);
-
-        List<String> hoverText = tabs.getTabToolTip(mouseX, mouseY);
-        if (hoverText != null)
-        {
-            drawHoveringText(hoverText, mouseX, mouseY, mc.fontRenderer);
-        }
     }
 
-    @Override
-    protected void mouseClicked(int clickX, int clickY, int button)
-    {
-        super.mouseClicked(clickX, clickY, button);
-        tabs.doTabClicks(clickX, clickY);
-    }
+//    @Override
+//    protected void mouseClicked(int clickX, int clickY, int button)
+//    {
+//        super.mouseClicked(clickX, clickY, button);
+//    }
 }
