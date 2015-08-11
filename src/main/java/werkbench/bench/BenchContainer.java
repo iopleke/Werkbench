@@ -88,18 +88,25 @@ public final class BenchContainer extends Container
     private void bindPlayerInventory(InventoryPlayer inventoryPlayer)
     {
         int slot, x, y;
+        int xOffset = 54;
+        int yOffset = 166;
+        int slotHeight = 18;
+
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)
             {
                 slot = j + i * 9 + 9;
-                x = 130 + j * 18;
-                y = 124 + i * 18;
+                x = xOffset + j * slotHeight;
+                y = yOffset + i * slotHeight;
                 addSlotToContainer(new Slot(inventoryPlayer, slot, x, y));
                 if (i == 0)
                 {
-                    x = 130 + j * 18;
-                    y = 182;
+
+                    x = xOffset + j * slotHeight;
+                    int hotbarOffset = 4;
+                    int hotbarMultiplier = 3;
+                    y = yOffset + hotbarMultiplier * slotHeight + hotbarOffset;
                     addSlotToContainer(new Slot(inventoryPlayer, j, x, y));
                 }
             }
