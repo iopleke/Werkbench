@@ -12,6 +12,17 @@ public class BenchGUI extends GuiContainer
 {
     private Tabs tabs;
 
+    /**
+     * Texture dimensions for centering calculations
+     */
+    private int textureSizeX = 222;
+    private int textureSizeY = 256;
+
+    /**
+     * Overlap adjustment based on texture
+     */
+    private int tabWidthOverlap = 24;
+
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
         super(new BenchContainer(inventoryPlayer, bench));
@@ -19,13 +30,8 @@ public class BenchGUI extends GuiContainer
         tabs = new Tabs(1);
         tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT), 0);
 
-        // Because I'm allergic to using Magic Numbers
-        int textureWidth = 222;
-        int textureHeight = 256;
-        int tabWidthMax = 0;
-
-        xSize = textureWidth + tabWidthMax;
-        ySize = textureHeight;
+        xSize = textureSizeX + (tabs.getTabsWidth() - tabWidthOverlap);
+        ySize = textureSizeY;
     }
 
     private void bindGUITexture()
@@ -42,7 +48,7 @@ public class BenchGUI extends GuiContainer
         // A full height texture (256 in height) is too tall for the default GUI size by 8px
         int positionOffsetY = -8;
 
-        drawTexturedModalRect(getOffsetX(), getOffsetY() + positionOffsetY, textureOffsetX, textureOffsetY, xSize, ySize);
+        drawTexturedModalRect(getOffsetX() + (tabs.getTabsWidth() - tabWidthOverlap) / 2, getOffsetY() + positionOffsetY, textureOffsetX, textureOffsetY, textureSizeX, textureSizeY);
     }
 
     private int getOffsetX()
