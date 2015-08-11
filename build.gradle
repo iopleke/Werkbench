@@ -44,7 +44,7 @@ group = "werkbench"
 archivesBaseName = "Werkbench"
 
 minecraft {
-    version = "${config.version.minecraft}-${config.version.forge}"
+    version = "${config.version.forge}-${config.version.minecraft}"
 
     replace "@MAJOR@", config.version.mod.major
     replace "@MINOR@", config.version.mod.minor
