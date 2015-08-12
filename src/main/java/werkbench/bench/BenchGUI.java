@@ -4,8 +4,12 @@ import jakimbox.prefab.gui.Tabs;
 import jakimbox.prefab.gui.Tabs.TabSide;
 import jakimbox.prefab.gui.Tabs.TabType;
 import jakimbox.prefab.gui.tabTypes.ChestTab;
+import jakimbox.reference.RelativeDirection;
+import java.util.Map;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import werkbench.reference.Compendium;
 
@@ -32,14 +36,16 @@ public class BenchGUI extends GuiContainer
     {
         super(new BenchContainer(inventoryPlayer, bench));
 
-        tabs = new Tabs(6);
-        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT, TabType.CHEST_SINGLE), 0);
-        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT, TabType.CHEST_DOUBLE), 1);
-        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT, TabType.CHEST_ENDER), 2);
-        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.RIGHT, TabType.CHEST_SINGLE), 3);
-        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.RIGHT, TabType.CHEST_DOUBLE), 4);
-        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.RIGHT, TabType.CHEST_ENDER), 5);
-
+        tabs = new Tabs(8);
+        int indexCounter = 0;
+        for (Map.Entry<RelativeDirection, Block> entry : bench.getBlockCache().entrySet())
+        {
+            if (entry.getValue() == Blocks.chest)
+            {
+                tabs.addTab(new ChestTab(Compendium.Naming.id, RelativeDirection.getRelativeDirectionTabSide(entry.getKey()), TabType.CHEST_SINGLE), indexCounter);
+                indexCounter++;
+            }
+        }
         xSize = textureSizeX + (tabs.getTabsWidth() - tabWidthOverlap);
         ySize = textureSizeY;
     }
