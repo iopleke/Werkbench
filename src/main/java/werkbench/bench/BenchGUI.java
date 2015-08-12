@@ -32,11 +32,13 @@ public class BenchGUI extends GuiContainer
     {
         super(new BenchContainer(inventoryPlayer, bench));
 
-        tabs = new Tabs(4);
+        tabs = new Tabs(6);
         tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT, TabType.CHEST_SINGLE), 0);
         tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT, TabType.CHEST_DOUBLE), 1);
-        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT, TabType.CHEST_SINGLE), 2);
-        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT, TabType.CHEST_ENDER), 3);
+        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.LEFT, TabType.CHEST_ENDER), 2);
+        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.RIGHT, TabType.CHEST_SINGLE), 3);
+        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.RIGHT, TabType.CHEST_DOUBLE), 4);
+        tabs.addTab(new ChestTab(Compendium.Naming.id, TabSide.RIGHT, TabType.CHEST_ENDER), 5);
 
         xSize = textureSizeX + (tabs.getTabsWidth() - tabWidthOverlap);
         ySize = textureSizeY;
@@ -109,6 +111,6 @@ public class BenchGUI extends GuiContainer
     {
         int xCoordOffset = width / 2 - textureSizeX / 2 + tabWidthOverlap - Tabs.iconWidth;
         int yCoordOffset = height / 2 + textureSizeY / 2 - guiTabUsableHeight + positionOffsetY;
-        tabs.setDefaultGUICoordinates(xCoordOffset, yCoordOffset);
+        tabs.setDefaultGUICoordinates(xCoordOffset, yCoordOffset, textureSizeX - tabWidthOverlap * 2 + 1);
     }
 }
