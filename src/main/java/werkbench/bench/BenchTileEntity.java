@@ -89,6 +89,9 @@ public class BenchTileEntity extends BasicInventoryTileEntity
                         blockCache.put(direction, tileEntity.getBlockType());
                     }
                 }
+            } else
+            {
+                blockCache.put(direction, null);
             }
         }
     }
