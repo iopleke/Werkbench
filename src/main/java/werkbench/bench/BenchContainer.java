@@ -12,7 +12,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntity;
@@ -70,14 +69,14 @@ public final class BenchContainer extends Container
                 x = 184 + j * 18;
                 y = 52 + i * 18;
 
-                addSlotToContainer(new Slot(this.craftMatrix, slot, x, y));
+                //addSlotToContainer(new Slot(this.craftMatrix, slot, x, y));
             }
         }
     }
 
     private void bindCraftGridOutput(InventoryPlayer inventoryPlayer)
     {
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
+        //addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
     }
 
     /**
@@ -88,7 +87,7 @@ public final class BenchContainer extends Container
     private void bindPlayerInventory(InventoryPlayer inventoryPlayer)
     {
         int slot, x, y;
-        int xOffset = 54;
+        int xOffset = 81;
         int yOffset = 166;
         int slotHeight = 18;
 
@@ -122,7 +121,7 @@ public final class BenchContainer extends Container
     {
         for (Slot slot : slotCache.get(direction))
         {
-            addSlotToContainer(slot);
+            //addSlotToContainer(slot);
         }
     }
 
@@ -131,7 +130,7 @@ public final class BenchContainer extends Container
         TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeDirection(bench, direction);
         if (tileEntity instanceof TileEntityChest)
         {
-            cacheSlotsForChest(direction, ((TileEntityChest) tileEntity));
+            //cacheSlotsForChest(direction, ((TileEntityChest) tileEntity));
 
         } else if (tileEntity instanceof TileEntityFurnace)
         {
@@ -202,7 +201,7 @@ public final class BenchContainer extends Container
                 }
             }
         }
-        loadCraftGridFromTileEntity();
+        //loadCraftGridFromTileEntity();
     }
 
     public void loadCraftGridFromTileEntity()
