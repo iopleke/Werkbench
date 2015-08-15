@@ -4,6 +4,7 @@ import jakimbox.prefab.gui.Tabs;
 import jakimbox.prefab.gui.Tabs.TabSide;
 import jakimbox.prefab.gui.Tabs.TabType;
 import jakimbox.prefab.gui.tabTypes.ChestTab;
+import jakimbox.prefab.gui.tabTypes.FurnaceTab;
 import jakimbox.reference.RelativeDirection;
 import java.util.Map;
 import net.minecraft.block.Block;
@@ -38,11 +39,21 @@ public class BenchGUI extends GuiContainer
 
         tabs = new Tabs(8);
         int indexCounter = 0;
+
         for (Map.Entry<RelativeDirection, Block> entry : bench.getBlockCache().entrySet())
         {
             if (entry.getValue() == Blocks.chest)
             {
+                // @TODO - add logic to check for double/ender chests
                 tabs.addTab(new ChestTab(Compendium.Naming.id, RelativeDirection.getRelativeDirectionTabSide(entry.getKey()), TabType.CHEST_SINGLE), indexCounter);
+                indexCounter++;
+            } else if (entry.getValue() == Blocks.ender_chest)
+            {
+                tabs.addTab(new ChestTab(Compendium.Naming.id, RelativeDirection.getRelativeDirectionTabSide(entry.getKey()), TabType.CHEST_ENDER), indexCounter);
+                indexCounter++;
+            } else if (entry.getValue() == Blocks.furnace)
+            {
+                tabs.addTab(new FurnaceTab(Compendium.Naming.id, RelativeDirection.getRelativeDirectionTabSide(entry.getKey())), indexCounter);
                 indexCounter++;
             }
         }
