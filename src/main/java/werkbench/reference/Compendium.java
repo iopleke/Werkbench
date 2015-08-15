@@ -2,11 +2,8 @@ package werkbench.reference;
 
 import cpw.mods.fml.common.ModMetadata;
 import java.util.Arrays;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.tileentity.TileEntityEnchantmentTable;
-import net.minecraft.tileentity.TileEntityEnderChest;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -31,15 +28,18 @@ public class Compendium
         /**
          * Check if the TileEntity type is supported
          *
-         * @param tileEntity
+         * @param block
          * @return boolean
          */
-        public static boolean isTileEntitySupported(TileEntity tileEntity)
+        public static boolean isBlockSupported(Block block)
         {
-            if (tileEntity instanceof TileEntityBrewingStand
-                || tileEntity instanceof TileEntityChest
-                || tileEntity instanceof TileEntityEnchantmentTable
-                || tileEntity instanceof TileEntityEnderChest)
+            if (block == Blocks.anvil
+                || block == Blocks.brewing_stand
+                || block == Blocks.chest
+                || block == Blocks.ender_chest
+                || block == Blocks.enchanting_table
+                || block == Blocks.furnace
+                || block == Blocks.hopper)
             {
                 return true;
             }
