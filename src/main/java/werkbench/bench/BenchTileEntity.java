@@ -7,7 +7,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
 import net.minecraft.block.Block;
-import net.minecraft.tileentity.TileEntity;
 import werkbench.reference.Compendium;
 import werkbench.reference.Compendium.AdjacentBlockType;
 import werkbench.reference.Config;
@@ -78,15 +77,16 @@ public class BenchTileEntity extends BasicInventoryTileEntity
         for (RelativeDirection direction : RelativeDirection.VALID_DIRECTIONS)
         {
             int[] directionOffset = SpatialHelper.getOffsetFromRelative(direction, blockMetadata);
-            TileEntity tileEntity = this.worldObj.getTileEntity(xCoord + directionOffset[0], yCoord, zCoord + directionOffset[1]);
-            if (tileEntity != null)
+            Block block = this.worldObj.getBlock(xCoord + directionOffset[0], yCoord, zCoord + directionOffset[1]);
+
+            if (block != null)
             {
-                if (AdjacentBlockType.isTileEntitySupported(tileEntity))
+                if (AdjacentBlockType.isBlockSupported(block))
                 {
                     Block cachedBlock = (Block) blockCache.get(direction);
-                    if (cachedBlock != tileEntity.getBlockType())
+                    if (cachedBlock != block)
                     {
-                        blockCache.put(direction, tileEntity.getBlockType());
+                        blockCache.put(direction, block);
                     }
                 }
             } else
