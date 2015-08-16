@@ -18,9 +18,6 @@ public class Config
     // turns on extra logging printouts
     public static boolean debugMode;
 
-    public static int furnaceGUIUpdatePacketFrequency = 40;
-    public static int maxUpdateTickCount = 100;
-
     private static void loadConfig()
     {
         Property prop;
@@ -33,18 +30,6 @@ public class Config
         prop.comment = StatCollector.translateToLocal("config.debugMode.description");
         prop.setLanguageKey("config.debugMode.tooltip");
         Config.debugMode = prop.getBoolean();
-        configList.add(prop.getName());
-
-        prop = Config.config.get(Compendium.Config.categoryPerformance, "maxUpdateTickCount", Config.maxUpdateTickCount);
-        prop.comment = StatCollector.translateToLocal("config.maxUpdateTickCount.description");
-        prop.setLanguageKey("config.maxUpdateTickCount.tooltip");
-        Config.maxUpdateTickCount = prop.getInt();
-        configList.add(prop.getName());
-
-        prop = Config.config.get(Compendium.Config.categoryPerformance, "furnaceGUIUpdatePacketFrequency", Config.furnaceGUIUpdatePacketFrequency);
-        prop.comment = StatCollector.translateToLocal("config.furnaceGUIUpdatePacketFrequency.description");
-        prop.setLanguageKey("config.furnaceGUIUpdatePacketFrequency.tooltip");
-        Config.furnaceGUIUpdatePacketFrequency = prop.getInt();
         configList.add(prop.getName());
 
         if (Config.config.hasChanged())
