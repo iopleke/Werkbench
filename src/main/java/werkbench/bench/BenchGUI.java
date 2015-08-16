@@ -31,7 +31,7 @@ public class BenchGUI extends BasicTabbedGUI
         {
             if (entry.getValue() == Blocks.chest)
             {
-                // @TODO - add logic to check for double/ender chests
+                // @TODO - add logic to check for double chests
                 tabs.addTab(new ChestTab(Compendium.Naming.id, RelativeDirection.getRelativeDirectionTabSide(entry.getKey()), TabType.CHEST_SINGLE), indexCounter);
                 indexCounter++;
             } else if (entry.getValue() == Blocks.ender_chest)
