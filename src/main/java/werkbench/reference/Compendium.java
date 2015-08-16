@@ -2,8 +2,6 @@ package werkbench.reference;
 
 import cpw.mods.fml.common.ModMetadata;
 import java.util.Arrays;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -13,40 +11,6 @@ import net.minecraft.util.ResourceLocation;
  */
 public class Compendium
 {
-    public static enum AdjacentBlockType
-    {
-        CHEST_DOUBLE, CHEST_SINGLE, EMPTY, FURNACE_ACTIVE, FURNACE_INACTIVE, OFFSET;
-
-        /**
-         * Array of all valid block types
-         */
-        public static final AdjacentBlockType[] VALID_TYPES =
-        {
-            CHEST_DOUBLE, CHEST_SINGLE, EMPTY, FURNACE_ACTIVE, FURNACE_INACTIVE, OFFSET
-        };
-
-        /**
-         * Check if the TileEntity type is supported
-         *
-         * @param block
-         * @return boolean
-         */
-        public static boolean isBlockSupported(Block block)
-        {
-            if (block == Blocks.anvil
-                || block == Blocks.brewing_stand
-                || block == Blocks.chest
-                || block == Blocks.ender_chest
-                || block == Blocks.enchanting_table
-                || block == Blocks.furnace
-                || block == Blocks.hopper)
-            {
-                return true;
-            }
-            return false;
-        }
-    }
-
     public static final class Naming
     {
         public static final String id = "werkbench";
