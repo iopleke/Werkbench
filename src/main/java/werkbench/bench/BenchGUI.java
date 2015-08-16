@@ -14,7 +14,7 @@ public class BenchGUI extends BasicTabbedGUI
 
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
-        super(Naming.id, inventoryPlayer, bench, world, 8);
+        super(Naming.id, new BenchContainer(inventoryPlayer, bench), bench, world, 8);
 
         textureWidth = 222;
         xSize = textureWidth;

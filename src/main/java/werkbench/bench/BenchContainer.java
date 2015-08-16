@@ -1,33 +1,23 @@
 package werkbench.bench;
 
-import jakimbox.helper.SpatialHelper;
-import jakimbox.reference.RelativeDirection;
-import java.util.EnumMap;
-import java.util.Map;
+import jakimbox.prefab.container.BasicInventoryContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.tileentity.TileEntityFurnace;
-import werkbench.reference.GUIOffset;
 
-public final class BenchContainer extends Container
+public final class BenchContainer extends BasicInventoryContainer
 {
 
     private final BenchTileEntity bench;
 
-    private Map<RelativeDirection, Slot[]> slotCache = new EnumMap<RelativeDirection, Slot[]>(RelativeDirection.class);
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
-    boolean loading = false;
 
     /**
      * Container object for the workbench
@@ -37,13 +27,14 @@ public final class BenchContainer extends Container
      */
     public BenchContainer(InventoryPlayer inventoryPlayer, BenchTileEntity bench)
     {
+        super(inventoryPlayer, bench);
+
         this.bench = bench;
         this.bench.doCacheUpdateNow();
 
-        loadCraftGridFromTileEntity();
-
-        bindPlayerInventory(inventoryPlayer);
         bindCraftGrid(inventoryPlayer);
+
+        onCraftMatrixChanged(craftMatrix);
     }
 
     /**
@@ -60,162 +51,23 @@ public final class BenchContainer extends Container
 
     private void bindCraftGridInput()
     {
-        int slot, x, y;
+        int x, y;
+        int slot = 0;
         for (int i = 0; i < 3; ++i)
         {
             for (int j = 0; j < 3; ++j)
             {
-                slot = j + i * 3;
-                x = 184 + j * 18;
-                y = 52 + i * 18;
+                x = 86 + j * 18;
+                y = 92 + i * 18;
 
-                //addSlotToContainer(new Slot(this.craftMatrix, slot, x, y));
+                addSlotToContainer(new Slot(this.craftMatrix, slot++, x, y));
             }
         }
     }
 
     private void bindCraftGridOutput(InventoryPlayer inventoryPlayer)
     {
-        //addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 253, 70));
-    }
-
-    /**
-     * Add the player's inventory slots to the GUI
-     *
-     * @param inventoryPlayer the player's inventory
-     */
-    private void bindPlayerInventory(InventoryPlayer inventoryPlayer)
-    {
-        int slot, x, y;
-        int xOffset = 81;
-        int yOffset = 166;
-        int slotHeight = 18;
-
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                slot = j + i * 9 + 9;
-                x = xOffset + j * slotHeight;
-                y = yOffset + i * slotHeight;
-                addSlotToContainer(new Slot(inventoryPlayer, slot, x, y));
-                if (i == 0)
-                {
-
-                    x = xOffset + j * slotHeight;
-                    int hotbarOffset = 4;
-                    int hotbarMultiplier = 3;
-                    y = yOffset + hotbarMultiplier * slotHeight + hotbarOffset;
-                    addSlotToContainer(new Slot(inventoryPlayer, j, x, y));
-                }
-            }
-        }
-    }
-
-    /**
-     * Slot binding iterator for a RelativeDirection
-     *
-     * @param direction
-     */
-    private void bindSlotsForDirection(RelativeDirection direction)
-    {
-        for (Slot slot : slotCache.get(direction))
-        {
-            //addSlotToContainer(slot);
-        }
-    }
-
-    private void cacheTileEntitySlotsForDirection(InventoryPlayer inventoryPlayer, RelativeDirection direction)
-    {
-        TileEntity tileEntity = SpatialHelper.getTileEntityForRelativeDirection(bench, direction);
-        if (tileEntity instanceof TileEntityChest)
-        {
-            //cacheSlotsForChest(direction, ((TileEntityChest) tileEntity));
-
-        } else if (tileEntity instanceof TileEntityFurnace)
-        {
-            //bindSlotsForFurnace(((TileEntityFurnace) tileEntity), inventoryPlayer, side);
-        }
-    }
-
-    /**
-     * Update the cached slots for a chest TileEntity
-     *
-     * @param direction
-     * @param chest
-     */
-    private void cacheSlotsForChest(RelativeDirection direction, TileEntityChest chest)
-    {
-        int slot, xOffset, yOffset, count = 0;
-
-        Slot[] slotArray = new Slot[27];
-        if (slotCache.containsKey(direction))
-        {
-            slotCache.remove(direction);
-        }
-
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                slot = j + i * 9;
-                xOffset = i * 18 + GUIOffset.CHEST_SINGLE.getOffsetForSide(RelativeDirection.getRelativeDirectionTabSide(direction))[0];
-                yOffset = j * 18 + GUIOffset.CHEST_SINGLE.getOffsetForSide(RelativeDirection.getRelativeDirectionTabSide(direction))[1];
-                slotArray[count++] = new Slot(chest, slot, xOffset, yOffset);
-            }
-        }
-        slotCache.put(direction, slotArray);
-    }
-
-    /**
-     * Determine if the player can interact with the container
-     *
-     * @param entityPlayer the player entity
-     * @return boolean
-     */
-    @Override
-    public boolean canInteractWith(EntityPlayer entityPlayer)
-    {
-        return true;
-    }
-
-    /**
-     * Send inventory changes to listeners and sync craftMatrix with TE inventory
-     */
-    @Override
-    public void detectAndSendChanges()
-    {
-        for (int i = 0; i < this.inventorySlots.size(); ++i)
-        {
-            ItemStack itemstack = ((Slot) this.inventorySlots.get(i)).getStack();
-            ItemStack itemstack1 = (ItemStack) this.inventoryItemStacks.get(i);
-
-            if (!ItemStack.areItemStacksEqual(itemstack1, itemstack))
-            {
-                itemstack1 = itemstack == null ? null : itemstack.copy();
-                this.inventoryItemStacks.set(i, itemstack1);
-
-                for (int j = 0; j < this.crafters.size(); ++j)
-                {
-                    ((ICrafting) this.crafters.get(j)).sendSlotContents(this, i, itemstack1);
-                }
-            }
-        }
-        //loadCraftGridFromTileEntity();
-    }
-
-    public void loadCraftGridFromTileEntity()
-    {
-        if (bench.getWorldObj().isRemote && !loading)
-        {
-            bench.getDescriptionPacket();
-        }
-        loading = true;
-        for (int s = 0; s < bench.getSizeInventory(); s++)
-        {
-            craftMatrix.setInventorySlotContents(s, bench.getStackInSlot(s));
-        }
-        loading = false;
+        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, craftMatrix, craftResult, 0, 155, 110));
     }
 
     /**
@@ -226,29 +78,7 @@ public final class BenchContainer extends Container
     @Override
     public void onCraftMatrixChanged(IInventory inventory)
     {
-        if (bench.getWorldObj().isRemote && !loading)
-        {
-            bench.getDescriptionPacket();
-        }
-        craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.bench.getWorldObj()));
-        if (!bench.getWorldObj().isRemote && !loading)
-        {
-            saveCraftGridToTileEntity();
-        }
-    }
-
-    public void resetCraftingGrid()
-    {
-        craftMatrix = new InventoryCrafting(this, 3, 3);
-        saveCraftGridToTileEntity();
-    }
-
-    public void saveCraftGridToTileEntity()
-    {
-        for (int s = 0; s < bench.getSizeInventory(); s++)
-        {
-            bench.setInventorySlotContents(s, craftMatrix.getStackInSlot(s));
-        }
+        craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, bench.getWorldObj()));
     }
 
     /**
