@@ -1,41 +1,28 @@
 package werkbench.bench;
 
+import jakimbox.prefab.gui.BasicTabbedGUI;
 import jakimbox.prefab.gui.Tabs;
-import jakimbox.prefab.gui.Tabs.TabSide;
 import jakimbox.prefab.gui.Tabs.TabType;
 import jakimbox.prefab.gui.tabTypes.ChestTab;
 import jakimbox.prefab.gui.tabTypes.FurnaceTab;
 import jakimbox.reference.RelativeDirection;
 import java.util.Map;
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import werkbench.reference.Compendium;
+import werkbench.reference.Compendium.Naming;
 
-public class BenchGUI extends GuiContainer
+public class BenchGUI extends BasicTabbedGUI
 {
-    /**
-     * Overlap adjustment based on texture
-     */
-    public int tabWidthOverlap = 24;
     public int guiTabUsableHeight = 172;
-
-    private Tabs tabs;
-
-    /**
-     * Texture dimensions for centering calculations
-     */
-    public int textureSizeX = 222;
-    public int textureSizeY = 256;
-
     // A full height texture (256 in height) is too tall for the default GUI size by 8px
     public int positionOffsetY = -8;
 
     public BenchGUI(InventoryPlayer inventoryPlayer, BenchTileEntity bench, World world)
     {
-        super(new BenchContainer(inventoryPlayer, bench));
+        super(Naming.id, inventoryPlayer, bench, world, 8);
 
         tabs = new Tabs(8);
         int indexCounter = 0;
@@ -57,77 +44,26 @@ public class BenchGUI extends GuiContainer
                 indexCounter++;
             }
         }
-        xSize = textureSizeX + (tabs.getTabsWidth() - tabWidthOverlap);
-        ySize = textureSizeY;
+        textureWidth = 222;
+        xSize = textureWidth;
+        ySize = textureHeight;
     }
 
-    private void bindGUITexture()
+    /**
+     * Draw the GUI background layer
+     */
+    @Override
+    protected void drawGUIBackground()
     {
-        this.mc.renderEngine.bindTexture(Compendium.TextureResource.GUI.background);
-    }
-
-    private void drawBenchBackground()
-    {
-        // The background texture has no offset
-        int textureOffsetX = 0;
-        int textureOffsetY = 0;
-
-        drawTexturedModalRect(getOffsetX() + (tabs.getTabsWidth() - tabWidthOverlap) / 2, getOffsetY() + positionOffsetY, textureOffsetX, textureOffsetY, textureSizeX, textureSizeY);
-    }
-
-    private int getOffsetX()
-    {
-        return (int) (width - xSize) / 2;
-    }
-
-    private int getOffsetY()
-    {
-        return (int) (height - ySize) / 2;
+        drawTexturedModalRect(getGUIOffsetX(), getGUIOffsetY() + positionOffsetY, textureX, textureY, xSize, ySize);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float opacity, int mouseX, int mouseY)
+    protected void updateGUIOffsets()
     {
-        // Main GUI texture rendering
-        bindGUITexture();
-        updateGUIOffsets();
-        drawBenchBackground();
-        tabs.renderTabs(this);
+        int xCoordOffset = width / 2 - textureWidth / 2 + tabWidthOverlap - Tabs.iconWidth;
+        int yCoordOffset = height / 2 + textureHeight / 2 - guiTabUsableHeight + positionOffsetY;
+        tabs.setDefaultGUICoordinates(xCoordOffset, yCoordOffset, textureWidth - tabWidthOverlap * 2 + 1);
     }
 
-    @Override
-    protected void mouseClicked(int clickX, int clickY, int button)
-    {
-        super.mouseClicked(clickX, clickY, button);
-
-        TabSide sideClicked;
-        if (clickX < this.width / 2)
-        {
-            sideClicked = TabSide.LEFT;
-        } else
-        {
-            sideClicked = TabSide.RIGHT;
-        }
-
-        tabs.doTabClicks(clickX, clickY, sideClicked);
-    }
-
-    @Override
-    protected void mouseMovedOrUp(int x, int y, int which)
-    {
-        super.mouseMovedOrUp(x, y, which);
-//        List<String> hoverText = tabs.getTabToolTip(x, y);
-//        if (hoverText != null)
-//        {
-//            drawHoveringText(hoverText, x, y, mc.fontRenderer);
-//        }
-
-    }
-
-    private void updateGUIOffsets()
-    {
-        int xCoordOffset = width / 2 - textureSizeX / 2 + tabWidthOverlap - Tabs.iconWidth;
-        int yCoordOffset = height / 2 + textureSizeY / 2 - guiTabUsableHeight + positionOffsetY;
-        tabs.setDefaultGUICoordinates(xCoordOffset, yCoordOffset, textureSizeX - tabWidthOverlap * 2 + 1);
-    }
 }
