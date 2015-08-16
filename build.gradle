@@ -96,5 +96,8 @@ sourceSets {
             exclude '**/xcf/*'
             exclude 'resources/assets/werkbench/xcf'
         }
+        java {
+            srcDir 'src/jakimbox/src/main/java'
+        }
     }
 }
