@@ -3,6 +3,7 @@ package werkbench.bench;
 import jakimbox.prefab.gui.BasicTabbedGUI;
 import jakimbox.prefab.gui.Tabs;
 import jakimbox.prefab.gui.Tabs.TabType;
+import jakimbox.prefab.gui.tabTypes.AnvilTab;
 import jakimbox.prefab.gui.tabTypes.ChestTab;
 import jakimbox.prefab.gui.tabTypes.FurnaceTab;
 import jakimbox.reference.RelativeDirection;
@@ -41,6 +42,10 @@ public class BenchGUI extends BasicTabbedGUI
             } else if (entry.getValue() == Blocks.furnace)
             {
                 tabs.addTab(new FurnaceTab(Compendium.Naming.id, RelativeDirection.getRelativeDirectionTabSide(entry.getKey())), indexCounter);
+                indexCounter++;
+            } else if (entry.getValue() == Blocks.anvil)
+            {
+                tabs.addTab(new AnvilTab(Compendium.Naming.id, RelativeDirection.getRelativeDirectionTabSide(entry.getKey())), indexCounter);
                 indexCounter++;
             }
         }
