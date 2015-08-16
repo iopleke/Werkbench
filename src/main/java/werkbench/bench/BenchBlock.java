@@ -116,7 +116,7 @@ public class BenchBlock extends BasicBlockContainer
         TileEntity potentialBench = world.getTileEntity(x, y, z);
         if (potentialBench instanceof BenchTileEntity)
         {
-            ((BenchTileEntity) potentialBench).updateSideChecks();
+            ((BenchTileEntity) potentialBench).doCacheUpdateNow();
         }
     }
 }

@@ -38,7 +38,7 @@ public final class BenchContainer extends Container
     public BenchContainer(InventoryPlayer inventoryPlayer, BenchTileEntity bench)
     {
         this.bench = bench;
-        this.bench.updateSideChecks();
+        this.bench.doCacheUpdateNow();
 
         loadCraftGridFromTileEntity();
 
