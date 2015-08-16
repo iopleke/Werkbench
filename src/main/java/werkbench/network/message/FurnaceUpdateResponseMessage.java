@@ -8,7 +8,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import werkbench.bench.BenchTileEntity;
-import werkbench.reference.Compendium.RelativeBenchSide;
 
 /**
  * The server sends this to the client in response to the request for values
@@ -67,12 +66,12 @@ public class FurnaceUpdateResponseMessage implements IMessage, IMessageHandler<F
         TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld.getTileEntity(message.benchX, message.benchY, message.benchZ);
         if (tileEntity instanceof BenchTileEntity)
         {
-            RelativeBenchSide furnaceSide = RelativeBenchSide.values()[message.furnaceSideOrdinal];
+            //RelativeBenchSide furnaceSide = RelativeBenchSide.values()[message.furnaceSideOrdinal];
             int[] values = new int[]
             {
                 message.furnaceBurnTime, message.furnaceCookTime, message.currentItemBurnTime
             };
-            ((BenchTileEntity) tileEntity).setFurnaceValuesForSide(furnaceSide, values);
+            //((BenchTileEntity) tileEntity).setFurnaceValuesForSide(furnaceSide, values);
         }
         return null;
     }

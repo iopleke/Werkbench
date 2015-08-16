@@ -11,7 +11,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import werkbench.bench.BenchTileEntity;
 import werkbench.network.MessageHandler;
-import werkbench.reference.Compendium.RelativeBenchSide;
 
 /**
  * A client sends this message to the server when the bench GUI needs a furnace update
@@ -30,12 +29,12 @@ public class FurnaceUpdateRequestMessage implements IMessage, IMessageHandler<Fu
     {
     }
 
-    public FurnaceUpdateRequestMessage(TileEntityFurnace furnace, BenchTileEntity bench, RelativeBenchSide side)
+    public FurnaceUpdateRequestMessage(TileEntityFurnace furnace, BenchTileEntity bench)
     {
         furnaceX = furnace.xCoord;
         furnaceY = furnace.yCoord;
         furnaceZ = furnace.zCoord;
-        this.furnaceSideOrdinal = side.ordinal();
+        //this.furnaceSideOrdinal = side.ordinal();
 
         benchX = bench.xCoord;
         benchY = bench.yCoord;
