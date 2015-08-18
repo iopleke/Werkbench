@@ -29,10 +29,10 @@ public final class BenchContainer extends BasicInventoryContainer
         this.bench = bench;
         this.bench.doCacheUpdateNow();
 
-        if (this.bench.craftMatrix == null)
+        if (this.bench.craftMatrix == null || this.bench.craftMatrix.equals(new InventoryCrafting(this, 3, 3)))
         {
             this.bench.craftMatrix = new InventoryCrafting(this, 3, 3);
-            this.bench.restoreGridFromSavedNBT();
+            this.bench.restoreGridFromCache();
         }
         if (this.bench.craftResult == null)
         {

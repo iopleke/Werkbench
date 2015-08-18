@@ -15,7 +15,7 @@ public class BenchTileEntity extends TabbedInventoryTileEntity
     public InventoryCrafting craftMatrix;
     public IInventory craftResult = new InventoryCraftResult();
 
-    private NBTTagCompound tag;
+    public ItemStack[] craftGridCache = new ItemStack[9];
 
     public BenchTileEntity()
     {
@@ -31,21 +31,36 @@ public class BenchTileEntity extends TabbedInventoryTileEntity
     public void readFromNBT(NBTTagCompound nbttagcompound)
     {
         super.readFromNBT(nbttagcompound);
-        tag = nbttagcompound;
+
         if (craftMatrix != null)
         {
-            restoreGridFromSavedNBT();
-        }
-    }
-
-    public void restoreGridFromSavedNBT()
-    {
-        if (tag != null && craftMatrix != null)
-        {
-            NBTTagList nbttaglist = tag.getTagList(craftMatrix.getInventoryName(), Constants.NBT.TAG_COMPOUND);
+            NBTTagList nbttaglist = nbttagcompound.getTagList(name, Constants.NBT.TAG_COMPOUND);
             for (int i = 0; i < 9; i++)
             {
                 craftMatrix.setInventorySlotContents(i, ItemStack.loadItemStackFromNBT(nbttaglist.getCompoundTagAt(i)));
+            }
+        } else
+        {
+            cacheCraftGrid(nbttagcompound);
+        }
+    }
+
+    private void cacheCraftGrid(NBTTagCompound nbttagcompound)
+    {
+        NBTTagList nbttaglist = nbttagcompound.getTagList(name, Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < 9; i++)
+        {
+            craftGridCache[i] = ItemStack.loadItemStackFromNBT(nbttaglist.getCompoundTagAt(i));
+        }
+    }
+
+    public void restoreGridFromCache()
+    {
+        if (craftMatrix != null)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                craftMatrix.setInventorySlotContents(i, craftGridCache[i]);
             }
         }
     }
@@ -77,7 +92,7 @@ public class BenchTileEntity extends TabbedInventoryTileEntity
                     nbttaglist.appendTag(new NBTTagCompound());
                 }
             }
-            nbttagcompound.setTag(craftMatrix.getInventoryName(), nbttaglist);
+            nbttagcompound.setTag(name, nbttaglist);
         }
     }
 }
