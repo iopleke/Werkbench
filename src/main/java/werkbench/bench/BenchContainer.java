@@ -16,9 +16,6 @@ public final class BenchContainer extends BasicInventoryContainer
 
     private final BenchTileEntity bench;
 
-    public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
-    public IInventory craftResult = new InventoryCraftResult();
-
     /**
      * Container object for the workbench
      *
@@ -32,9 +29,19 @@ public final class BenchContainer extends BasicInventoryContainer
         this.bench = bench;
         this.bench.doCacheUpdateNow();
 
+        if (this.bench.craftMatrix == null)
+        {
+            this.bench.craftMatrix = new InventoryCrafting(this, 3, 3);
+            this.bench.restoreGridFromSavedNBT();
+        }
+        if (this.bench.craftResult == null)
+        {
+            this.bench.craftResult = new InventoryCraftResult();
+        }
+
         bindCraftGrid(inventoryPlayer);
 
-        onCraftMatrixChanged(craftMatrix);
+        onCraftMatrixChanged(this.bench.craftMatrix);
     }
 
     /**
@@ -60,14 +67,14 @@ public final class BenchContainer extends BasicInventoryContainer
                 x = 86 + j * 18;
                 y = 92 + i * 18;
 
-                addSlotToContainer(new Slot(this.craftMatrix, slot++, x, y));
+                addSlotToContainer(new Slot(this.bench.craftMatrix, slot++, x, y));
             }
         }
     }
 
     private void bindCraftGridOutput(InventoryPlayer inventoryPlayer)
     {
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, craftMatrix, craftResult, 0, 155, 110));
+        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench.craftMatrix, this.bench.craftResult, 0, 155, 110));
     }
 
     /**
@@ -78,7 +85,7 @@ public final class BenchContainer extends BasicInventoryContainer
     @Override
     public void onCraftMatrixChanged(IInventory inventory)
     {
-        craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, bench.getWorldObj()));
+        this.bench.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.bench.craftMatrix, bench.getWorldObj()));
     }
 
     /**
@@ -98,4 +105,26 @@ public final class BenchContainer extends BasicInventoryContainer
 
         return null;
     }
+
+//    public void removeSlots()
+//    {
+//        for (int i = 0; i < 9; i++)
+//        {
+//            if (inventorySlots.get(i) != null)
+//            {
+//                inventorySlots.remove(i);
+//            }
+//        }
+//    }
+//
+//    /**
+//     * the slot is assumed empty
+//     */
+//    protected Slot addSlotToContainer(Slot p_75146_1_)
+//    {
+//        p_75146_1_.slotNumber = this.inventorySlots.size();
+//        this.inventorySlots.add(p_75146_1_);
+//        this.inventoryItemStacks.add((Object) null);
+//        return p_75146_1_;
+//    }
 }
