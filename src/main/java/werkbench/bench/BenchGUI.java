@@ -17,7 +17,7 @@ public class BenchGUI extends BasicTabbedGUI
         super(Naming.id, new BenchContainer(inventoryPlayer, bench), bench, world, 8);
 
         textureWidth = 222;
-        xSize = textureWidth;
+        xSize = textureWidth + tabs.getTabsWidth() - tabWidthOverlap;
         ySize = textureHeight;
     }
 
@@ -27,7 +27,7 @@ public class BenchGUI extends BasicTabbedGUI
     @Override
     protected void drawGUIBackground()
     {
-        drawTexturedModalRect(getGUIOffsetX(), getGUIOffsetY() + positionOffsetY, textureX, textureY, xSize, ySize);
+        drawTexturedModalRect(getGUIOffsetX() + (tabs.getTabsWidth() / 2) - this.tabWidthOverlap + 12, getGUIOffsetY() + positionOffsetY, textureX, textureY, textureWidth, textureHeight);
     }
 
     @Override
