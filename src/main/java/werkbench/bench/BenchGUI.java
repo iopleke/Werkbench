@@ -37,5 +37,4 @@ public class BenchGUI extends BasicTabbedGUI
         int yCoordOffset = height / 2 + textureHeight / 2 - guiTabUsableHeight + positionOffsetY;
         tabs.setDefaultGUICoordinates(xCoordOffset, yCoordOffset, textureWidth - tabWidthOverlap * 2 + 1);
     }
-
 }

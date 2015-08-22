@@ -1,8 +1,15 @@
 package werkbench.bench;
 
 import jakimbox.prefab.container.BasicInventoryContainer;
+import jakimbox.prefab.gui.Tabs.TabSide;
+import jakimbox.reference.RelativeDirection;
+import java.util.EnumMap;
+import java.util.Map;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
@@ -15,6 +22,8 @@ public final class BenchContainer extends BasicInventoryContainer
 {
 
     private final BenchTileEntity bench;
+
+    private final Map<RelativeDirection, int[]> slotIDs = new EnumMap<RelativeDirection, int[]>(RelativeDirection.class);
 
     /**
      * Container object for the workbench
@@ -39,9 +48,85 @@ public final class BenchContainer extends BasicInventoryContainer
             this.bench.craftResult = new InventoryCraftResult();
         }
 
+        for (Map.Entry<RelativeDirection, Block> entry : this.bench.getBlockCache().entrySet())
+        {
+            if (entry.getValue() == Blocks.chest)
+            {
+                int x = this.bench.xCoord + entry.getKey().x;
+                int y = this.bench.yCoord;
+                int z = this.bench.zCoord + entry.getKey().z;
+                IInventory chestInventory = ((BlockChest) entry.getValue()).func_149951_m(this.bench.getWorldObj(), x, y, z);
+                if (chestInventory != null)
+                {
+                    bindChest(chestInventory, entry.getKey());
+                }
+            }
+        }
         bindCraftGrid(inventoryPlayer);
 
         onCraftMatrixChanged(this.bench.craftMatrix);
+    }
+
+    private void bindChest(IInventory chestInventory, RelativeDirection direction)
+    {
+        int slotID;
+        int slots[] = new int[27];
+        int count = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                slotID = j + i * 9;
+
+                slots[count] = addSlotToContainer(new Slot(chestInventory, slotID, -999, -999)).slotNumber;
+                count++;
+            }
+        }
+        slotIDs.put(direction, slots);
+    }
+
+    public void moveBoundSlots(RelativeDirection direction, TabSide side)
+    {
+        int tabSlots[] = slotIDs.get(direction);
+        if (tabSlots != null)
+        {
+            int count = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (side == TabSide.LEFT)
+                    {
+                        ((Slot) this.inventorySlots.get(tabSlots[count])).xDisplayPosition = -50 + i * 18;
+                    } else
+                    {
+                        ((Slot) this.inventorySlots.get(tabSlots[count])).xDisplayPosition = 221 + i * 18;
+                    }
+
+                    ((Slot) this.inventorySlots.get(tabSlots[count])).yDisplayPosition = 73 + j * 18;
+                    count++;
+
+                }
+            }
+        }
+    }
+
+    public void resetBoundSlots(RelativeDirection direction)
+    {
+        int tabSlots[] = slotIDs.get(direction);
+        if (tabSlots != null)
+        {
+            int count = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    ((Slot) this.inventorySlots.get(tabSlots[count])).xDisplayPosition = -999;
+                    ((Slot) this.inventorySlots.get(tabSlots[count])).yDisplayPosition = -999;
+                    count++;
+                }
+            }
+        }
     }
 
     /**
