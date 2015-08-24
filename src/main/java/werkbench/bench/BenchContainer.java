@@ -97,10 +97,10 @@ public final class BenchContainer extends BasicInventoryContainer
                 {
                     if (side == TabSide.LEFT)
                     {
-                        ((Slot) this.inventorySlots.get(tabSlots[count])).xDisplayPosition = -50 + i * 18;
+                        ((Slot) this.inventorySlots.get(tabSlots[count])).xDisplayPosition = i * 18 - 1;
                     } else
                     {
-                        ((Slot) this.inventorySlots.get(tabSlots[count])).xDisplayPosition = 221 + i * 18;
+                        ((Slot) this.inventorySlots.get(tabSlots[count])).xDisplayPosition = 270 + i * 18;
                     }
 
                     ((Slot) this.inventorySlots.get(tabSlots[count])).yDisplayPosition = 73 + j * 18;
