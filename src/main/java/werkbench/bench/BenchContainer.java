@@ -149,7 +149,7 @@ public final class BenchContainer extends BasicInventoryContainer
         {
             for (int j = 0; j < 3; ++j)
             {
-                x = 86 + j * 18;
+                x = 135 + j * 18;
                 y = 92 + i * 18;
 
                 addSlotToContainer(new Slot(this.bench.craftMatrix, slot++, x, y));
@@ -159,7 +159,7 @@ public final class BenchContainer extends BasicInventoryContainer
 
     private void bindCraftGridOutput(InventoryPlayer inventoryPlayer)
     {
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench.craftMatrix, this.bench.craftResult, 0, 155, 110));
+        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench.craftMatrix, this.bench.craftResult, 0, 204, 110));
     }
 
     /**
