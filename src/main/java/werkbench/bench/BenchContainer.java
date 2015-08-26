@@ -190,26 +190,4 @@ public final class BenchContainer extends BasicInventoryContainer
 
         return null;
     }
-
-//    public void removeSlots()
-//    {
-//        for (int i = 0; i < 9; i++)
-//        {
-//            if (inventorySlots.get(i) != null)
-//            {
-//                inventorySlots.remove(i);
-//            }
-//        }
-//    }
-//
-//    /**
-//     * the slot is assumed empty
-//     */
-//    protected Slot addSlotToContainer(Slot p_75146_1_)
-//    {
-//        p_75146_1_.slotNumber = this.inventorySlots.size();
-//        this.inventorySlots.add(p_75146_1_);
-//        this.inventoryItemStacks.add((Object) null);
-//        return p_75146_1_;
-//    }
 }
