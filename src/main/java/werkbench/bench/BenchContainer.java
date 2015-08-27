@@ -3,6 +3,7 @@ package werkbench.bench;
 import jakimbox.prefab.container.BasicInventoryContainer;
 import jakimbox.prefab.gui.Tabs.TabSide;
 import jakimbox.reference.RelativeDirection;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.block.Block;
@@ -17,11 +18,14 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import org.lwjgl.input.Mouse;
 
 public final class BenchContainer extends BasicInventoryContainer
 {
 
     private final BenchTileEntity bench;
+
+    private int[] craftGridIDs;
 
     private final Map<RelativeDirection, int[]> slotIDs = new EnumMap<RelativeDirection, int[]>(RelativeDirection.class);
 
@@ -62,6 +66,8 @@ public final class BenchContainer extends BasicInventoryContainer
                 }
             }
         }
+
+        craftGridIDs = new int[10];
         bindCraftGrid(inventoryPlayer);
 
         onCraftMatrixChanged(this.bench.craftMatrix);
@@ -152,14 +158,14 @@ public final class BenchContainer extends BasicInventoryContainer
                 x = 135 + j * 18;
                 y = 92 + i * 18;
 
-                addSlotToContainer(new Slot(this.bench.craftMatrix, slot++, x, y));
+                craftGridIDs[slot] = addSlotToContainer(new Slot(this.bench.craftMatrix, slot++, x, y)).slotNumber;
             }
         }
     }
 
     private void bindCraftGridOutput(InventoryPlayer inventoryPlayer)
     {
-        addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench.craftMatrix, this.bench.craftResult, 0, 204, 110));
+        craftGridIDs[9] = addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench.craftMatrix, this.bench.craftResult, 0, 204, 110)).slotNumber;
     }
 
     /**
@@ -188,6 +194,14 @@ public final class BenchContainer extends BasicInventoryContainer
         // Shift clicking is difficult for me to get working well in most ideal case,
         // and this expanded craft grid has so much to take into account.
 
+        Mouse.setGrabbed(false);
+        if (craftGridIDs[9] == slotID)
+        {
+            // do craft result shift click operations
+        } else if (Arrays.asList(craftGridIDs).contains(slotID))
+        {
+            // do craftgrid shift click operations
+        }
         return null;
     }
 }
