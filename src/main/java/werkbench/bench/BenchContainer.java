@@ -189,19 +189,60 @@ public final class BenchContainer extends BasicInventoryContainer
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
     {
-        // @TODO - implement shift clicking
-        // I've opted to remove this for now.
-        // Shift clicking is difficult for me to get working well in most ideal case,
-        // and this expanded craft grid has so much to take into account.
+        ItemStack originalStack = null;
+        Slot slot = (Slot) this.inventorySlots.get(slotID);
 
         Mouse.setGrabbed(false);
-        if (craftGridIDs[9] == slotID)
+        if (slot != null && slot.getHasStack())
         {
-            // do craft result shift click operations
-        } else if (Arrays.asList(craftGridIDs).contains(slotID))
-        {
-            // do craftgrid shift click operations
+            originalStack = slot.getStack();
+            ItemStack stackToModify = originalStack.copy();
+
+            if (craftGridIDs[9] == slotID)
+            {
+                // do craft result shift click operations
+                if (!mergeItemStack(stackToModify, 10, 46, true))
+                {
+                    return null;
+                }
+
+                slot.onSlotChange(stackToModify, originalStack);
+            } else if (Arrays.asList(craftGridIDs).contains(slotID))
+            {
+                // do craftgrid shift click operations
+            }
         }
-        return null;
+        return originalStack;
+    }
+
+    @Override
+    protected boolean mergeItemStack(ItemStack stack, int fromSlot, int toSlot, boolean backward)
+    {
+        if (inventorySlotIDs != null)
+        {
+            for (int i = 0; i < inventorySlotIDs.length; i++)
+            {
+                Slot slot = (Slot) this.inventorySlots.get(inventorySlotIDs[i]);
+                if (slot != null)
+                {
+                    if (slot.getHasStack())
+                    {
+                        if (slot.getStack() == stack)
+                        {
+                            // combine slots
+                        }
+                    }
+                }
+            }
+            if (stack.stackSize > 0)
+            {
+                for (int i = 0; i < inventorySlotIDs.length; i++)
+                {
+                    // put stack into empty slot
+                }
+            }
+        }
+
+        return false;
     }
 }
