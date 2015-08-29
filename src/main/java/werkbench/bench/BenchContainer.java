@@ -18,7 +18,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
-import org.lwjgl.input.Mouse;
 
 public final class BenchContainer extends BasicInventoryContainer
 {
@@ -192,32 +191,48 @@ public final class BenchContainer extends BasicInventoryContainer
         ItemStack originalStack = null;
         Slot slot = (Slot) this.inventorySlots.get(slotID);
 
-        Mouse.setGrabbed(false);
         if (slot != null && slot.getHasStack())
         {
             originalStack = slot.getStack();
-            ItemStack stackToModify = originalStack.copy();
+            ItemStack stackToMerge = originalStack.copy();
 
             if (craftGridIDs[9] == slotID)
             {
                 // do craft result shift click operations
-                if (!mergeItemStack(stackToModify, 10, 46, true))
+                if (!mergeIntoPlayerInventory(stackToMerge, slot))
                 {
                     return null;
                 }
 
-                slot.onSlotChange(stackToModify, originalStack);
+                slot.putStack((ItemStack) null);
+
+                slot.onSlotChange(stackToMerge, originalStack);
             } else if (Arrays.asList(craftGridIDs).contains(slotID))
             {
                 // do craftgrid shift click operations
             }
+            if (stackToMerge.stackSize == 0)
+            {
+                slot.putStack((ItemStack) null);
+            } else
+            {
+                slot.onSlotChanged();
+            }
+
+            if (stackToMerge.stackSize == originalStack.stackSize)
+            {
+                return null;
+            }
+
+            slot.onPickupFromSlot(player, stackToMerge);
         }
+
         return originalStack;
     }
 
-    @Override
-    protected boolean mergeItemStack(ItemStack stack, int fromSlot, int toSlot, boolean backward)
+    protected boolean mergeIntoPlayerInventory(ItemStack stack, Slot craftSlot)
     {
+        boolean ret = false;
         if (inventorySlotIDs != null)
         {
             for (int i = 0; i < inventorySlotIDs.length; i++)
@@ -227,9 +242,18 @@ public final class BenchContainer extends BasicInventoryContainer
                 {
                     if (slot.getHasStack())
                     {
-                        if (slot.getStack() == stack)
+                        if (slot.getStack().equals(stack))
                         {
-                            // combine slots
+                            if (slot.getStack().getMaxStackSize() < stack.stackSize + slot.getStack().stackSize)
+                            {
+                                slot.getStack().stackSize = stack.stackSize + slot.getStack().stackSize;
+                                stack.stackSize = 0;
+                                return true;
+                            } else
+                            {
+                                stack.stackSize = stack.stackSize - (slot.getStack().getMaxStackSize() - slot.getStack().stackSize);
+                                slot.getStack().stackSize = slot.getStack().getMaxStackSize();
+                            }
                         }
                     }
                 }
@@ -238,11 +262,22 @@ public final class BenchContainer extends BasicInventoryContainer
             {
                 for (int i = 0; i < inventorySlotIDs.length; i++)
                 {
-                    // put stack into empty slot
+                    Slot slot = (Slot) this.inventorySlots.get(inventorySlotIDs[i]);
+                    if (!slot.getHasStack())
+                    {
+                        slot.putStack(stack.copy());
+
+                        slot.onSlotChanged();
+                        stack.stackSize = 0;
+                        return true;
+                    } else
+                    {
+                        // do nothing
+                    }
                 }
             }
         }
 
-        return false;
+        return ret;
     }
 }
