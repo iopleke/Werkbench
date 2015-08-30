@@ -242,17 +242,22 @@ public final class BenchContainer extends BasicInventoryContainer
                 {
                     if (slot.getHasStack())
                     {
-                        if (slot.getStack().equals(stack))
+                        ItemStack slotStack = slot.getStack();
+                        if (slotStack.isItemEqual(stack))
                         {
-                            if (slot.getStack().getMaxStackSize() < stack.stackSize + slot.getStack().stackSize)
+                            int stackMax = slot.getStack().getMaxStackSize();
+                            int newSize = stack.stackSize + slot.getStack().stackSize;
+                            if (stackMax >= newSize)
                             {
                                 slot.getStack().stackSize = stack.stackSize + slot.getStack().stackSize;
+                                slot.onSlotChanged();
                                 stack.stackSize = 0;
                                 return true;
                             } else
                             {
                                 stack.stackSize = stack.stackSize - (slot.getStack().getMaxStackSize() - slot.getStack().stackSize);
                                 slot.getStack().stackSize = slot.getStack().getMaxStackSize();
+                                slot.onSlotChanged();
                             }
                         }
                     }
