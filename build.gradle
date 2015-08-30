@@ -40,14 +40,26 @@ repositories {
     }
 }
 
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+dependencies {
+    shade 'src/jakimbox/src/main/java'
+}
+
 group = "werkbench"
 archivesBaseName = "Werkbench"
+
 
 minecraft {
     version = "${config.version.forge}-${config.version.minecraft}"
 
     replace "@MAJOR@", config.version.mod.major
     replace "@MINOR@", config.version.mod.minor
+
+    srgExtra "PK:jakimbox werkbench/lib/jakimbox"
 
     if (System.getenv("BUILD_NUMBER") != null) {
         replace "@BUILD@", System.getenv("BUILD_NUMBER")
@@ -73,6 +85,11 @@ allprojects {
 
     jar {
         destinationDir = file (rootProject.getRootDir().getPath() + '/output')
+        configurations.shade.each { dep ->
+            from(project.zipTree(dep)){
+                exclude 'META-INF', 'META-INF/**'
+            }
+        }
     }
 
     publishing {
@@ -89,15 +106,11 @@ allprojects {
     }
 }
 
-
 sourceSets {
     main {
         resources {
             exclude '**/xcf/*'
             exclude 'resources/assets/werkbench/xcf'
-        }
-        java {
-            srcDir 'src/jakimbox/src/main/java'
         }
     }
 }
