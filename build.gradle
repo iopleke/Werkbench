@@ -46,7 +46,7 @@ configurations {
 }
 
 dependencies {
-    shade 'src/jakimbox/src/main/java'
+    shade(project('src:jakimbox')) {transitive false}
 }
 
 group = "werkbench"
