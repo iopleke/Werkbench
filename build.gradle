@@ -46,7 +46,7 @@ configurations {
 }
 
 dependencies {
-    shade(project('src:jakimbox')) {transitive false}
+    shade fileTree(dir: 'libs', include: '*.jar')
 }
 
 group = "werkbench"
@@ -59,8 +59,8 @@ minecraft {
     replace "@MAJOR@", config.version.mod.major
     replace "@MINOR@", config.version.mod.minor
 
-    srgExtra "PK:jakimbox werkbench/lib/jakimbox"
-
+    srgExtra "PK: jakimbox werkbench/lib/jakimbox"
+    
     if (System.getenv("BUILD_NUMBER") != null) {
         replace "@BUILD@", System.getenv("BUILD_NUMBER")
     }
@@ -81,7 +81,7 @@ allprojects {
         version += ".${System.getenv("BUILD_NUMBER")}"
     } else {
         version += "-ManuallyBuilt"
-    }
+    }    
 
     jar {
         destinationDir = file (rootProject.getRootDir().getPath() + '/output')
