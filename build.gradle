@@ -99,5 +99,10 @@ sourceSets {
             exclude '**/xcf/*'
             exclude 'resources/assets/werkbench/xcf'
         }
+        java {
+            if (System.getenv("BUILD_NUMBER") == null) {
+                srcDir 'src/jakimbox/src/main/java'
+            }
+        }
     }
 }
