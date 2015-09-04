@@ -49,3 +49,6 @@ eclipse/
 nbbuild/
 nbproject/
 dist/
+
+## gedit
+*.save
