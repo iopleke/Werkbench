@@ -1,5 +1,8 @@
 package werkbench.bench;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import jakimbox.helper.LogHelper;
 import jakimbox.prefab.container.BasicInventoryContainer;
 import jakimbox.reference.RelativeDirection;
 import java.util.Arrays;
@@ -23,13 +26,13 @@ public final class BenchContainer extends BasicInventoryContainer
 
     private final BenchTileEntity bench;
 
-    private int[] craftGridIDs;
+    private final int[] craftGridIDs;
 
     /**
      * Container object for the workbench
      *
      * @param inventoryPlayer the player's inventory
-     * @param bench the bench TileEntity
+     * @param bench           the bench TileEntity
      */
     public BenchContainer(InventoryPlayer inventoryPlayer, BenchTileEntity bench)
     {
@@ -37,6 +40,7 @@ public final class BenchContainer extends BasicInventoryContainer
 
         this.bench = bench;
         this.bench.doCacheUpdateNow();
+        this.bench.updateEntity();
 
         if (this.bench.craftMatrix == null || this.bench.craftMatrix.equals(new InventoryCrafting(this, 3, 3)))
         {
@@ -190,6 +194,29 @@ public final class BenchContainer extends BasicInventoryContainer
     public void onCraftMatrixChanged(IInventory inventory)
     {
         this.bench.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.bench.craftMatrix, bench.getWorldObj()));
+    }
+
+    /**
+     * Place itemstacks into slots. Adds check for out of bounds exception.
+     *
+     * @param stack
+     */
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void putStacksInSlots(ItemStack[] stack)
+    {
+        for (int i = 0; i < stack.length; ++i)
+        {
+            try
+            {
+                this.getSlot(i).putStack(stack[i]);
+            } catch (IndexOutOfBoundsException e)
+            {
+                LogHelper.warn("Index out of bounds!");
+                LogHelper.warn("Length:" + stack.length);
+                LogHelper.warn("Index:" + i);
+            }
+        }
     }
 
     /**
