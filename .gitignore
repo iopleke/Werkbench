@@ -49,6 +49,7 @@ eclipse/
 nbbuild/
 nbproject/
 dist/
+.nb-gradle/
 
 ## gedit
 *.save
