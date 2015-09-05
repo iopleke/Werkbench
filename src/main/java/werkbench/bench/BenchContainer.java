@@ -16,6 +16,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.tileentity.TileEntityChest;
 
 public final class BenchContainer extends BasicInventoryContainer
 {
@@ -55,8 +56,9 @@ public final class BenchContainer extends BasicInventoryContainer
                 int y = this.bench.yCoord;
                 int z = this.bench.zCoord + entry.getKey().z;
                 Block storedBlock = entry.getValue();
-                if (storedBlock instanceof BlockChest)
+                if (storedBlock instanceof BlockChest && this.bench.getWorldObj().getTileEntity(x, y, z) instanceof TileEntityChest)
                 {
+
                     IInventory chestInventory = ((BlockChest) storedBlock).func_149951_m(this.bench.getWorldObj(), x, y, z);
                     if (chestInventory != null)
                     {
