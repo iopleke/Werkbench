@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import jakimbox.helper.LogHelper;
 import jakimbox.prefab.container.BasicInventoryContainer;
 import jakimbox.reference.RelativeDirection;
-import java.util.Arrays;
 import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -20,6 +19,7 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.tileentity.TileEntityChest;
+import org.apache.commons.lang3.ArrayUtils;
 
 public final class BenchContainer extends BasicInventoryContainer
 {
@@ -237,9 +237,9 @@ public final class BenchContainer extends BasicInventoryContainer
             originalStack = slot.getStack();
             ItemStack stackToMerge = originalStack.copy();
 
-            if (craftGridIDs[9] == slotID)
+            // Only allow shift clicking into the player's inventory, not out of it
+            if (!ArrayUtils.contains(inventorySlotIDs, slotID))
             {
-                // do craft result shift click operations
                 if (!mergeIntoPlayerInventory(stackToMerge, slot))
                 {
                     return null;
@@ -248,9 +248,6 @@ public final class BenchContainer extends BasicInventoryContainer
                 slot.putStack((ItemStack) null);
 
                 slot.onSlotChange(stackToMerge, originalStack);
-            } else if (Arrays.asList(craftGridIDs).contains(slotID))
-            {
-                // do craftgrid shift click operations
             }
             if (stackToMerge.stackSize == 0)
             {
