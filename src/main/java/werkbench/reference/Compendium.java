@@ -14,7 +14,7 @@ public class Compendium
     public static final class Naming
     {
         public static final String id = "werkbench";
-        public static final String name = "Werkbench";
+        public static final String name = "werkbench";
         public static final String block = "Werkbench";
         public static final String tileEntity = "werkbenchTileEntity";
         public static final String inventoryName = "container.bench.name";
