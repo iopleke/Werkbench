@@ -28,7 +28,7 @@ public final class BenchContainer extends BasicInventoryContainer
      * Container object for the workbench
      *
      * @param inventoryPlayer the player's inventory
-     * @param bench           the bench TileEntity
+     * @param bench the bench TileEntity
      */
     public BenchContainer(InventoryPlayer inventoryPlayer, BenchTileEntity bench)
     {
@@ -54,10 +54,14 @@ public final class BenchContainer extends BasicInventoryContainer
                 int x = this.bench.xCoord + entry.getKey().x;
                 int y = this.bench.yCoord;
                 int z = this.bench.zCoord + entry.getKey().z;
-                IInventory chestInventory = ((BlockChest) entry.getValue()).func_149951_m(this.bench.getWorldObj(), x, y, z);
-                if (chestInventory != null)
+                Block storedBlock = entry.getValue();
+                if (storedBlock instanceof BlockChest)
                 {
-                    bindChest(chestInventory, entry.getKey());
+                    IInventory chestInventory = ((BlockChest) storedBlock).func_149951_m(this.bench.getWorldObj(), x, y, z);
+                    if (chestInventory != null)
+                    {
+                        bindChest(chestInventory, entry.getKey());
+                    }
                 }
             }
         }
@@ -117,6 +121,62 @@ public final class BenchContainer extends BasicInventoryContainer
     private void bindCraftGridOutput(InventoryPlayer inventoryPlayer)
     {
         craftGridIDs[9] = addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench.craftMatrix, this.bench.craftResult, 0, 204, 110)).slotNumber;
+    }
+
+    protected boolean mergeIntoPlayerInventory(ItemStack stack, Slot craftSlot)
+    {
+        boolean ret = false;
+        if (inventorySlotIDs != null)
+        {
+            for (int i = 0; i < inventorySlotIDs.length; i++)
+            {
+                Slot slot = (Slot) this.inventorySlots.get(inventorySlotIDs[i]);
+                if (slot != null)
+                {
+                    if (slot.getHasStack())
+                    {
+                        ItemStack slotStack = slot.getStack();
+                        if (slotStack.isItemEqual(stack))
+                        {
+                            int stackMax = slot.getStack().getMaxStackSize();
+                            int newSize = stack.stackSize + slot.getStack().stackSize;
+                            if (stackMax >= newSize)
+                            {
+                                slot.getStack().stackSize = stack.stackSize + slot.getStack().stackSize;
+                                slot.onSlotChanged();
+                                stack.stackSize = 0;
+                                return true;
+                            } else
+                            {
+                                stack.stackSize = stack.stackSize - (slot.getStack().getMaxStackSize() - slot.getStack().stackSize);
+                                slot.getStack().stackSize = slot.getStack().getMaxStackSize();
+                                slot.onSlotChanged();
+                            }
+                        }
+                    }
+                }
+            }
+            if (stack.stackSize > 0)
+            {
+                for (int i = 0; i < inventorySlotIDs.length; i++)
+                {
+                    Slot slot = (Slot) this.inventorySlots.get(inventorySlotIDs[i]);
+                    if (!slot.getHasStack())
+                    {
+                        slot.putStack(stack.copy());
+
+                        slot.onSlotChanged();
+                        stack.stackSize = 0;
+                        return true;
+                    } else
+                    {
+                        // do nothing
+                    }
+                }
+            }
+        }
+
+        return ret;
     }
 
     /**
@@ -180,61 +240,5 @@ public final class BenchContainer extends BasicInventoryContainer
         }
 
         return originalStack;
-    }
-
-    protected boolean mergeIntoPlayerInventory(ItemStack stack, Slot craftSlot)
-    {
-        boolean ret = false;
-        if (inventorySlotIDs != null)
-        {
-            for (int i = 0; i < inventorySlotIDs.length; i++)
-            {
-                Slot slot = (Slot) this.inventorySlots.get(inventorySlotIDs[i]);
-                if (slot != null)
-                {
-                    if (slot.getHasStack())
-                    {
-                        ItemStack slotStack = slot.getStack();
-                        if (slotStack.isItemEqual(stack))
-                        {
-                            int stackMax = slot.getStack().getMaxStackSize();
-                            int newSize = stack.stackSize + slot.getStack().stackSize;
-                            if (stackMax >= newSize)
-                            {
-                                slot.getStack().stackSize = stack.stackSize + slot.getStack().stackSize;
-                                slot.onSlotChanged();
-                                stack.stackSize = 0;
-                                return true;
-                            } else
-                            {
-                                stack.stackSize = stack.stackSize - (slot.getStack().getMaxStackSize() - slot.getStack().stackSize);
-                                slot.getStack().stackSize = slot.getStack().getMaxStackSize();
-                                slot.onSlotChanged();
-                            }
-                        }
-                    }
-                }
-            }
-            if (stack.stackSize > 0)
-            {
-                for (int i = 0; i < inventorySlotIDs.length; i++)
-                {
-                    Slot slot = (Slot) this.inventorySlots.get(inventorySlotIDs[i]);
-                    if (!slot.getHasStack())
-                    {
-                        slot.putStack(stack.copy());
-
-                        slot.onSlotChanged();
-                        stack.stackSize = 0;
-                        return true;
-                    } else
-                    {
-                        // do nothing
-                    }
-                }
-            }
-        }
-
-        return ret;
     }
 }
