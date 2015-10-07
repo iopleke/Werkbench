@@ -8,6 +8,7 @@ import jakimbox.reference.RelativeDirection;
 import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -16,9 +17,12 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
+import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.tileentity.TileEntityFurnace;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class BenchContainer extends BasicInventoryContainer
@@ -69,6 +73,30 @@ public final class BenchContainer extends BasicInventoryContainer
                         bindChest(chestInventory, entry.getKey());
                     }
                 }
+            } else if (entry.getValue() == Blocks.furnace || entry.getValue() == Blocks.lit_furnace)
+            {
+                int x = this.bench.xCoord + entry.getKey().x;
+                int y = this.bench.yCoord;
+                int z = this.bench.zCoord + entry.getKey().z;
+                Block storedBlock = entry.getValue();
+                TileEntity worldTileEntity = bench.getWorldObj().getTileEntity(x, y, z);
+
+                if (storedBlock instanceof BlockFurnace)
+                {
+                    TileEntityFurnace furnace;
+                    if (worldTileEntity instanceof TileEntityFurnace)
+                    {
+                        furnace = (TileEntityFurnace) worldTileEntity;
+                    } else
+                    {
+                        furnace = new TileEntityFurnace();
+                    }
+
+                    addSlotToContainer(new Slot(furnace, 0, 10, 10));
+                    addSlotToContainer(new Slot(furnace, 1, 10, 28));
+                    addSlotToContainer(new SlotFurnace(inventoryPlayer.player, furnace, 2, 10, 46));
+
+                }
             }
         }
 
@@ -103,7 +131,7 @@ public final class BenchContainer extends BasicInventoryContainer
      */
     private void bindCraftGrid(InventoryPlayer inventoryPlayer)
     {
-        bindCraftGridInput();
+        //bindCraftGridInput();
 
         bindCraftGridOutput(inventoryPlayer);
     }
@@ -119,7 +147,7 @@ public final class BenchContainer extends BasicInventoryContainer
                 x = 135 + j * 18;
                 y = 92 + i * 18;
 
-                craftGridIDs[slot] = addSlotToContainer(new Slot(this.bench.craftMatrix, slot++, x, y)).slotNumber;
+                craftGridIDs[slot] = addSlotToContainer(new Slot(this.bench.craftMatrix, 3 + slot++, x, y)).slotNumber;
             }
         }
     }
@@ -127,6 +155,40 @@ public final class BenchContainer extends BasicInventoryContainer
     private void bindCraftGridOutput(InventoryPlayer inventoryPlayer)
     {
         craftGridIDs[9] = addSlotToContainer(new SlotCrafting(inventoryPlayer.player, this.bench.craftMatrix, this.bench.craftResult, 0, 204, 110)).slotNumber;
+    }
+
+    protected int getNextSlotId()
+    {
+        int nextSlot = 0;
+        boolean doReturn = false;
+        while (!doReturn)
+        {
+            if (!ArrayUtils.contains(craftGridIDs, nextSlot))
+            {
+                if (!ArrayUtils.contains(inventorySlotIDs, nextSlot))
+                {
+                    boolean contains = false;
+                    for (Map.Entry<RelativeDirection, int[]> entry : slotIDs.entrySet())
+                    {
+                        if (ArrayUtils.contains(entry.getValue(), nextSlot))
+                        {
+                            contains = true;
+                        }
+
+                    }
+                    if (!contains)
+                    {
+                        doReturn = true;
+                    }
+
+                }
+            }
+            if (!doReturn)
+            {
+                nextSlot++;
+            }
+        }
+        return nextSlot;
     }
 
     protected boolean mergeIntoPlayerInventory(ItemStack stack, Slot craftSlot)
