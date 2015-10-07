@@ -75,27 +75,9 @@ public final class BenchContainer extends BasicInventoryContainer
                 }
             } else if (entry.getValue() == Blocks.furnace || entry.getValue() == Blocks.lit_furnace)
             {
-                int x = this.bench.xCoord + entry.getKey().x;
-                int y = this.bench.yCoord;
-                int z = this.bench.zCoord + entry.getKey().z;
-                Block storedBlock = entry.getValue();
-                TileEntity worldTileEntity = bench.getWorldObj().getTileEntity(x, y, z);
-
-                if (storedBlock instanceof BlockFurnace)
+                if (entry.getValue() instanceof BlockFurnace)
                 {
-                    TileEntityFurnace furnace;
-                    if (worldTileEntity instanceof TileEntityFurnace)
-                    {
-                        furnace = (TileEntityFurnace) worldTileEntity;
-                    } else
-                    {
-                        furnace = new TileEntityFurnace();
-                    }
-
-                    addSlotToContainer(new Slot(furnace, 0, 10, 10));
-                    addSlotToContainer(new Slot(furnace, 1, 10, 28));
-                    addSlotToContainer(new SlotFurnace(inventoryPlayer.player, furnace, 2, 10, 46));
-
+                    bindFurnace(inventoryPlayer.player, entry.getKey());
                 }
             }
         }
@@ -122,6 +104,32 @@ public final class BenchContainer extends BasicInventoryContainer
             }
         }
         slotIDs.put(direction, slots);
+    }
+
+    private void bindFurnace(EntityPlayer player, RelativeDirection direction)
+    {
+        int x = this.bench.xCoord + direction.x;
+        int y = this.bench.yCoord;
+        int z = this.bench.zCoord + direction.z;
+
+        TileEntity worldTileEntity = bench.getWorldObj().getTileEntity(x, y, z);
+
+        TileEntityFurnace furnace;
+        if (worldTileEntity instanceof TileEntityFurnace)
+        {
+            furnace = (TileEntityFurnace) worldTileEntity;
+        } else
+        {
+            furnace = new TileEntityFurnace();
+        }
+
+        int slots[] = new int[3];
+
+        slots[0] = addSlotToContainer(new Slot(furnace, 0, 10, 10)).slotNumber;
+        slots[1] = addSlotToContainer(new Slot(furnace, 1, 10, 28)).slotNumber;
+        slots[2] = addSlotToContainer(new SlotFurnace(player, furnace, 2, 10, 46)).slotNumber;
+        slotIDs.put(direction, slots);
+
     }
 
     /**
