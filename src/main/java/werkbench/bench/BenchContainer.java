@@ -125,9 +125,9 @@ public final class BenchContainer extends BasicInventoryContainer
 
         int slots[] = new int[3];
 
-        slots[0] = addSlotToContainer(new Slot(furnace, 0, 10, 10)).slotNumber;
-        slots[1] = addSlotToContainer(new Slot(furnace, 1, 10, 28)).slotNumber;
-        slots[2] = addSlotToContainer(new SlotFurnace(player, furnace, 2, 10, 46)).slotNumber;
+        slots[0] = addSlotToContainer(new Slot(furnace, 0, -999, -999)).slotNumber;
+        slots[1] = addSlotToContainer(new Slot(furnace, 1, -999, -999)).slotNumber;
+        slots[2] = addSlotToContainer(new SlotFurnace(player, furnace, 2, -999, -999)).slotNumber;
         slotIDs.put(direction, slots);
 
     }
