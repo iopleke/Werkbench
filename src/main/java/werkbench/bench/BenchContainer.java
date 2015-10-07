@@ -139,7 +139,7 @@ public final class BenchContainer extends BasicInventoryContainer
      */
     private void bindCraftGrid(InventoryPlayer inventoryPlayer)
     {
-        //bindCraftGridInput();
+        bindCraftGridInput();
 
         bindCraftGridOutput(inventoryPlayer);
     }
