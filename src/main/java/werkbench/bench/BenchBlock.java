@@ -28,20 +28,23 @@ public class BenchBlock extends BasicBlockContainer
         TileEntity bench = world.getTileEntity(x, y, z);
         if (bench instanceof BenchTileEntity)
         {
-            for (int i = 0; i < 9; i++)
+            if (((BenchTileEntity) bench).craftMatrix != null)
             {
-                ItemStack stack = ((BenchTileEntity) bench).craftMatrix.getStackInSlotOnClosing(i);
-                if (stack != null)
+                for (int i = 0; i < 9; i++)
                 {
-                    float spawnX = x + world.rand.nextFloat();
-                    float spawnY = y + world.rand.nextFloat();
-                    float spawnZ = z + world.rand.nextFloat();
-                    EntityItem droppedItem = new EntityItem(world, spawnX, spawnY, spawnZ, stack);
-                    float scale = 0.05F;
-                    droppedItem.motionX = (-0.5F + world.rand.nextFloat()) * scale;
-                    droppedItem.motionY = (4 + world.rand.nextFloat()) * scale;
-                    droppedItem.motionZ = (-0.5F + world.rand.nextFloat()) * scale;
-                    world.spawnEntityInWorld(droppedItem);
+                    ItemStack stack = ((BenchTileEntity) bench).craftMatrix.getStackInSlotOnClosing(i);
+                    if (stack != null)
+                    {
+                        float spawnX = x + world.rand.nextFloat();
+                        float spawnY = y + world.rand.nextFloat();
+                        float spawnZ = z + world.rand.nextFloat();
+                        EntityItem droppedItem = new EntityItem(world, spawnX, spawnY, spawnZ, stack);
+                        float scale = 0.05F;
+                        droppedItem.motionX = (-0.5F + world.rand.nextFloat()) * scale;
+                        droppedItem.motionY = (4 + world.rand.nextFloat()) * scale;
+                        droppedItem.motionZ = (-0.5F + world.rand.nextFloat()) * scale;
+                        world.spawnEntityInWorld(droppedItem);
+                    }
                 }
             }
         }
