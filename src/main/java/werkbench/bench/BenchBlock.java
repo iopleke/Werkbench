@@ -20,6 +20,7 @@ public class BenchBlock extends BasicBlockContainer
     {
         super(Compendium.Naming.id, Compendium.Naming.name, Material.wood, CreativeTabs.tabDecorations);
         setStepSound(Block.soundTypeWood);
+        setHardness(2.5F);
     }
 
     @Override
