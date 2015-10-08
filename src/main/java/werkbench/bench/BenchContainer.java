@@ -155,7 +155,7 @@ public final class BenchContainer extends BasicInventoryContainer
                 x = 135 + j * 18;
                 y = 92 + i * 18;
 
-                craftGridIDs[slot] = addSlotToContainer(new Slot(this.bench.craftMatrix, 3 + slot++, x, y)).slotNumber;
+                craftGridIDs[slot] = addSlotToContainer(new Slot(this.bench.craftMatrix, slot++, x, y)).slotNumber;
             }
         }
     }
